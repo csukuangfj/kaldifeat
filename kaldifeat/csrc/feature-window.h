@@ -55,11 +55,40 @@ struct FrameExtractionOptions {
   }
 };
 
-struct FeatureWindowFunction {
+class FeatureWindowFunction {
+ public:
   FeatureWindowFunction() = default;
   explicit FeatureWindowFunction(const FrameExtractionOptions &opts);
+  torch::Tensor Apply(const torch::Tensor &input) const;
+
+ private:
   torch::Tensor window;
 };
+
+/**
+   This function returns the number of frames that we can extract from a wave
+   file with the given number of samples in it (assumed to have the same
+   sampling rate as specified in 'opts').
+
+      @param [in] num_samples  The number of samples in the wave file.
+      @param [in] opts     The frame-extraction options class
+
+      @param [in] flush   True if we are asserting that this number of samples
+   is 'all there is', false if we expecting more data to possibly come in.  This
+   only makes a difference to the answer if opts.snips_edges
+             == false.  For offline feature extraction you always want flush ==
+             true.  In an online-decoding context, once you know (or decide)
+   that no more data is coming in, you'd call it with flush == true at the end
+   to flush out any remaining data.
+*/
+int32_t NumFrames(int64_t num_samples, const FrameExtractionOptions &opts,
+                  bool flush = true);
+
+// return a 2-d tensor with shape [num_frames, opts.WindowSize()]
+torch::Tensor GetStrided(const torch::Tensor &wave,
+                         const FrameExtractionOptions &opts);
+
+torch::Tensor Dither(const torch::Tensor &wave, float dither_value);
 
 }  // namespace kaldifeat
 

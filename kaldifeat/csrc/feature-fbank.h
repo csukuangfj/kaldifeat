@@ -9,6 +9,7 @@
 
 #include <map>
 
+#include "kaldifeat/csrc/feature-common.h"
 #include "kaldifeat/csrc/feature-window.h"
 #include "kaldifeat/csrc/mel-computations.h"
 
@@ -37,6 +38,8 @@ struct FbankOptions {
 
 class FbankComputer {
  public:
+  using Options = FbankOptions;
+
   explicit FbankComputer(const FbankOptions &opts);
   ~FbankComputer();
 
@@ -64,6 +67,8 @@ class FbankComputer {
   float log_energy_floor_;
   std::map<float, MelBanks *> mel_banks_;  // float is VTLN coefficient.
 };
+
+using Fbank = OfflineFeatureTpl<FbankComputer>;
 
 }  // namespace kaldifeat
 

@@ -64,9 +64,8 @@ torch::Tensor FbankComputer::Compute(torch::Tensor signal_raw_log_energy,
 
   // Compute energy after window function (not the raw one).
   if (opts_.use_energy && !opts_.raw_energy) {
-    // signal_raw_log_energy = torch::max(signal_frame.pow(2).sum(1),
-    // kEps).log();
-    signal_raw_log_energy = signal_frame.pow(2).sum(1).log();
+    signal_raw_log_energy =
+        torch::clamp_min(signal_frame.pow(2).sum(1), kEps).log();
   }
 
   // note spectrum is in magnitude, not power, because of `abs()`
@@ -83,8 +82,7 @@ torch::Tensor FbankComputer::Compute(torch::Tensor signal_raw_log_energy,
   torch::Tensor mel_energies = mel_banks.Compute(spectrum);
   if (opts_.use_log_fbank) {
     // Avoid log of zero (which should be prevented anyway by dithering).
-    // mel_energies = torch::max(mel_energies, kEps).log()
-    mel_energies = mel_energies.log();
+    mel_energies = torch::clamp_min(mel_energies, kEps).log();
   }
 
   // Copy energy as first value (or the last, if htk_compat == true).
