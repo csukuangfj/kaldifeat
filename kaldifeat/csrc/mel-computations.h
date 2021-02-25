@@ -61,6 +61,8 @@ class MelBanks {
 
   int32_t NumBins() const { return static_cast<int32_t>(bins_mat_.sizes()[0]); }
 
+  torch::Tensor Compute(const torch::Tensor &spectrum) const;
+
  private:
   // A 2-D matrix of shape [num_bins, num_fft_bins]
   torch::Tensor bins_mat_;

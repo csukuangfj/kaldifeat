@@ -1,4 +1,5 @@
 set(kaldifeat_srcs
+  feature-fbank.cc
   feature-window.cc
   mel-computations.cc
 )

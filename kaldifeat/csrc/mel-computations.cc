@@ -177,4 +177,9 @@ MelBanks::MelBanks(const MelBanksOptions &opts,
   if (debug_) KALDIFEAT_LOG << bins_mat_;
 }
 
+torch::Tensor MelBanks::Compute(const torch::Tensor &spectrum) const {
+  // TODO(fangjun): save a transposed version of `bins_mat_`.
+  return torch::mm(spectrum, bins_mat_.t());
+}
+
 }  // namespace kaldifeat
