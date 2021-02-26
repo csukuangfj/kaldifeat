@@ -71,8 +71,12 @@ torch::Tensor FbankComputer::Compute(torch::Tensor signal_raw_log_energy,
   // note spectrum is in magnitude, not power, because of `abs()`
   torch::Tensor spectrum = torch::fft::rfft(signal_frame).abs();
 
+  // remove the last column, i.e., the highest fft bin
+  spectrum = spectrum.index(
+      {"...", torch::indexing::Slice(0, -1, torch::indexing::None)});
+
   // Use power instead of magnitude if requested.
-  if (opts_.use_power) spectrum = spectrum.pow(2);
+  if (opts_.use_power) spectrum.pow_(2);
 
 #if 0
   int32_t mel_offset = ((opts_.use_energy && !opts_.htk_compat) ? 1 : 0);

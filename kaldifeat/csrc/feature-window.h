@@ -59,7 +59,7 @@ class FeatureWindowFunction {
  public:
   FeatureWindowFunction() = default;
   explicit FeatureWindowFunction(const FrameExtractionOptions &opts);
-  torch::Tensor Apply(const torch::Tensor &input) const;
+  void Apply(torch::Tensor *wave) const;
 
  private:
   torch::Tensor window;
@@ -89,6 +89,8 @@ torch::Tensor GetStrided(const torch::Tensor &wave,
                          const FrameExtractionOptions &opts);
 
 torch::Tensor Dither(const torch::Tensor &wave, float dither_value);
+
+void Preemphasize(float preemph_coeff, torch::Tensor *wave);
 
 }  // namespace kaldifeat
 

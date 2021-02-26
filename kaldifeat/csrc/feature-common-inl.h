@@ -42,30 +42,10 @@ torch::Tensor OfflineFeatureTpl<F>::ComputeFeatures(const torch::Tensor &wave,
         torch::clamp_min(strided_input.pow(2).sum(1), kEps).log();
   }
 
-  if (frame_opts.preemph_coeff != 0.0f) {
-    KALDIFEAT_ASSERT(frame_opts.preemph_coeff >= 0.0f &&
-                     frame_opts.preemph_coeff <= 1.0f);
+  if (frame_opts.preemph_coeff != 0.0f)
+    Preemphasize(frame_opts.preemph_coeff, &strided_input);
 
-    // right = strided_input[:, 1:]
-    torch::Tensor right = strided_input.index(
-        {"...", torch::indexing::Slice(1, torch::indexing::None,
-                                       torch::indexing::None)});
-
-    // current = strided_input[:, 0:-1]
-    torch::Tensor current =
-        strided_input.index({"...", torch::indexing::Slice(0, -1, 1)});
-
-    // strided_input[1:, :] =
-    //   strided_input[:, 1:] - preemph_coeff * strided_input[:, 0:-1]
-    strided_input.index(
-        {"...", torch::indexing::Slice(1, torch::indexing::None,
-                                       torch::indexing::None)}) =
-        right - frame_opts.preemph_coeff * current;
-
-    strided_input.index({"...", 0}) *= 1 - frame_opts.preemph_coeff;
-  }
-
-  strided_input = feature_window_function_.Apply(strided_input);
+  feature_window_function_.Apply(&strided_input);
 
   int32_t padding = frame_opts.PaddedWindowSize() - strided_input.sizes()[1];
 

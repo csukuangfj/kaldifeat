@@ -13,7 +13,6 @@ PYBIND11_MODULE(_kaldifeat, m) {
   m.doc() = "Python wrapper for kaldifeat";
 
   m.def("test", [](const torch::Tensor &tensor) -> torch::Tensor {
-    std::cout << "size: " << tensor.sizes() << "\n";
     FbankOptions fbank_opts;
     fbank_opts.frame_opts.dither = 0.0f;
 

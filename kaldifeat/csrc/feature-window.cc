@@ -51,10 +51,10 @@ FeatureWindowFunction::FeatureWindowFunction(
   window = window.unsqueeze(0);
 }
 
-torch::Tensor FeatureWindowFunction::Apply(const torch::Tensor &input) const {
-  KALDIFEAT_ASSERT(input.dim() == 2);
-  KALDIFEAT_ASSERT(input.sizes()[1] == window.sizes()[1]);
-  return input * window;
+void FeatureWindowFunction::Apply(torch::Tensor *wave) const {
+  KALDIFEAT_ASSERT(wave->dim() == 2);
+  KALDIFEAT_ASSERT(wave->sizes()[1] == wave->sizes()[1]);
+  wave->mul_(window);
 }
 
 static int64_t FirstSampleOfFrame(int32_t frame,
@@ -135,6 +135,28 @@ torch::Tensor Dither(const torch::Tensor &wave, float dither_value) {
 
   torch::Tensor rand_gauss = torch::randn_like(wave);
   return wave + rand_gauss * dither_value;
+}
+
+void Preemphasize(float preemph_coeff, torch::Tensor *wave) {
+  if (preemph_coeff == 0.0f) return;
+
+  KALDIFEAT_ASSERT(preemph_coeff >= 0.0f && preemph_coeff <= 1.0f);
+
+  // right = wave[:, 1:]
+  torch::Tensor right =
+      wave->index({"...", torch::indexing::Slice(1, torch::indexing::None,
+                                                 torch::indexing::None)});
+
+  // current = wave[:, 0:-1]
+  torch::Tensor current = wave->index(
+      {"...", torch::indexing::Slice(0, -1, torch::indexing::None)});
+
+  // wave[1:, :] = wave[:, 1:] - preemph_coeff * wave[:, 0:-1]
+  wave->index({"...", torch::indexing::Slice(1, torch::indexing::None,
+                                             torch::indexing::None)}) =
+      right - preemph_coeff * current;
+
+  wave->index({"...", 0}) *= 1 - preemph_coeff;
 }
 
 }  // namespace kaldifeat
