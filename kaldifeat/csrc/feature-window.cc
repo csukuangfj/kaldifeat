@@ -134,7 +134,12 @@ torch::Tensor Dither(const torch::Tensor &wave, float dither_value) {
   if (dither_value == 0.0f) wave;
 
   torch::Tensor rand_gauss = torch::randn_like(wave);
+#if 1
   return wave + rand_gauss * dither_value;
+#else
+  // use in-place version of wave and change its to pointer type
+  wave_->add_(rand_gauss, dither_value);
+#endif
 }
 
 void Preemphasize(float preemph_coeff, torch::Tensor *wave) {
