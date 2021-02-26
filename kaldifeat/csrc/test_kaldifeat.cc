@@ -26,12 +26,17 @@ static void TestPreemph() {
   std::cout << d << "\n";
 }
 
-int main() {
+static void TestPad() {
   torch::Tensor a = torch::arange(0, 6).reshape({2, 3}).to(torch::kFloat);
-  torch::Tensor b = torch::arange(1, 4).to(torch::kFloat).unsqueeze(0);
+  torch::Tensor b = torch::nn::functional::pad(
+      a, torch::nn::functional::PadFuncOptions({0, 3})
+             .mode(torch::kConstant)
+             .value(0));
   std::cout << a << "\n";
   std::cout << b << "\n";
-  std::cout << a * b << "\n";
+}
 
+int main() {
+  TestPad();
   return 0;
 }

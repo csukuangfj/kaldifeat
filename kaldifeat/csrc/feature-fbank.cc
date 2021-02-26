@@ -79,6 +79,7 @@ torch::Tensor FbankComputer::Compute(torch::Tensor signal_raw_log_energy,
   SubVector<float> mel_energies(*feature, mel_offset, opts_.mel_opts.num_bins);
 #endif
 
+  // TODO(fangjun): remove the last column of spectrum
   torch::Tensor mel_energies = mel_banks.Compute(spectrum);
   if (opts_.use_log_fbank) {
     // Avoid log of zero (which should be prevented anyway by dithering).

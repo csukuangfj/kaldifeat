@@ -63,6 +63,9 @@ class MelBanks {
 
   torch::Tensor Compute(const torch::Tensor &spectrum) const;
 
+  // for debug only
+  const torch::Tensor &GetBinsMat() const { return bins_mat_; }
+
  private:
   // A 2-D matrix of shape [num_bins, num_fft_bins]
   torch::Tensor bins_mat_;

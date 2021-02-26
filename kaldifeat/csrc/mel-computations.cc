@@ -131,7 +131,9 @@ MelBanks::MelBanks(const MelBanksOptions &opts,
                   << " and vtln-high " << vtln_high << ", versus "
                   << "low-freq " << low_freq << " and high-freq " << high_freq;
 
-  bins_mat_ = torch::zeros({num_bins, num_fft_bins}, torch::kFloat);
+  // TODO(fangjun): remove the last column of the power spectrum
+  // and set the number of columns to num_fft_bins instead of num_fft_bins + 1
+  bins_mat_ = torch::zeros({num_bins, num_fft_bins + 1}, torch::kFloat);
   int32_t stride = bins_mat_.strides()[0];
 
   for (int32_t bin = 0; bin < num_bins; ++bin) {

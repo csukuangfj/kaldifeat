@@ -18,10 +18,10 @@ torch::Tensor OfflineFeatureTpl<F>::ComputeFeatures(const torch::Tensor &wave,
   int32_t rows_out = NumFrames(wave.sizes()[0], computer_.GetFrameOptions());
   int32_t cols_out = computer_.Dim();
 
-  const FrameExtractionOptions &frame_opts =
-      computer_.GetFrameOptions().frame_opts;
+  const FrameExtractionOptions &frame_opts = computer_.GetFrameOptions();
 
-  torch::Tensor strided_input = GetStrided(wave, frame_opts);
+  // TODO(fangjun): avoid clone
+  torch::Tensor strided_input = GetStrided(wave, frame_opts).clone();
 
   if (frame_opts.dither != 0)
     strided_input = Dither(strided_input, frame_opts.dither);
@@ -62,24 +62,21 @@ torch::Tensor OfflineFeatureTpl<F>::ComputeFeatures(const torch::Tensor &wave,
                                        torch::indexing::None)}) =
         right - frame_opts.preemph_coeff * current;
 
-    strided_input.index({"...", 0}) *= frame_opts.preemph_coeff;
+    strided_input.index({"...", 0}) *= 1 - frame_opts.preemph_coeff;
   }
 
   strided_input = feature_window_function_.Apply(strided_input);
 
-#if 0
-  Vector<BaseFloat> window;  // windowed waveform.
-  bool use_raw_log_energy = computer_.NeedRawLogEnergy();
-  for (int32 r = 0; r < rows_out; r++) {  // r is frame index.
-    BaseFloat raw_log_energy = 0.0;
-    ExtractWindow(0, wave, r, computer_.GetFrameOptions(),
-                  feature_window_function_, &window,
-                  (use_raw_log_energy ? &raw_log_energy : NULL));
+  int32_t padding = frame_opts.PaddedWindowSize() - strided_input.sizes()[1];
 
-    SubVector<BaseFloat> output_row(*output, r);
-    computer_.Compute(raw_log_energy, vtln_warp, &window, &output_row);
+  if (padding > 0) {
+    strided_input = torch::nn::functional::pad(
+        strided_input, torch::nn::functional::PadFuncOptions({0, padding})
+                           .mode(torch::kConstant)
+                           .value(0));
   }
-#endif
+
+  return computer_.Compute(log_energy_pre_window, vtln_warp, strided_input);
 }
 
 }  // namespace kaldifeat
