@@ -22,9 +22,9 @@ def main():
         a *= 32768
         tensor = torch.from_numpy(a)
         ans = _kaldifeat.test(tensor)
-        torch.set_printoptions(profile="full")
-        print(ans.shape)
-        print(ans)
+        #  torch.set_printoptions(profile="full")
+        #  print(ans.shape)
+        #  print(ans)
 
 
 if __name__ == '__main__':
