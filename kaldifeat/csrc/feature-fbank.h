@@ -85,6 +85,8 @@ class FbankComputer {
     return opts_.frame_opts;
   }
 
+  const FbankOptions &GetOptions() const { return opts_; }
+
   // signal_raw_log_energy is log_energy_pre_window, which is not empty
   // iff NeedRawLogEnergy() returns true.
   torch::Tensor Compute(torch::Tensor signal_raw_log_energy, float vtln_warp,

@@ -67,10 +67,12 @@ static void TestCat() {
   torch::Tensor b = torch::arange(0, 2).reshape({2, 1}).to(torch::kFloat) * 0.1;
   torch::Tensor c = torch::cat({a, b}, 1);
   torch::Tensor d = torch::cat({b, a}, 1);
+  torch::Tensor e = torch::cat({a, a}, 0);
   std::cout << a << "\n";
   std::cout << b << "\n";
   std::cout << c << "\n";
   std::cout << d << "\n";
+  std::cout << e << "\n";
 }
 
 int main() {

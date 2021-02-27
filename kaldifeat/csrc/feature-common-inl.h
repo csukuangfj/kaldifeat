@@ -14,11 +14,16 @@ namespace kaldifeat {
 template <class F>
 torch::Tensor OfflineFeatureTpl<F>::ComputeFeatures(const torch::Tensor &wave,
                                                     float vtln_warp) {
-  KALDIFEAT_ASSERT(wave.dim() == 1);
-
   const FrameExtractionOptions &frame_opts = computer_.GetFrameOptions();
 
-  torch::Tensor strided_input = GetStrided(wave, frame_opts);
+  torch::Tensor strided_input;
+  if (wave.dim() == 1) {
+    strided_input = GetStrided(wave, frame_opts);
+  } else {
+    KALDIFEAT_ASSERT(wave.dim() == 2);
+    KALDIFEAT_ASSERT(wave.sizes()[1] == frame_opts.WindowSize());
+    strided_input = wave;
+  }
 
   if (frame_opts.dither != 0.0f) {
     strided_input = Dither(strided_input, frame_opts.dither);

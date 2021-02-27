@@ -42,6 +42,8 @@ void PybindFbankOptions(py::module &m) {
   py::class_<Fbank>(m, "Fbank")
       .def(py::init<const FbankOptions &>(), py::arg("opts"))
       .def("dim", &Fbank::Dim)
+      .def("options", &Fbank::GetOptions,
+           py::return_value_policy::reference_internal)
       .def("compute_features", &Fbank::ComputeFeatures, py::arg("wave"),
            py::arg("vtln_warp"));
 }

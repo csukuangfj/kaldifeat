@@ -40,6 +40,7 @@ class OfflineFeatureTpl {
   torch::Tensor ComputeFeatures(const torch::Tensor &wave, float vtln_warp);
 
   int32_t Dim() const { return computer_.Dim(); }
+  const Options &GetOptions() const { return computer_.GetOptions(); }
 
   // Copy constructor.
   OfflineFeatureTpl(const OfflineFeatureTpl<F> &) = delete;

@@ -34,6 +34,11 @@ void PybindFrameExtractionOptions(py::module &m) {
       .def("__str__", [](const FrameExtractionOptions &self) -> std::string {
         return self.ToString();
       });
+
+  m.def("num_frames", &NumFrames, py::arg("num_samples"), py::arg("opts"),
+        py::arg("flush") = true);
+
+  m.def("get_strided", &GetStrided, py::arg("ave"), py::arg("opts"));
 }
 
 }  // namespace kaldifeat

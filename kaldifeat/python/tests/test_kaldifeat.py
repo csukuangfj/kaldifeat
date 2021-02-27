@@ -6,6 +6,8 @@ from pathlib import Path
 cur_dir = Path(__file__).resolve().parent
 kaldi_feat_dir = cur_dir.parent.parent.parent
 
+from typing import List
+
 import sys
 sys.path.insert(0, f'{kaldi_feat_dir}/build/lib')
 
@@ -132,10 +134,41 @@ def test_use_energy_htk_compat_false():
         assert torch.allclose(ans[:3, :].cpu(), expected, rtol=1e-3)
 
 
+def test_compute_batch():
+    data1 = read_wave()
+    data2 = read_wave()
+
+    data = [data1, data2]
+    fbank_opts = _kaldifeat.FbankOptions()
+    fbank_opts.frame_opts.dither = 0
+    fbank = _kaldifeat.Fbank(fbank_opts)
+
+    def impl(waves: List[torch.Tensor]) -> List[torch.Tensor]:
+        num_frames = [
+            _kaldifeat.num_frames(w.numel(), fbank_opts.frame_opts)
+            for w in waves
+        ]
+
+        strided = [
+            _kaldifeat.get_strided(w, fbank_opts.frame_opts) for w in waves
+        ]
+        strided = torch.cat(strided, dim=0)
+
+        features = _kaldifeat.compute(strided, fbank)
+        feature1 = features[:num_frames[0]]
+        feature2 = features[num_frames[0]:]
+        return [feature1, feature2]
+
+    feature1, feature2 = impl([data1, data2])
+    assert torch.allclose(feature1, feature2)
+
+
 def main():
     test_and_benchmark_default_parameters()
     test_use_energy_htk_compat_true()
     test_use_energy_htk_compat_false()
+
+    test_compute_batch()
 
 
 if __name__ == '__main__':
