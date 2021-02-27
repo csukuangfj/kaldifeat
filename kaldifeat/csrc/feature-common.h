@@ -42,14 +42,10 @@ class OfflineFeatureTpl {
   int32_t Dim() const { return computer_.Dim(); }
 
   // Copy constructor.
-  OfflineFeatureTpl(const OfflineFeatureTpl<F> &other)
-      : computer_(other.computer_),
-        feature_window_function_(other.feature_window_function_) {}
+  OfflineFeatureTpl(const OfflineFeatureTpl<F> &) = delete;
+  OfflineFeatureTpl<F> &operator=(const OfflineFeatureTpl<F> &) = delete;
 
  private:
-  // Disallow assignment.
-  OfflineFeatureTpl<F> &operator=(const OfflineFeatureTpl<F> &other);
-
   F computer_;
   FeatureWindowFunction feature_window_function_;
 };

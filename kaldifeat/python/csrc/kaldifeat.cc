@@ -14,14 +14,9 @@
 
 namespace kaldifeat {
 
-static torch::Tensor Compute(const torch::Tensor &wave,
-                             const FbankOptions &fbank_opts) {
-  // TODO(fangjun): wrap Fbank to Python
-
-  Fbank fbank(fbank_opts);
+static torch::Tensor Compute(const torch::Tensor &wave, Fbank *fbank) {
   float vtln_warp = 1.0f;
-
-  torch::Tensor ans = fbank.ComputeFeatures(wave, vtln_warp);
+  torch::Tensor ans = fbank->ComputeFeatures(wave, vtln_warp);
   return ans;
 }
 
@@ -32,18 +27,18 @@ PYBIND11_MODULE(_kaldifeat, m) {
   PybindMelBanksOptions(m);
   PybindFbankOptions(m);
 
-  m.def("compute", &Compute, py::arg("wave"), py::arg("fbank_opts"));
+  m.def("compute", &Compute, py::arg("wave"), py::arg("fbank"));
 
   // It verifies that the reimplementation produces the same output
   // as kaldi using default parameters with dither disabled.
   m.def(
       "_compute_with_elapsed_time",  // for benchmark only
       [](const torch::Tensor &wave,
-         const FbankOptions &fbank_opts) -> std::pair<torch::Tensor, double> {
+         Fbank *fbank) -> std::pair<torch::Tensor, double> {
         std::chrono::steady_clock::time_point begin =
             std::chrono::steady_clock::now();
 
-        torch::Tensor ans = Compute(wave, fbank_opts);
+        torch::Tensor ans = Compute(wave, fbank);
 
         std::chrono::steady_clock::time_point end =
             std::chrono::steady_clock::now();
@@ -55,7 +50,7 @@ PYBIND11_MODULE(_kaldifeat, m) {
 
         return std::make_pair(ans, elapsed_seconds);
       },
-      py::arg("wave"), py::arg("fbank_opts"));
+      py::arg("wave"), py::arg("fbank"));
 }
 
 }  // namespace kaldifeat

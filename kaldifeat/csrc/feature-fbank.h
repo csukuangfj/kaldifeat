@@ -68,8 +68,7 @@ class FbankComputer {
   ~FbankComputer();
 
   FbankComputer &operator=(const FbankComputer &) = delete;
-
-  FbankComputer(const FbankComputer &other);
+  FbankComputer(const FbankComputer &) = delete;
 
   int32_t Dim() const {
     return opts_.mel_opts.num_bins + (opts_.use_energy ? 1 : 0);

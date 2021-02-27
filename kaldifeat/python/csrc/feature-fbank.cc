@@ -22,6 +22,12 @@ void PybindFbankOptions(py::module &m) {
       .def("__str__", [](const FbankOptions &self) -> std::string {
         return self.ToString();
       });
+
+  py::class_<Fbank>(m, "Fbank")
+      .def(py::init<const FbankOptions &>(), py::arg("opts"))
+      .def("dim", &Fbank::Dim)
+      .def("compute_features", &Fbank::ComputeFeatures, py::arg("wave"),
+           py::arg("vtln_warp"));
 }
 
 }  // namespace kaldifeat

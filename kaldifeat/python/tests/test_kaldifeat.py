@@ -58,11 +58,11 @@ def read_wave() -> torch.Tensor:
 def test_and_benchmark_default_parameters():
     fbank_opts = _kaldifeat.FbankOptions()
     fbank_opts.frame_opts.dither = 0
+    fbank = _kaldifeat.Fbank(fbank_opts)
 
     data = read_wave()
 
-    ans, elapsed_seconds = _kaldifeat._compute_with_elapsed_time(
-        data, fbank_opts)
+    ans, elapsed_seconds = _kaldifeat._compute_with_elapsed_time(data, fbank)
 
     expected = read_ark_txt()
     assert torch.allclose(ans, expected, rtol=1e-3)
@@ -74,10 +74,11 @@ def test_use_energy_htk_compat_true():
     fbank_opts.frame_opts.dither = 0
     fbank_opts.use_energy = True
     fbank_opts.htk_compat = True
+    fbank = _kaldifeat.Fbank(fbank_opts)
 
     data = read_wave()
 
-    ans = _kaldifeat.compute(data, fbank_opts)
+    ans = _kaldifeat.compute(data, fbank)
 
     # ./compute-fbank-feats --dither=0 --use-energy=1 --htk-compat=1 scp:abc.scp ark,t:abc.txt
     # the first 3 rows are:
@@ -95,10 +96,11 @@ def test_use_energy_htk_compat_false():
     fbank_opts.frame_opts.dither = 0
     fbank_opts.use_energy = True
     fbank_opts.htk_compat = False
+    fbank = _kaldifeat.Fbank(fbank_opts)
 
     data = read_wave()
 
-    ans = _kaldifeat.compute(data, fbank_opts)
+    ans = _kaldifeat.compute(data, fbank)
 
     # ./compute-fbank-feats --dither=0 --use-energy=1 --htk-compat=0 scp:abc.scp ark,t:abc.txt
     # the first 3 rows are:

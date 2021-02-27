@@ -26,14 +26,6 @@ FbankComputer::FbankComputer(const FbankOptions &opts) : opts_(opts) {
   GetMelBanks(1.0f);
 }
 
-FbankComputer::FbankComputer(const FbankComputer &other)
-    : opts_(other.opts_),
-      log_energy_floor_(other.log_energy_floor_),
-      mel_banks_(other.mel_banks_) {
-  for (auto iter = mel_banks_.begin(); iter != mel_banks_.end(); ++iter)
-    iter->second = new MelBanks(*(iter->second));
-}
-
 FbankComputer::~FbankComputer() {
   for (auto iter = mel_banks_.begin(); iter != mel_banks_.end(); ++iter)
     delete iter->second;
