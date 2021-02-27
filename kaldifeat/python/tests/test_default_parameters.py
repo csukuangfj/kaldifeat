@@ -9,9 +9,10 @@ kaldi_feat_dir = cur_dir.parent.parent.parent
 import sys
 sys.path.insert(0, f'{kaldi_feat_dir}/build/lib')
 
-import torch
 import numpy as np
 import soundfile as sf
+import torch
+
 import _kaldifeat
 
 
