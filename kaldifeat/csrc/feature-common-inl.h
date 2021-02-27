@@ -20,15 +20,14 @@ torch::Tensor OfflineFeatureTpl<F>::ComputeFeatures(const torch::Tensor &wave,
 
   const FrameExtractionOptions &frame_opts = computer_.GetFrameOptions();
 
-  // TODO(fangjun): avoid clone
-  torch::Tensor strided_input = GetStrided(wave, frame_opts).clone();
+  torch::Tensor strided_input = GetStrided(wave, frame_opts);
 
   if (frame_opts.dither != 0)
     strided_input = Dither(strided_input, frame_opts.dither);
 
   if (frame_opts.remove_dc_offset) {
     torch::Tensor row_means = strided_input.mean(1).unsqueeze(1);
-    strided_input -= row_means;
+    strided_input = strided_input - row_means;
   }
 
   bool use_raw_log_energy = computer_.NeedRawLogEnergy();

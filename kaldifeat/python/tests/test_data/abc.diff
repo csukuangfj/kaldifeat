@@ -1,0 +1,30 @@
+diff --git a/src/featbin/compute-fbank-feats.cc b/src/featbin/compute-fbank-feats.cc
+index e52b30baf..63735c985 100644
+--- a/src/featbin/compute-fbank-feats.cc
++++ b/src/featbin/compute-fbank-feats.cc
+@@ -18,6 +18,8 @@
+ // See the Apache 2 License for the specific language governing permissions and
+ // limitations under the License.
+ 
++#include <chrono>
++
+ #include "base/kaldi-common.h"
+ #include "feat/feature-fbank.h"
+ #include "feat/wave-reader.h"
+@@ -145,8 +147,16 @@ int main(int argc, char *argv[]) {
+       SubVector<BaseFloat> waveform(wave_data.Data(), this_chan);
+       Matrix<BaseFloat> features;
+       try {
++        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+         fbank.ComputeFeatures(waveform, wave_data.SampFreq(),
+                               vtln_warp_local, &features);
++        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
++        std::cout << "Time difference = "
++                  << std::chrono::duration_cast<std::chrono::microseconds>(
++                         end - begin)
++                             .count() /
++                         1000000.
++                  << "[s]" << std::endl;
+       } catch (...) {
+         KALDI_WARN << "Failed to compute features for utterance " << utt;
+         continue;

@@ -36,7 +36,34 @@ static void TestPad() {
   std::cout << b << "\n";
 }
 
+static void TestGetStrided() {
+  // 0 1 2 3 4 5
+  //
+  //
+  // 0 1 2 3
+  // 2 3 4 5
+
+  torch::Tensor a = torch::arange(0, 6).to(torch::kFloat);
+  torch::Tensor b = a.as_strided({2, 4}, {2, 1});
+  // b = b.clone();
+  std::cout << a << "\n";
+  std::cout << b << "\n";
+  std::cout << b.mean(1).unsqueeze(1) << "\n";
+  b = b - b.mean(1).unsqueeze(1);
+  std::cout << a << "\n";
+  std::cout << b << "\n";
+}
+
+static void TestDither() {
+  torch::Tensor a = torch::arange(0, 6).reshape({2, 3}).to(torch::kFloat);
+  torch::Tensor b = torch::arange(0, 6).reshape({2, 3}).to(torch::kFloat) * 0.1;
+  std::cout << a << "\n";
+  std::cout << b << "\n";
+  std::cout << (a + b * 2) << "\n";
+}
+
 int main() {
-  TestPad();
+  // TestDither();
+  TestGetStrided();
   return 0;
 }
