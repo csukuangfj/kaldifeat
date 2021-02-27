@@ -79,7 +79,8 @@ std::ostream &operator<<(std::ostream &os, const FrameExtractionOptions &opts);
 class FeatureWindowFunction {
  public:
   FeatureWindowFunction() = default;
-  explicit FeatureWindowFunction(const FrameExtractionOptions &opts);
+  FeatureWindowFunction(const FrameExtractionOptions &opts,
+                        torch::Device device);
   void Apply(torch::Tensor *wave) const;
 
  private:

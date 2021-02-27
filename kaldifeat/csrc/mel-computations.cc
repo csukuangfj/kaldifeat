@@ -88,7 +88,7 @@ float MelBanks::VtlnWarpMelFreq(
 
 MelBanks::MelBanks(const MelBanksOptions &opts,
                    const FrameExtractionOptions &frame_opts,
-                   float vtln_warp_factor)
+                   float vtln_warp_factor, torch::Device device)
     : htk_mode_(opts.htk_mode) {
   int32_t num_bins = opts.num_bins;
   if (num_bins < 3) KALDIFEAT_ERR << "Must have at least 3 mel bins";
@@ -182,6 +182,10 @@ MelBanks::MelBanks(const MelBanksOptions &opts,
   if (debug_) KALDIFEAT_LOG << bins_mat_;
 
   bins_mat_.t_();
+
+  if (bins_mat_.device() != device) {
+    bins_mat_ = bins_mat_.to(device);
+  }
 }
 
 torch::Tensor MelBanks::Compute(const torch::Tensor &spectrum) const {

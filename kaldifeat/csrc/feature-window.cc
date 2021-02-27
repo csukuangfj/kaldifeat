@@ -21,8 +21,8 @@ std::ostream &operator<<(std::ostream &os, const FrameExtractionOptions &opts) {
   return os;
 }
 
-FeatureWindowFunction::FeatureWindowFunction(
-    const FrameExtractionOptions &opts) {
+FeatureWindowFunction::FeatureWindowFunction(const FrameExtractionOptions &opts,
+                                             torch::Device device) {
   int32_t frame_length = opts.WindowSize();
   KALDIFEAT_ASSERT(frame_length > 0);
 
@@ -54,6 +54,9 @@ FeatureWindowFunction::FeatureWindowFunction(
   }
 
   window = window.unsqueeze(0);
+  if (window.device() != device) {
+    window = window.to(device);
+  }
 }
 
 void FeatureWindowFunction::Apply(torch::Tensor *wave) const {

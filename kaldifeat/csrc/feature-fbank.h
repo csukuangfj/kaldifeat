@@ -12,6 +12,7 @@
 #include "kaldifeat/csrc/feature-common.h"
 #include "kaldifeat/csrc/feature-window.h"
 #include "kaldifeat/csrc/mel-computations.h"
+#include "torch/torch.h"
 
 namespace kaldifeat {
 
@@ -37,7 +38,9 @@ struct FbankOptions {
   // analysis, else magnitude.
   bool use_power = true;
 
-  FbankOptions() { mel_opts.num_bins = 23; }
+  torch::Device device;
+
+  FbankOptions() : device("cpu") { mel_opts.num_bins = 23; }
 
   std::string ToString() const {
     std::ostringstream os;
@@ -54,6 +57,7 @@ struct FbankOptions {
     os << "htk_compat: " << htk_compat << "\n";
     os << "use_log_fbank: " << use_log_fbank << "\n";
     os << "use_power: " << use_power << "\n";
+    os << "device: " << device << "\n";
     return os.str();
   }
 };

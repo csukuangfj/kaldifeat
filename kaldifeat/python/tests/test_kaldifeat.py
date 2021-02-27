@@ -56,61 +56,80 @@ def read_wave() -> torch.Tensor:
 
 
 def test_and_benchmark_default_parameters():
-    fbank_opts = _kaldifeat.FbankOptions()
-    fbank_opts.frame_opts.dither = 0
-    fbank = _kaldifeat.Fbank(fbank_opts)
+    devices = [torch.device('cpu')]
+    if torch.cuda.is_available():
+        devices.append(torch.device('cuda', 0))
 
-    data = read_wave()
+    for device in devices:
+        fbank_opts = _kaldifeat.FbankOptions()
+        fbank_opts.frame_opts.dither = 0
+        fbank_opts.set_device(device)
+        fbank = _kaldifeat.Fbank(fbank_opts)
 
-    ans, elapsed_seconds = _kaldifeat._compute_with_elapsed_time(data, fbank)
+        data = read_wave().to(device)
 
-    expected = read_ark_txt()
-    assert torch.allclose(ans, expected, rtol=1e-3)
-    print('elapsed seconds:', elapsed_seconds)
+        ans, elapsed_seconds = _kaldifeat._compute_with_elapsed_time(
+            data, fbank)
+
+        expected = read_ark_txt()
+        assert torch.allclose(ans.cpu(), expected, rtol=1e-3)
+        print(f'elapsed seconds {device}:', elapsed_seconds)
 
 
 def test_use_energy_htk_compat_true():
-    fbank_opts = _kaldifeat.FbankOptions()
-    fbank_opts.frame_opts.dither = 0
-    fbank_opts.use_energy = True
-    fbank_opts.htk_compat = True
-    fbank = _kaldifeat.Fbank(fbank_opts)
+    devices = [torch.device('cpu')]
+    if torch.cuda.is_available():
+        devices.append(torch.device('cuda', 0))
 
-    data = read_wave()
+    for device in devices:
+        fbank_opts = _kaldifeat.FbankOptions()
+        fbank_opts.frame_opts.dither = 0
+        fbank_opts.set_device(device)
+        fbank_opts.use_energy = True
+        fbank_opts.htk_compat = True
+        fbank = _kaldifeat.Fbank(fbank_opts)
 
-    ans = _kaldifeat.compute(data, fbank)
+        data = read_wave().to(device)
 
-    # ./compute-fbank-feats --dither=0 --use-energy=1 --htk-compat=1 scp:abc.scp ark,t:abc.txt
-    # the first 3 rows are:
-    expected_str = '''
-        15.576 21.93211 25.55334 24.08283 15.93041 12.47176 10.47909 9.024426 7.899537 6.935482 6.21563 6.035741 6.140291 5.94696 6.146772 6.860236 6.702379 7.087324 6.929666 7.66336 7.935287 8.405977 8.309303 25.38995
-        15.5755 21.93212 25.55334 24.08282 15.93044 12.47107 10.47753 9.026523 7.901362 6.939464 6.189109 5.926141 5.678882 5.553694 6.006057 6.066478 6.500169 7.277717 7.248817 7.699819 7.990362 8.033764 8.220113 25.38996
-        15.57543 21.93211 25.55334 24.08282 15.93052 12.47129 10.4782 9.028108 7.90429 6.946663 6.310408 5.903729 5.777827 6.027511 6.000434 6.190129 5.968217 6.455313 7.450428 7.993948 8.512851 8.341401 8.14073 25.38995
-    '''
-    expected = parse_str(expected_str)
-    assert torch.allclose(ans[:3, :], expected, rtol=1e-3)
+        ans = _kaldifeat.compute(data, fbank)
+
+        # ./compute-fbank-feats --dither=0 --use-energy=1 --htk-compat=1 scp:abc.scp ark,t:abc.txt
+        # the first 3 rows are:
+        expected_str = '''
+            15.576 21.93211 25.55334 24.08283 15.93041 12.47176 10.47909 9.024426 7.899537 6.935482 6.21563 6.035741 6.140291 5.94696 6.146772 6.860236 6.702379 7.087324 6.929666 7.66336 7.935287 8.405977 8.309303 25.38995
+            15.5755 21.93212 25.55334 24.08282 15.93044 12.47107 10.47753 9.026523 7.901362 6.939464 6.189109 5.926141 5.678882 5.553694 6.006057 6.066478 6.500169 7.277717 7.248817 7.699819 7.990362 8.033764 8.220113 25.38996
+            15.57543 21.93211 25.55334 24.08282 15.93052 12.47129 10.4782 9.028108 7.90429 6.946663 6.310408 5.903729 5.777827 6.027511 6.000434 6.190129 5.968217 6.455313 7.450428 7.993948 8.512851 8.341401 8.14073 25.38995
+        '''
+        expected = parse_str(expected_str)
+        assert torch.allclose(ans[:3, :].cpu(), expected, rtol=1e-3)
 
 
 def test_use_energy_htk_compat_false():
-    fbank_opts = _kaldifeat.FbankOptions()
-    fbank_opts.frame_opts.dither = 0
-    fbank_opts.use_energy = True
-    fbank_opts.htk_compat = False
-    fbank = _kaldifeat.Fbank(fbank_opts)
+    devices = [torch.device('cpu')]
+    if torch.cuda.is_available():
+        devices.append(torch.device('cuda', 0))
 
-    data = read_wave()
+    for device in devices:
+        fbank_opts = _kaldifeat.FbankOptions()
+        fbank_opts.frame_opts.dither = 0
+        fbank_opts.use_energy = True
+        fbank_opts.htk_compat = False
+        fbank_opts.set_device(device)
+        fbank = _kaldifeat.Fbank(fbank_opts)
 
-    ans = _kaldifeat.compute(data, fbank)
+        data = read_wave().to(device)
 
-    # ./compute-fbank-feats --dither=0 --use-energy=1 --htk-compat=0 scp:abc.scp ark,t:abc.txt
-    # the first 3 rows are:
-    expected_str = '''
-      25.38995 15.576 21.93211 25.55334 24.08283 15.93041 12.47176 10.47909 9.024426 7.899537 6.935482 6.21563 6.035741 6.140291 5.94696 6.146772 6.860236 6.702379 7.087324 6.929666 7.66336 7.935287 8.405977 8.309303 
-      25.38996 15.5755 21.93212 25.55334 24.08282 15.93044 12.47107 10.47753 9.026523 7.901362 6.939464 6.189109 5.926141 5.678882 5.553694 6.006057 6.066478 6.500169 7.277717 7.248817 7.699819 7.990362 8.033764 8.220113 
-      25.38995 15.57543 21.93211 25.55334 24.08282 15.93052 12.47129 10.4782 9.028108 7.90429 6.946663 6.310408 5.903729 5.777827 6.027511 6.000434 6.190129 5.968217 6.455313 7.450428 7.993948 8.512851 8.341401 8.14073 
-    '''
-    expected = parse_str(expected_str)
-    assert torch.allclose(ans[:3, :], expected, rtol=1e-3)
+        ans = _kaldifeat.compute(data, fbank)
+
+        # ./compute-fbank-feats --dither=0 --use-energy=1 --htk-compat=0 scp:abc.scp ark,t:abc.txt
+        # the first 3 rows are:
+        expected_str = '''
+          25.38995 15.576 21.93211 25.55334 24.08283 15.93041 12.47176 10.47909 9.024426 7.899537 6.935482 6.21563 6.035741 6.140291 5.94696 6.146772 6.860236 6.702379 7.087324 6.929666 7.66336 7.935287 8.405977 8.309303 
+          25.38996 15.5755 21.93212 25.55334 24.08282 15.93044 12.47107 10.47753 9.026523 7.901362 6.939464 6.189109 5.926141 5.678882 5.553694 6.006057 6.066478 6.500169 7.277717 7.248817 7.699819 7.990362 8.033764 8.220113 
+          25.38995 15.57543 21.93211 25.55334 24.08282 15.93052 12.47129 10.4782 9.028108 7.90429 6.946663 6.310408 5.903729 5.777827 6.027511 6.000434 6.190129 5.968217 6.455313 7.450428 7.993948 8.512851 8.341401 8.14073 
+        '''
+        expected = parse_str(expected_str)
+        assert torch.allclose(ans[:3, :].cpu(), expected, rtol=1e-3)
 
 
 def main():

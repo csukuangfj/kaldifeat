@@ -37,7 +37,8 @@ const MelBanks *FbankComputer::GetMelBanks(float vtln_warp) {
   // std::map<float, MelBanks *>::iterator iter = mel_banks_.find(vtln_warp);
   auto iter = mel_banks_.find(vtln_warp);
   if (iter == mel_banks_.end()) {
-    this_mel_banks = new MelBanks(opts_.mel_opts, opts_.frame_opts, vtln_warp);
+    this_mel_banks =
+        new MelBanks(opts_.mel_opts, opts_.frame_opts, vtln_warp, opts_.device);
     mel_banks_[vtln_warp] = this_mel_banks;
   } else {
     this_mel_banks = iter->second;

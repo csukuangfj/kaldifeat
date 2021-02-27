@@ -20,7 +20,7 @@ class OfflineFeatureTpl {
   // using the options class, that we cache at this level.
   OfflineFeatureTpl(const Options &opts)
       : computer_(opts),
-        feature_window_function_(computer_.GetFrameOptions()) {}
+        feature_window_function_(computer_.GetFrameOptions(), opts.device) {}
 
   /**
      Computes the features for one file (one sequence of features).

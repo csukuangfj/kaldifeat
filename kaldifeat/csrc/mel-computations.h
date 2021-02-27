@@ -71,7 +71,8 @@ class MelBanks {
                                float vtln_warp_factor, float mel_freq);
 
   MelBanks(const MelBanksOptions &opts,
-           const FrameExtractionOptions &frame_opts, float vtln_warp_factor);
+           const FrameExtractionOptions &frame_opts, float vtln_warp_factor,
+           torch::Device device);
 
   int32_t NumBins() const { return static_cast<int32_t>(bins_mat_.sizes()[0]); }
 
