@@ -13,6 +13,11 @@
 
 namespace kaldifeat {
 
+std::ostream &operator<<(std::ostream &os, const FbankOptions &opts) {
+  os << opts.ToString();
+  return os;
+}
+
 FbankComputer::FbankComputer(const FbankOptions &opts) : opts_(opts) {
   if (opts.energy_floor > 0.0f) log_energy_floor_ = logf(opts.energy_floor);
 
@@ -78,11 +83,6 @@ torch::Tensor FbankComputer::Compute(torch::Tensor signal_raw_log_energy,
   // Use power instead of magnitude if requested.
   if (opts_.use_power) spectrum.pow_(2);
 
-#if 0
-  int32_t mel_offset = ((opts_.use_energy && !opts_.htk_compat) ? 1 : 0);
-  SubVector<float> mel_energies(*feature, mel_offset, opts_.mel_opts.num_bins);
-#endif
-
   // TODO(fangjun): remove the last column of spectrum
   torch::Tensor mel_energies = mel_banks.Compute(spectrum);
   if (opts_.use_log_fbank) {
@@ -90,17 +90,26 @@ torch::Tensor FbankComputer::Compute(torch::Tensor signal_raw_log_energy,
     mel_energies = torch::clamp_min(mel_energies, kEps).log();
   }
 
+  // if use_energy is true, then we get an extra bin. That is,
+  // if num_mel_bins is 23, the feature will contain 24 bins.
+  //
+  // if htk_compat is false, then the 0th bin is the log energy
+  // if htk_compat is true, then the last bin is the log energy
+
   // Copy energy as first value (or the last, if htk_compat == true).
   if (opts_.use_energy) {
-#if 0
-    if (opts_.energy_floor > 0.0 && signal_raw_log_energy < log_energy_floor_) {
-      signal_raw_log_energy = log_energy_floor_;
+    if (opts_.energy_floor > 0.0f) {
+      signal_raw_log_energy =
+          torch::clamp_min(signal_raw_log_energy, log_energy_floor_);
     }
-#endif
-    int32_t energy_index = opts_.htk_compat ? opts_.mel_opts.num_bins : 0;
-    energy_index = 0;  // TODO(fangjun): fix it
 
-    mel_energies.index({"...", energy_index}) = signal_raw_log_energy;
+    signal_raw_log_energy.unsqueeze_(1);
+
+    if (opts_.htk_compat) {
+      mel_energies = torch::cat({mel_energies, signal_raw_log_energy}, 1);
+    } else {
+      mel_energies = torch::cat({signal_raw_log_energy, mel_energies}, 1);
+    }
   }
 
   return mel_energies;

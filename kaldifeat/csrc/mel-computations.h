@@ -32,7 +32,21 @@ struct MelBanksOptions {
   // Enables more exact compatibility with HTK, for testing purposes.  Affects
   // mel-energy flooring and reproduces a bug in HTK.
   bool htk_mode = false;
+
+  std::string ToString() const {
+    std::ostringstream os;
+    os << "num_bins: " << num_bins << "\n";
+    os << "low_freq: " << low_freq << "\n";
+    os << "high_freq: " << high_freq << "\n";
+    os << "vtln_low: " << vtln_low << "\n";
+    os << "vtln_high: " << vtln_high << "\n";
+    os << "debug_mel: " << debug_mel << "\n";
+    os << "htk_mode: " << htk_mode << "\n";
+    return os.str();
+  }
 };
+
+std::ostream &operator<<(std::ostream &os, const MelBanksOptions &opts);
 
 class MelBanks {
  public:

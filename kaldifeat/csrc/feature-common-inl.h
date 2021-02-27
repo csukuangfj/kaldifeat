@@ -15,15 +15,14 @@ template <class F>
 torch::Tensor OfflineFeatureTpl<F>::ComputeFeatures(const torch::Tensor &wave,
                                                     float vtln_warp) {
   KALDIFEAT_ASSERT(wave.dim() == 1);
-  int32_t rows_out = NumFrames(wave.sizes()[0], computer_.GetFrameOptions());
-  int32_t cols_out = computer_.Dim();
 
   const FrameExtractionOptions &frame_opts = computer_.GetFrameOptions();
 
   torch::Tensor strided_input = GetStrided(wave, frame_opts);
 
-  if (frame_opts.dither != 0)
+  if (frame_opts.dither != 0.0f) {
     strided_input = Dither(strided_input, frame_opts.dither);
+  }
 
   if (frame_opts.remove_dc_offset) {
     torch::Tensor row_means = strided_input.mean(1).unsqueeze(1);
@@ -37,12 +36,14 @@ torch::Tensor OfflineFeatureTpl<F>::ComputeFeatures(const torch::Tensor &wave,
   constexpr float kEps = 1.1920928955078125e-07f;
 
   if (use_raw_log_energy) {
+    // it is true iff use_energy==true and row_energy==true
     log_energy_pre_window =
         torch::clamp_min(strided_input.pow(2).sum(1), kEps).log();
   }
 
-  if (frame_opts.preemph_coeff != 0.0f)
+  if (frame_opts.preemph_coeff != 0.0f) {
     Preemphasize(frame_opts.preemph_coeff, &strided_input);
+  }
 
   feature_window_function_.Apply(&strided_input);
 

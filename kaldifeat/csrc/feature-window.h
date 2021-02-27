@@ -39,9 +39,9 @@ struct FrameExtractionOptions {
   bool round_to_power_of_two = true;
   float blackman_coeff = 0.42f;
   bool snip_edges = true;
-  bool allow_downsample = false;
-  bool allow_upsample = false;
-  int32_t max_feature_vectors = -1;
+  // bool allow_downsample = false;
+  // bool allow_upsample = false;
+  // int32_t max_feature_vectors = -1;
 
   int32_t WindowShift() const {
     return static_cast<int32_t>(samp_freq * 0.001f * frame_shift_ms);
@@ -53,7 +53,28 @@ struct FrameExtractionOptions {
     return (round_to_power_of_two ? RoundUpToNearestPowerOfTwo(WindowSize())
                                   : WindowSize());
   }
+  std::string ToString() const {
+    std::ostringstream os;
+#define KALDIFEAT_PRINT(x) os << #x << ": " << x << "\n"
+    KALDIFEAT_PRINT(samp_freq);
+    KALDIFEAT_PRINT(frame_shift_ms);
+    KALDIFEAT_PRINT(frame_length_ms);
+    KALDIFEAT_PRINT(dither);
+    KALDIFEAT_PRINT(preemph_coeff);
+    KALDIFEAT_PRINT(remove_dc_offset);
+    KALDIFEAT_PRINT(window_type);
+    KALDIFEAT_PRINT(round_to_power_of_two);
+    KALDIFEAT_PRINT(blackman_coeff);
+    KALDIFEAT_PRINT(snip_edges);
+    // KALDIFEAT_PRINT(allow_downsample);
+    // KALDIFEAT_PRINT(allow_upsample);
+    // KALDIFEAT_PRINT(max_feature_vectors);
+#undef KALDIFEAT_PRINT
+    return os.str();
+  }
 };
+
+std::ostream &operator<<(std::ostream &os, const FrameExtractionOptions &opts);
 
 class FeatureWindowFunction {
  public:

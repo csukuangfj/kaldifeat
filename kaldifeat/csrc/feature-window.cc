@@ -16,6 +16,11 @@
 
 namespace kaldifeat {
 
+std::ostream &operator<<(std::ostream &os, const FrameExtractionOptions &opts) {
+  os << opts.ToString();
+  return os;
+}
+
 FeatureWindowFunction::FeatureWindowFunction(
     const FrameExtractionOptions &opts) {
   int32_t frame_length = opts.WindowSize();

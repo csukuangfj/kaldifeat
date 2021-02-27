@@ -10,6 +10,11 @@
 
 namespace kaldifeat {
 
+std::ostream &operator<<(std::ostream &os, const MelBanksOptions &opts) {
+  os << opts.ToString();
+  return os;
+}
+
 float MelBanks::VtlnWarpFreq(
     float vtln_low_cutoff,  // upper+lower frequency cutoffs for VTLN.
     float vtln_high_cutoff,

@@ -20,12 +20,16 @@ struct FbankOptions {
   MelBanksOptions mel_opts;
   // append an extra dimension with energy to the filter banks
   bool use_energy = false;
-  float energy_floor = 0.0f;
+  float energy_floor = 0.0f;  // active iff use_energy==true
 
-  // If true, compute energy before preemphasis and windowing
-  bool raw_energy = true;
+  // If true, compute log_energy before preemphasis and windowing
+  // If false, compute log_energy after preemphasis ans windowing
+  bool raw_energy = true;  // active iff use_energy==true
+
   // If true, put energy last (if using energy)
-  bool htk_compat = false;
+  // If false, put energy first
+  bool htk_compat = false;  // active iff use_energy==true
+
   // if true (default), produce log-filterbank, else linear
   bool use_log_fbank = true;
 
@@ -34,7 +38,27 @@ struct FbankOptions {
   bool use_power = true;
 
   FbankOptions() { mel_opts.num_bins = 23; }
+
+  std::string ToString() const {
+    std::ostringstream os;
+    os << "frame_opts: \n";
+    os << frame_opts << "\n";
+    os << "\n";
+
+    os << "mel_opts: \n";
+    os << mel_opts << "\n";
+
+    os << "use_energy: " << use_energy << "\n";
+    os << "energy_floor: " << energy_floor << "\n";
+    os << "raw_energy: " << raw_energy << "\n";
+    os << "htk_compat: " << htk_compat << "\n";
+    os << "use_log_fbank: " << use_log_fbank << "\n";
+    os << "use_power: " << use_power << "\n";
+    return os.str();
+  }
 };
+
+std::ostream &operator<<(std::ostream &os, const FbankOptions &opts);
 
 class FbankComputer {
  public:
@@ -51,12 +75,15 @@ class FbankComputer {
     return opts_.mel_opts.num_bins + (opts_.use_energy ? 1 : 0);
   }
 
+  // if true, compute log_energy_pre_window but after dithering and dc removal
   bool NeedRawLogEnergy() const { return opts_.use_energy && opts_.raw_energy; }
 
   const FrameExtractionOptions &GetFrameOptions() const {
     return opts_.frame_opts;
   }
 
+  // signal_raw_log_energy is log_energy_pre_window, which is not empty
+  // iff NeedRawLogEnergy() returns true.
   torch::Tensor Compute(torch::Tensor signal_raw_log_energy, float vtln_warp,
                         const torch::Tensor &signal_frame);
 

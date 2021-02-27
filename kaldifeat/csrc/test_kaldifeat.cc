@@ -62,8 +62,18 @@ static void TestDither() {
   std::cout << (a + b * 2) << "\n";
 }
 
+static void TestCat() {
+  torch::Tensor a = torch::arange(0, 6).reshape({2, 3}).to(torch::kFloat);
+  torch::Tensor b = torch::arange(0, 2).reshape({2, 1}).to(torch::kFloat) * 0.1;
+  torch::Tensor c = torch::cat({a, b}, 1);
+  torch::Tensor d = torch::cat({b, a}, 1);
+  std::cout << a << "\n";
+  std::cout << b << "\n";
+  std::cout << c << "\n";
+  std::cout << d << "\n";
+}
+
 int main() {
-  // TestDither();
-  TestGetStrided();
+  TestCat();
   return 0;
 }
