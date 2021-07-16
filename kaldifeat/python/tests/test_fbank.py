@@ -32,8 +32,8 @@ def read_wave(filename) -> torch.Tensor:
 
 def test_fbank():
     device = torch.device("cpu")
-    if torch.cuda.is_available():
-        device = torch.device("cuda", 0)
+    #  if torch.cuda.is_available():
+    #      device = torch.device("cuda", 0)
 
     wave0 = read_wave("test_data/test.wav")
     wave1 = read_wave("test_data/test2.wav")
@@ -61,8 +61,8 @@ def test_fbank():
 
     # To compute fbank features for only a specified frame
     audio_frames = fbank.convert_samples_to_frames(wave0)
-    feature_frame_1 = fbank.compute(audio_frames[1])
-    feature_frame_10 = fbank.compute(audio_frames[10])
+    feature_frame_1 = fbank.compute(audio_frames[1:2])
+    feature_frame_10 = fbank.compute(audio_frames[10:11])
 
     assert torch.allclose(features0[1], feature_frame_1)
     assert torch.allclose(features0[10], feature_frame_10)
