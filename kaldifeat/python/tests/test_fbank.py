@@ -68,5 +68,41 @@ def test_fbank():
     assert torch.allclose(features0[10], feature_frame_10)
 
 
+def test_benchmark():
+    # You have to run ./test_data/run.sh to generate test_data/test-1hour.wav
+    device = torch.device("cpu")
+    #  device = torch.device('cuda:0')
+    wave = read_wave("test_data/test-1hour.wav").to(device)
+    opts = kaldifeat.FbankOptions()
+    opts.frame_opts.dither = 0
+    opts.device = device
+    opts.mel_opts.num_bins = 80
+
+    fbank = kaldifeat.Fbank(opts)
+
+    # 1 seconds has 100 frames
+    chunk_size = 100 * 10  # 10 seconds
+    audio_frames = fbank.convert_samples_to_frames(wave)
+    num_chunks = audio_frames.size(0) // chunk_size
+
+    features = []
+    for i in range(num_chunks):
+        start = i * chunk_size
+        end = start + chunk_size
+        this_chunk = fbank.compute(audio_frames[start:end])
+        features.append(this_chunk)
+
+    if end < audio_frames.size(0):
+        last_chunk = fbank.compute(audio_frames[end:])
+        features.append(last_chunk)
+
+    features = torch.cat(features, dim=0)
+
+    # watch -n 0.2 free -m
+    #  features2 = fbank(wave)
+    #  assert torch.allclose(features, features2)
+
+
 if __name__ == "__main__":
     test_fbank()
+    #  test_benchmark()

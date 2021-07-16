@@ -41,3 +41,9 @@ if [ ! -f test-40-no-snip-edges.txt ]; then
   compute-fbank-feats --dither=0 --num-mel-bins=40 --snip-edges=0 \
     scp:test.scp ark,t:test-40-no-snip-edges.txt
 fi
+
+if [ ! -f test-1hour.wav ]; then
+  # generate a wav of one hour, containing a sine-wave
+  # swept from 300 Hz to 3300 Hz
+  sox -n -r 16000 -b 16 test-1hour.wav synth 3600 sine 300-3300
+fi
