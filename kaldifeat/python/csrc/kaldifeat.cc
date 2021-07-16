@@ -27,7 +27,7 @@ PYBIND11_MODULE(_kaldifeat, m) {
   PybindMelBanksOptions(m);
   PybindFbankOptions(m);
 
-  m.def("compute", &Compute, py::arg("wave"), py::arg("fbank"));
+  m.def("compute_fbank_feats", &Compute, py::arg("wave"), py::arg("fbank"));
 
   // It verifies that the reimplementation produces the same output
   // as kaldi using default parameters with dither disabled.

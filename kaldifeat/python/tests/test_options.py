@@ -52,6 +52,7 @@ def test_fbank_options():
     opts.use_energy = False
     opts.use_log_fbank = True
     opts.use_power = True
+    opts.device = "cuda:0"
 
     frame_opts.blackman_coeff = 0.42
     frame_opts.dither = 1
@@ -75,8 +76,8 @@ def test_fbank_options():
 
 
 def main():
-    #  test_frame_extraction_options()
-    #  test_mel_banks_options()
+    test_frame_extraction_options()
+    test_mel_banks_options()
     test_fbank_options()
 
 

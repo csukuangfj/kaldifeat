@@ -5,6 +5,9 @@
 import re
 
 import setuptools
+import torch
+
+from cmake.cmake_extension import BuildExtension, bdist_wheel, cmake_extension
 
 
 def read_long_description():
@@ -22,7 +25,20 @@ def get_package_version():
     return latest_version
 
 
+def get_pytorch_version():
+    # if it is 1.7.1+cuda101, then strip +cuda101
+    return torch.__version__.split("+")[0]
+
+
+install_requires = [
+    f"torch=={get_pytorch_version()}",
+]
+
+
 package_name = "kaldifeat"
+
+with open("kaldifeat/python/kaldifeat/__init__.py", "a") as f:
+    f.write(f"__version__ = '{get_package_version()}'\n")
 
 setuptools.setup(
     name=package_name,
@@ -30,16 +46,14 @@ setuptools.setup(
     author="Fangjun Kuang",
     author_email="csukuangfj@gmail.com",
     data_files=[("", ["LICENSE", "README.md"])],
-    package_dir={
-        package_name: "kaldifeat/python/kaldifeat",
-    },
+    package_dir={package_name: "kaldifeat/python/kaldifeat"},
     packages=[package_name],
+    install_requires=install_requires,
     url="https://github.com/csukuangfj/kaldifeat",
     long_description=read_long_description(),
     long_description_content_type="text/markdown",
-    #  ext_modules=[cmake_extension('_kaldifeat')],
-    #  cmdclass={'build_ext': BuildExtension},
-    zip_safe=False,
+    ext_modules=[cmake_extension("_kaldifeat")],
+    cmdclass={"build_ext": BuildExtension, "bdist_wheel": bdist_wheel},
     classifiers=[
         "Programming Language :: C++",
         "Programming Language :: Python",
@@ -52,3 +66,12 @@ setuptools.setup(
     python_requires=">=3.6.0",
     license="Apache licensed, as found in the LICENSE file",
 )
+
+# remove the line __version__ from kaldifeat/python/kaldifeat/__init__.py
+with open("kaldifeat/python/kaldifeat/__init__.py", "r") as f:
+    lines = f.readlines()
+
+with open("kaldifeat/python/kaldifeat/__init__.py", "w") as f:
+    for line in lines:
+        if "__version__" not in line:
+            f.write(line)
