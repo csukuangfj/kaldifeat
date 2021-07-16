@@ -9,6 +9,12 @@ from pathlib import Path
 import setuptools
 from setuptools.command.build_ext import build_ext
 
+
+def is_for_pypi():
+    ans = os.environ.get("KALDIFEAT_IS_FOR_PYPI", None)
+    return ans is not None
+
+
 try:
     from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
 
@@ -17,11 +23,12 @@ try:
             _bdist_wheel.finalize_options(self)
             # In this case, the generated wheel has a name in the form
             # k2-xxx-pyxx-none-any.whl
-            #  self.root_is_pure = True
-
-            # The generated wheel has a name ending with
-            # -linux_x86_64.whl
-            self.root_is_pure = False
+            if is_for_pypi():
+                self.root_is_pure = True
+            else:
+                # The generated wheel has a name ending with
+                # -linux_x86_64.whl
+                self.root_is_pure = False
 
 
 except ImportError:
