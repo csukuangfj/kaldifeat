@@ -11,6 +11,12 @@ if [ ! -f test.wav ]; then
   sox -n -r 16000 -b 16 test.wav synth 1.2 sine 300-3300
 fi
 
+if [ ! -f test2.wav ]; then
+  # generate a wav of 0.5 seconds, containing a sine-wave
+  # swept from 300 Hz to 3300 Hz
+  sox -n -r 16000 -b 16 test2.wav synth 0.5 sine 300-3300
+fi
+
 echo "1 test.wav" > test.scp
 
 # We disable dither for testing

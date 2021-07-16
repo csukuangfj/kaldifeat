@@ -52,7 +52,7 @@ def test_and_benchmark_default_parameters():
     for device in devices:
         fbank_opts = _kaldifeat.FbankOptions()
         fbank_opts.frame_opts.dither = 0
-        fbank_opts.set_device(device)
+        fbank_opts.device = device
         fbank = _kaldifeat.Fbank(fbank_opts)
 
         data = read_wave().to(device)
@@ -74,14 +74,14 @@ def test_use_energy_htk_compat_true():
     for device in devices:
         fbank_opts = _kaldifeat.FbankOptions()
         fbank_opts.frame_opts.dither = 0
-        fbank_opts.set_device(device)
+        fbank_opts.device = device
         fbank_opts.use_energy = True
         fbank_opts.htk_compat = True
         fbank = _kaldifeat.Fbank(fbank_opts)
 
         data = read_wave().to(device)
 
-        ans = _kaldifeat.compute(data, fbank)
+        ans = _kaldifeat.compute_fbank_feats(data, fbank)
 
         expected = read_ark_txt("test-htk.txt")
         assert torch.allclose(ans.cpu(), expected, rtol=1e-2)
@@ -97,12 +97,12 @@ def test_use_energy_htk_compat_false():
         fbank_opts.frame_opts.dither = 0
         fbank_opts.use_energy = True
         fbank_opts.htk_compat = False
-        fbank_opts.set_device(device)
+        fbank_opts.device = device
         fbank = _kaldifeat.Fbank(fbank_opts)
 
         data = read_wave().to(device)
 
-        ans = _kaldifeat.compute(data, fbank)
+        ans = _kaldifeat.compute_fbank_feats(data, fbank)
 
         expected = read_ark_txt("test-with-energy.txt")
         assert torch.allclose(ans.cpu(), expected, rtol=1e-2)
@@ -117,12 +117,12 @@ def test_40_mel():
         fbank_opts = _kaldifeat.FbankOptions()
         fbank_opts.frame_opts.dither = 0
         fbank_opts.mel_opts.num_bins = 40
-        fbank_opts.set_device(device)
+        fbank_opts.device = device
         fbank = _kaldifeat.Fbank(fbank_opts)
 
         data = read_wave().to(device)
 
-        ans = _kaldifeat.compute(data, fbank)
+        ans = _kaldifeat.compute_fbank_feats(data, fbank)
 
         expected = read_ark_txt("test-40.txt")
         assert torch.allclose(ans.cpu(), expected, rtol=1e-1)
@@ -138,12 +138,12 @@ def test_40_mel_no_snip_edges():
         fbank_opts.frame_opts.snip_edges = False
         fbank_opts.frame_opts.dither = 0
         fbank_opts.mel_opts.num_bins = 40
-        fbank_opts.set_device(device)
+        fbank_opts.device = device
         fbank = _kaldifeat.Fbank(fbank_opts)
 
         data = read_wave().to(device)
 
-        ans = _kaldifeat.compute(data, fbank)
+        ans = _kaldifeat.compute_fbank_feats(data, fbank)
 
         expected = read_ark_txt("test-40-no-snip-edges.txt")
         assert torch.allclose(ans.cpu(), expected, rtol=1e-2)
@@ -161,7 +161,7 @@ def test_compute_batch():
         fbank_opts = _kaldifeat.FbankOptions()
         fbank_opts.frame_opts.dither = 0
         fbank_opts.frame_opts.snip_edges = False
-        fbank_opts.set_device(device)
+        fbank_opts.device = device
         fbank = _kaldifeat.Fbank(fbank_opts)
 
         def impl(waves: List[torch.Tensor]) -> List[torch.Tensor]:
@@ -175,7 +175,9 @@ def test_compute_batch():
             ]
             strided = torch.cat(strided, dim=0)
 
-            features = _kaldifeat.compute(strided, fbank).split(num_frames)
+            features = _kaldifeat.compute_fbank_feats(strided, fbank).split(
+                num_frames
+            )
 
             return features
 

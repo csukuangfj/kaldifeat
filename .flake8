@@ -1,5 +1,9 @@
 [flake8]
 max-line-length = 80
 
+exclude =
+  .git,
+  kaldifeat/python/kaldifeat/__init__.py
+
 ignore =
   E402
