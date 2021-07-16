@@ -17,15 +17,9 @@
 name: Publish to PyPI
 
 on:
-  # push:
-  #   tags:
-  #     - '*'
   push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+    tags:
+      - '*'
 
 jobs:
   pypi:
