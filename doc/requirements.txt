@@ -1,0 +1,6 @@
+dataclasses
+recommonmark
+sphinx
+sphinx-autodoc-typehints
+sphinx_rtd_theme
+sphinxcontrib-bibtex

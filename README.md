@@ -4,20 +4,36 @@ Wrap kaldi's feature computations to Python with PyTorch support.
 
 # Installation
 
-`kaldifeat` can be installed by
+## From PyPi with pip
+
+If you install `kaldifeat` using `pip`, it will also install
+PyTorch 1.8.1. If this is not what you want, please install `kaldifeat`
+from source (see below).
 
 ```bash
 pip install kaldifeat
 ```
 
-# TODOs
+## From source
 
-- [ ] Add Python interface
-- [ ] Support torch.device so that it can switch between CUDA and CPU
-- [ ] Add unit tests
-- [ ] Set up GitHub actions
-- [ ] Benchmark its speed and compare it with Kaldi
-- [ ] Support batch processing of multiple waves
-- [ ] Handle non-default parameters
-- [ ] Support MFCC and other features available in Kaldi
-- [ ] Publish it to PyPI
+The following are the commands to compile `kaldifeat` from source.
+We assume that you have installed `cmake` and PyTorch.
+cmake 3.11 is known to work. Other cmake versions may also work.
+PyTorch 1.8.1 is known to work. Other PyTorch versions may also work.
+
+```bash
+mkdir /some/path
+git clone https://github.com/csukuangfj/kaldifeat.git
+cd kaldifeat
+python setup.py install
+```
+
+To test whether `kaldifeat` was installed successfully, you can run:
+```
+python3 -c "import kaldifeat; print(kaldifeat.__version__)"
+```
+
+## Usage
+
+Please refer to <https://kaldifeat.readthedocs.io/en/latest/usage.html>
+for how to use `kaldifeat`.
