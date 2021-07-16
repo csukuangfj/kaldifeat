@@ -1,6 +1,11 @@
 # kaldifeat
 
-Wrap kaldi's feature computations to Python with PyTorch support.
+Feature extraction compatible with kaldi using PyTorch, supporting
+CUDA, batch process, and autograd.
+
+See [colab notebook][1] for example usage.
+
+[1]: https://colab.research.google.com/drive/16LXJ5QlqO0mQRYK4q1NxOBdM2yL0CYNJ#scrollTo=dTYi4IVJro0j
 
 # Installation
 
