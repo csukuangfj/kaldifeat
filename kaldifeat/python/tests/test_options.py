@@ -111,11 +111,32 @@ def test_mfcc_options():
     print(opts)
 
 
+def test_spectogram_options():
+    opts = kaldifeat.SpectrogramOptions()
+    opts.energy_floor = 0.0
+    opts.raw_energy = True
+
+    frame_opts = opts.frame_opts
+    frame_opts.blackman_coeff = 0.42
+    frame_opts.dither = 1
+    frame_opts.frame_length_ms = 25
+    frame_opts.frame_shift_ms = 10
+    frame_opts.preemph_coeff = 0.97
+    frame_opts.remove_dc_offset = True
+    frame_opts.round_to_power_of_two = True
+    frame_opts.samp_freq = 16000
+    frame_opts.snip_edges = True
+    frame_opts.window_type = "povey"
+
+    print(opts)
+
+
 def main():
     test_frame_extraction_options()
     test_mel_banks_options()
     test_fbank_options()
     test_mfcc_options()
+    test_spectogram_options()
 
 
 if __name__ == "__main__":

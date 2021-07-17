@@ -98,7 +98,7 @@ torch::Tensor MfccComputer::Compute(torch::Tensor signal_raw_log_energy,
       {"...", torch::indexing::Slice(0, -1, torch::indexing::None)});
 
   // Use power instead of magnitude
-  spectrum.pow_(2);
+  spectrum = spectrum.pow(2);
 
   torch::Tensor mel_energies = mel_banks.Compute(spectrum);
 

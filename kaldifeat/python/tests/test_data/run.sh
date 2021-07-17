@@ -29,6 +29,14 @@ if [ ! -f test-mfcc.txt ]; then
   compute-mfcc-feats --dither=0 scp:test.scp ark,t:test-mfcc.txt
 fi
 
+if [ ! -f test-spectrogram.txt ]; then
+  compute-spectrogram-feats --dither=0 scp:test.scp ark,t:test-spectrogram.txt
+fi
+
+if [ ! -f test-spectrogram-no-snip-edges.txt ]; then
+  compute-spectrogram-feats --dither=0 --snip-edges=0 scp:test.scp ark,t:test-spectrogram-no-snip-edges.txt
+fi
+
 if [ ! -f test-mfcc-no-snip-edges.txt ]; then
   compute-mfcc-feats --dither=0 --snip-edges=0 scp:test.scp ark,t:test-mfcc-no-snip-edges.txt
 fi
