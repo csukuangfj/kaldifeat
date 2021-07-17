@@ -6,7 +6,7 @@ KALDI_ROOT=/root/fangjun/open-source/kaldi
 export PATH=${KALDI_ROOT}/src/featbin:$PATH
 
 if [ ! -f test.wav ]; then
-  # generate a wav of two seconds, containing a sine-wave
+  # generate a wav of 1.2 seconds, containing a sine-wave
   # swept from 300 Hz to 3300 Hz
   sox -n -r 16000 -b 16 test.wav synth 1.2 sine 300-3300
 fi
