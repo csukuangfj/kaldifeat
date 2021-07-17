@@ -9,7 +9,7 @@
 
 namespace kaldifeat {
 
-void PybindFbankOptions(py::module &m);
+void PybindFeatureFbank(py::module &m);
 
 }  // namespace kaldifeat
 

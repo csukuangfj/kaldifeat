@@ -2,18 +2,14 @@
 
 set(kaldifeat_srcs
   feature-fbank.cc
+  feature-mfcc.cc
   feature-window.cc
+  matrix-functions.cc
   mel-computations.cc
 )
 
 add_library(kaldifeat_core SHARED ${kaldifeat_srcs})
 target_link_libraries(kaldifeat_core PUBLIC ${TORCH_LIBRARIES})
-
-# PYTHON_INCLUDE_DIRS is set by pybind11
-target_include_directories(kaldifeat_core PUBLIC ${PYTHON_INCLUDE_DIRS})
-
-# PYTHON_LIBRARY is set by pybind11
-target_link_libraries(kaldifeat_core PUBLIC ${PYTHON_LIBRARY})
 
 add_executable(test_kaldifeat test_kaldifeat.cc)
 target_link_libraries(test_kaldifeat PRIVATE kaldifeat_core)

@@ -9,7 +9,7 @@
 
 namespace kaldifeat {
 
-void PybindFrameExtractionOptions(py::module &m);
+void PybindFeatureWindow(py::module &m);
 
 }  // namespace kaldifeat
 

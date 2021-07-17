@@ -1,27 +1,25 @@
-// kaldifeat/python/csrc/feature-fbank.cc
+// kaldifeat/python/csrc/feature-mfcc.cc
 //
 // Copyright (c)  2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
-#include "kaldifeat/python/csrc/feature-fbank.h"
+#include "kaldifeat/python/csrc/feature-mfcc.h"
 
-#include <string>
-
-#include "kaldifeat/csrc/feature-fbank.h"
+#include "kaldifeat/csrc/feature-mfcc.h"
 
 namespace kaldifeat {
 
-static void PybindFbankOptions(py::module &m) {
-  using PyClass = FbankOptions;
-  py::class_<PyClass>(m, "FbankOptions")
+void PybindMfccOptions(py::module &m) {
+  using PyClass = MfccOptions;
+  py::class_<PyClass>(m, "MfccOptions")
       .def(py::init<>())
       .def_readwrite("frame_opts", &PyClass::frame_opts)
       .def_readwrite("mel_opts", &PyClass::mel_opts)
+      .def_readwrite("num_ceps", &PyClass::num_ceps)
       .def_readwrite("use_energy", &PyClass::use_energy)
       .def_readwrite("energy_floor", &PyClass::energy_floor)
       .def_readwrite("raw_energy", &PyClass::raw_energy)
+      .def_readwrite("cepstral_lifter", &PyClass::cepstral_lifter)
       .def_readwrite("htk_compat", &PyClass::htk_compat)
-      .def_readwrite("use_log_fbank", &PyClass::use_log_fbank)
-      .def_readwrite("use_power", &PyClass::use_power)
       .def_property(
           "device",
           [](const PyClass &self) -> py::object {
@@ -36,19 +34,19 @@ static void PybindFbankOptions(py::module &m) {
            [](const PyClass &self) -> std::string { return self.ToString(); });
 }
 
-static void PybindFbank(py::module &m) {
-  using PyClass = Fbank;
-  py::class_<PyClass>(m, "Fbank")
-      .def(py::init<const FbankOptions &>(), py::arg("opts"))
+static void PybindMfcc(py::module &m) {
+  using PyClass = Mfcc;
+  py::class_<PyClass>(m, "Mfcc")
+      .def(py::init<const MfccOptions &>(), py::arg("opts"))
       .def("dim", &PyClass::Dim)
       .def_property_readonly("options", &PyClass::GetOptions)
       .def("compute_features", &PyClass::ComputeFeatures, py::arg("wave"),
            py::arg("vtln_warp"));
 }
 
-void PybindFeatureFbank(py::module &m) {
-  PybindFbankOptions(m);
-  PybindFbank(m);
+void PybindFeatureMfcc(py::module &m) {
+  PybindMfccOptions(m);
+  PybindMfcc(m);
 }
 
 }  // namespace kaldifeat

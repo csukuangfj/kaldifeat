@@ -13,10 +13,7 @@
 #include "kaldifeat/csrc/feature-common.h"
 #include "kaldifeat/csrc/feature-window.h"
 #include "kaldifeat/csrc/mel-computations.h"
-#include "pybind11/pybind11.h"
 #include "torch/torch.h"
-
-namespace py = pybind11;
 
 namespace kaldifeat {
 
@@ -42,19 +39,9 @@ struct FbankOptions {
   // analysis, else magnitude.
   bool use_power = true;
 
-  torch::Device device;
+  torch::Device device{"cpu"};
 
-  FbankOptions() : device("cpu") { mel_opts.num_bins = 23; }
-
-  // Get/Set methods are for implementing properties in Python
-  py::object GetDevice() const {
-    py::object ans = py::module_::import("torch").attr("device");
-    return ans(device.str());
-  }
-  void SetDevice(py::object obj) {
-    std::string s = static_cast<py::str>(obj);
-    device = torch::Device(s);
-  }
+  FbankOptions() { mel_opts.num_bins = 23; }
 
   std::string ToString() const {
     std::ostringstream os;

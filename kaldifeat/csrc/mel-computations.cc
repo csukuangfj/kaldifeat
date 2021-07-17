@@ -192,4 +192,15 @@ torch::Tensor MelBanks::Compute(const torch::Tensor &spectrum) const {
   return torch::mm(spectrum, bins_mat_);
 }
 
+void ComputeLifterCoeffs(float Q, torch::Tensor *coeffs) {
+  // Compute liftering coefficients (scaling on cepstral coeffs)
+  // coeffs are numbered slightly differently from HTK: the zeroth
+  // index is C0, which is not affected.
+  float *data = coeffs->data_ptr<float>();
+  int32_t n = coeffs->numel();
+  for (int32_t i = 0; i < n; ++i) {
+    data[i] = 1.0 + 0.5 * Q * sin(M_PI * i / Q);
+  }
+}
+
 }  // namespace kaldifeat

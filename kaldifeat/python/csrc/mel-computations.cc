@@ -8,20 +8,22 @@
 
 namespace kaldifeat {
 
-void PybindMelBanksOptions(py::module &m) {
-  py::class_<MelBanksOptions>(m, "MelBanksOptions")
+static void PybindMelBanksOptions(py::module &m) {
+  using PyClass = MelBanksOptions;
+  py::class_<PyClass>(m, "MelBanksOptions")
       .def(py::init<>())
-      .def_readwrite("num_bins", &MelBanksOptions::num_bins)
-      .def_readwrite("low_freq", &MelBanksOptions::low_freq)
-      .def_readwrite("high_freq", &MelBanksOptions::high_freq)
-      .def_readwrite("vtln_low", &MelBanksOptions::vtln_low)
-      .def_readwrite("vtln_high", &MelBanksOptions::vtln_high)
-      .def_readwrite("debug_mel", &MelBanksOptions::debug_mel)
-      .def_readwrite("htk_mode", &MelBanksOptions::htk_mode)
-      .def("__str__", [](const MelBanksOptions &self) -> std::string {
-        return self.ToString();
-      });
+      .def_readwrite("num_bins", &PyClass::num_bins)
+      .def_readwrite("low_freq", &PyClass::low_freq)
+      .def_readwrite("high_freq", &PyClass::high_freq)
+      .def_readwrite("vtln_low", &PyClass::vtln_low)
+      .def_readwrite("vtln_high", &PyClass::vtln_high)
+      .def_readwrite("debug_mel", &PyClass::debug_mel)
+      .def_readwrite("htk_mode", &PyClass::htk_mode)
+      .def("__str__",
+           [](const PyClass &self) -> std::string { return self.ToString(); });
   ;
 }
+
+void PybindMelComputations(py::module &m) { PybindMelBanksOptions(m); }
 
 }  // namespace kaldifeat
