@@ -4,7 +4,9 @@ from _kaldifeat import (
     FrameExtractionOptions,
     MelBanksOptions,
     MfccOptions,
+    SpectrogramOptions,
 )
 
 from .fbank import Fbank
 from .mfcc import Mfcc
+from .spectrogram import Spectrogram

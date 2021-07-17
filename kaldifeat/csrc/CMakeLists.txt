@@ -3,6 +3,7 @@
 set(kaldifeat_srcs
   feature-fbank.cc
   feature-mfcc.cc
+  feature-spectrogram.cc
   feature-window.cc
   matrix-functions.cc
   mel-computations.cc

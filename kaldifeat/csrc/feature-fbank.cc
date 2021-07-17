@@ -73,7 +73,9 @@ torch::Tensor FbankComputer::Compute(torch::Tensor signal_raw_log_energy,
       {"...", torch::indexing::Slice(0, -1, torch::indexing::None)});
 
   // Use power instead of magnitude if requested.
-  if (opts_.use_power) spectrum.pow_(2);
+  if (opts_.use_power) {
+    spectrum = spectrum.pow(2);
+  }
 
   torch::Tensor mel_energies = mel_banks.Compute(spectrum);
   if (opts_.use_log_fbank) {
