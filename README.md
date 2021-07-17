@@ -1,7 +1,7 @@
 # kaldifeat
 
-Feature extraction compatible with kaldi using PyTorch, supporting
-CUDA, batch process, and autograd.
+Feature extraction compatible with `Kaldi` using PyTorch, supporting
+CUDA, batch processing, chunk processing, and autograd.
 
 
 # Usage
@@ -32,14 +32,15 @@ wave = wave.squeeze()
 
 opts = kaldifeat.FbankOptions()
 opts.frame_opts.dither = 0
-# Yes, it has same options like kaldi
+# Yes, it has same options like `Kaldi`
 
 fbank = kaldifeat.Fbank(opts)
 features = fbank(wave)
 ```
 
-To compute features that are compatible with kaldi, you can scale
-the wave samples to the range `[-32768, 32768]`.
+To compute features that are compatible with `Kaldi`, wave samples have to be
+scaled to the range `[-32768, 32768]`. WARNING: You don't have to do this if
+you don't care about the compatibility with `Kaldi`
 
 The following is an example:
 
@@ -81,7 +82,7 @@ The output is:
   13.94753 19.94101 25.4494 24.90511 17.00044 13.92074 11.66673 11.82172 10.34108 10.72575 10.09829 9.810879 9.676199 9.421767 9.124647 8.774353 9.086291 8.74897 8.469534 8.670973 8.772754 8.740549 8.982433
 ```
 
-You can see that ``kaldifeat`` produces the same output as kaldi (within some tolerance due to numerical computation).
+You can see that ``kaldifeat`` produces the same output as `Kaldi` (within some tolerance due to numerical computation).
 
 
 **HINT**: Download [test_scp][test_scp] and [test_txt][test_txt].
@@ -114,7 +115,7 @@ for more examples.
 **HINT**: In the examples, you can find that
 
 - ``kaldifeat`` supports batch processing as well as chunk processing
-- ``kaldifeat`` uses the same options as kaldi's `compute-fbank-feats` and `compute-mfcc-feats`
+- ``kaldifeat`` uses the same options as `Kaldi`'s `compute-fbank-feats` and `compute-mfcc-feats`
 
 # Installation
 
