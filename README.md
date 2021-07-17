@@ -65,7 +65,7 @@ tensor([[15.0074, 21.1730, 25.5286, 24.4644, 16.6994, 13.8480, 11.2087, 11.7952,
           9.0863,  8.7488,  8.4695,  8.6710,  8.7728,  8.7405,  8.9824]])
 ```
 
-You can compute the fbank feature for the same wave using the following command:
+You can compute the fbank feature for the same wave with `Kaldi` using the following commands:
 
 ```bash
 echo "1 test.wav" > test.scp
@@ -82,7 +82,7 @@ The output is:
   13.94753 19.94101 25.4494 24.90511 17.00044 13.92074 11.66673 11.82172 10.34108 10.72575 10.09829 9.810879 9.676199 9.421767 9.124647 8.774353 9.086291 8.74897 8.469534 8.670973 8.772754 8.740549 8.982433
 ```
 
-You can see that ``kaldifeat`` produces the same output as `Kaldi` (within some tolerance due to numerical computation).
+You can see that ``kaldifeat`` produces the same output as `Kaldi` (within some tolerance due to numerical precision).
 
 
 **HINT**: Download [test_scp][test_scp] and [test_txt][test_txt].
