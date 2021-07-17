@@ -25,6 +25,14 @@ if [ ! -f test.txt ]; then
   compute-fbank-feats --dither=0 scp:test.scp ark,t:test.txt
 fi
 
+if [ ! -f test-mfcc.txt ]; then
+  compute-mfcc-feats --dither=0 scp:test.scp ark,t:test-mfcc.txt
+fi
+
+if [ ! -f test-mfcc-no-snip-edges.txt ]; then
+  compute-mfcc-feats --dither=0 --snip-edges=0 scp:test.scp ark,t:test-mfcc-no-snip-edges.txt
+fi
+
 if [ ! -f test-htk.txt ]; then
   compute-fbank-feats --dither=0 --use-energy=1 --htk-compat=1 scp:test.scp ark,t:test-htk.txt
 fi

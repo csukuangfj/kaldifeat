@@ -89,6 +89,13 @@ class MelBanks {
   bool htk_mode_;
 };
 
+// Compute liftering coefficients (scaling on cepstral coeffs)
+// coeffs are numbered slightly differently from HTK: the zeroth
+// index is C0, which is not affected.
+//
+// coeffs is a 1-D float tensor
+void ComputeLifterCoeffs(float Q, torch::Tensor *coeffs);
+
 }  // namespace kaldifeat
 
 #endif  // KALDIFEAT_CSRC_MEL_COMPUTATIONS_H_

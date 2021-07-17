@@ -8,7 +8,7 @@
 
 namespace kaldifeat {
 
-void PybindFrameExtractionOptions(py::module &m) {
+static void PybindFrameExtractionOptions(py::module &m) {
   py::class_<FrameExtractionOptions>(m, "FrameExtractionOptions")
       .def(py::init<>())
       .def_readwrite("samp_freq", &FrameExtractionOptions::samp_freq)
@@ -34,6 +34,15 @@ void PybindFrameExtractionOptions(py::module &m) {
       .def("__str__", [](const FrameExtractionOptions &self) -> std::string {
         return self.ToString();
       });
+
+  m.def("num_frames", &NumFrames, py::arg("num_samples"), py::arg("opts"),
+        py::arg("flush") = true);
+
+  m.def("get_strided", &GetStrided, py::arg("wave"), py::arg("opts"));
+}
+
+void PybindFeatureWindow(py::module &m) {
+  PybindFrameExtractionOptions(m);
 
   m.def("num_frames", &NumFrames, py::arg("num_samples"), py::arg("opts"),
         py::arg("flush") = true);

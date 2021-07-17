@@ -9,7 +9,7 @@
 
 namespace kaldifeat {
 
-void PybindMelBanksOptions(py::module &m);
+void PybindMelComputations(py::module &m);
 
 }  // namespace kaldifeat
 

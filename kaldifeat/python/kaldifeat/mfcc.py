@@ -6,7 +6,7 @@ import _kaldifeat
 from .offline_feature import OfflineFeature
 
 
-class Fbank(OfflineFeature):
-    def __init__(self, opts: _kaldifeat.FbankOptions):
+class Mfcc(OfflineFeature):
+    def __init__(self, opts: _kaldifeat.MfccOptions):
         super().__init__(opts)
-        self.computer = _kaldifeat.Fbank(opts)
+        self.computer = _kaldifeat.Mfcc(opts)
