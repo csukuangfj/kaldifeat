@@ -201,9 +201,6 @@ for more examples.
 - ``kaldifeat`` supports batch processing as well as chunk processing
 - ``kaldifeat`` uses the same options as `Kaldi`'s `compute-fbank-feats` and `compute-mfcc-feats`
 
-## PLP
-
-
 # Installation
 
 ## From PyPi with pip
