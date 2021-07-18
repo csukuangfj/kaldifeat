@@ -31,7 +31,7 @@ features = fbank(wave)
 <td>
 <pre lang="python">
 opts = kaldifeat.MfccOptions();
-opts.numceps = 13
+opts.num_ceps = 13
 mfcc = kaldifeat.Mfcc(opts)
 features = mfcc(wave)
 </pre>
