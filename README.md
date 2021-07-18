@@ -1,8 +1,84 @@
 # kaldifeat
 
+<table>
+<tr>
+<th>Comments</th>
+<th>Options</th>
+<th>Feature Computer</th>
+<th>Usage</th>
+</tr>
+
+<tr>
+<td>FBANK</td>
+<td><code>kaldifeat.FbankOptions</code></td>
+<td><code>kaldifeat.Fbank</code></td>
+<td>
+<pre lang="python">
+opts = kaldifeat.FbankOptions()
+opts.device = torch.device('cuda', 0)
+opts.frame_opts.window_type = 'povey'
+fbank = kaldifeat.Fbank(opts)
+features = fbank(wave)
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>MFCC</td>
+<td><code>kaldifeat.MfccOptions</code></td>
+<td><code>kaldifeat.Mfcc</code></td>
+<td>
+<pre lang="python">
+opts = kaldifeat.MfccOptions();
+opts.numceps = 13
+mfcc = kaldifeat.Mfcc(opts)
+features = mfcc(wave)
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>PLP</td>
+<td><code>kaldifeat.PlpOptions</code></td>
+<td><code>kaldifeat.Plp</code></td>
+<td>
+<pre lang="python">
+opts = kaldifeat.PlpOptions();
+opts.mel_opts.num_bins = 23
+plp = kaldifeat.Plp(opts)
+features = plp(wave)
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>Spectorgram</td>
+<td><code>kaldifeat.SpectrogramOptions</code></td>
+<td><code>kaldifeat.Spectrogram</code></td>
+<td>
+<pre lang="python">
+opts = kaldifeat.SpectrogramOptions();
+print(opts)
+spectrogram = kaldifeat.Spectrogram(opts)
+features = spectrogram(wave)
+</pre>
+</td>
+</tr>
+
+</table>
+
+
 Feature extraction compatible with `Kaldi` using PyTorch, supporting
 CUDA, batch processing, chunk processing, and autograd.
 
+The following kaldi-compatible commandline tools are implemented:
+
+  - `compute-fbank-feats`
+  - `compute-mfcc-feats`
+  - `compute-plp-feats`
+  - `compute-spectrogram-feats`
+
+(**NOTE**: We will implement other types of features, e.g., Pitch, ivector, etc, soon.)
 
 # Usage
 
@@ -14,7 +90,7 @@ Let us first generate a test wave using sox:
 sox -n -r 16000 -b 16 test.wav synth 1.2 sine 300-3300
 ```
 
-**HINT**: Download [test_wav][test_wav].
+**HINT**: Download [test.wav][test_wav].
 
 [test_wav]: kaldifeat/python/tests/test_data/test.wav
 
@@ -39,8 +115,8 @@ features = fbank(wave)
 ```
 
 To compute features that are compatible with `Kaldi`, wave samples have to be
-scaled to the range `[-32768, 32768]`. WARNING: You don't have to do this if
-you don't care about the compatibility with `Kaldi`
+scaled to the range `[-32768, 32768]`. **WARNING**: You don't have to do this if
+you don't care about the compatibility with `Kaldi`.
 
 The following is an example:
 
@@ -85,7 +161,7 @@ The output is:
 You can see that ``kaldifeat`` produces the same output as `Kaldi` (within some tolerance due to numerical precision).
 
 
-**HINT**: Download [test_scp][test_scp] and [test_txt][test_txt].
+**HINT**: Download [test.scp][test_scp] and [test.txt][test_txt].
 
 [test_scp]: kaldifeat/python/tests/test_data/test.scp
 [test_txt]: kaldifeat/python/tests/test_data/test.txt
@@ -103,13 +179,20 @@ fbank = kaldifeat.Fbank(opts)
 features = fbank(wave.to(opts.device))
 ```
 
-## MFCC
+## MFCC, PLP, Spectrogram
 
 To compute MFCC features, please replace `kaldifeat.FbankOptions` and `kaldifeat.Fbank`
-with `kaldifeat.MfccOptions` and `kaldifeat.Mfcc`, respectively.
+with `kaldifeat.MfccOptions` and `kaldifeat.Mfcc`, respectively. The same goes
+for `PLP` and `Spectrogram`.
 
-Please refer to [kaldifeat/python/tests/test_fbank.py](kaldifeat/python/tests/test_fbank.py)
-and [kaldifeat/python/tests/test_mfcc.py](kaldifeat/python/tests/test_mfcc.py)
+Please refer to
+
+  - [kaldifeat/python/tests/test_fbank.py](kaldifeat/python/tests/test_fbank.py)
+  - [kaldifeat/python/tests/test_mfcc.py](kaldifeat/python/tests/test_mfcc.py)
+  - [kaldifeat/python/tests/test_plp.py](kaldifeat/python/tests/test_plp.py)
+  - [kaldifeat/python/tests/test_spectrogram.py](kaldifeat/python/tests/test_spectrogram.py)
+  - [kaldifeat/python/tests/test_options.py](kaldifeat/python/tests/test_options.py)
+
 for more examples.
 
 **HINT**: In the examples, you can find that
@@ -117,16 +200,22 @@ for more examples.
 - ``kaldifeat`` supports batch processing as well as chunk processing
 - ``kaldifeat`` uses the same options as `Kaldi`'s `compute-fbank-feats` and `compute-mfcc-feats`
 
+## PLP
+
+
 # Installation
 
 ## From PyPi with pip
 
 If you install `kaldifeat` using `pip`, it will also install
-PyTorch 1.8.1. If this is not what you want, please install `kaldifeat`
-from source (see below).
+PyTorch 1.8.1. If this is not what you want (i.e, you have installed a
+different version of PyTorch and you don't want to replace it
+with PyTorch 1.8.1), please add an option `--no-dependencies` to
+`pip install`.
 
 ```bash
-pip install kaldifeat
+pip install kaldifeat                     # also installs torch 1.8.1
+pip install --no-dependencies kaldifeat   # will NOT install torch 1.8.1
 ```
 
 ## From source
