@@ -1,5 +1,6 @@
 # kaldifeat
 
+<font size="2">
 <table>
 <tr>
 <th>Comments</th>
@@ -66,6 +67,7 @@ features = spectrogram(wave)
 </tr>
 
 </table>
+</font>
 
 
 Feature extraction compatible with `Kaldi` using PyTorch, supporting
