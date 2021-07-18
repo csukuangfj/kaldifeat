@@ -3,8 +3,10 @@
 // Copyright (c)  2021  Xiaomi Corporation (authors: Fangjun Kuang)
 //
 // This file is copied/modified from kaldi/src/feat/mel-computations.cc
-//
+
 #include "kaldifeat/csrc/mel-computations.h"
+
+#include <algorithm>
 
 #include "kaldifeat/csrc/feature-window.h"
 
@@ -136,8 +138,13 @@ MelBanks::MelBanks(const MelBanksOptions &opts,
                   << " and vtln-high " << vtln_high << ", versus "
                   << "low-freq " << low_freq << " and high-freq " << high_freq;
 
+  // we will transpose bins_mat_ at the end of this funciton
   bins_mat_ = torch::zeros({num_bins, num_fft_bins}, torch::kFloat);
+
   int32_t stride = bins_mat_.strides()[0];
+
+  center_freqs_ = torch::empty({num_bins}, torch::kFloat);
+  float *center_freqs_data = center_freqs_.data_ptr<float>();
 
   for (int32_t bin = 0; bin < num_bins; ++bin) {
     float left_mel = mel_low_freq + bin * mel_freq_delta,
@@ -152,6 +159,7 @@ MelBanks::MelBanks(const MelBanksOptions &opts,
       right_mel = VtlnWarpMelFreq(vtln_low, vtln_high, low_freq, high_freq,
                                   vtln_warp_factor, right_mel);
     }
+    center_freqs_data[bin] = InverseMelScale(center_mel);
     // this_bin will be a vector of coefficients that is only
     // nonzero where this mel bin is active.
     float *this_bin = bins_mat_.data_ptr<float>() + bin * stride;
@@ -201,6 +209,143 @@ void ComputeLifterCoeffs(float Q, torch::Tensor *coeffs) {
   for (int32_t i = 0; i < n; ++i) {
     data[i] = 1.0 + 0.5 * Q * sin(M_PI * i / Q);
   }
+}
+
+void GetEqualLoudnessVector(const MelBanks &mel_banks, torch::Tensor *ans) {
+  int32_t n = mel_banks.NumBins();
+  // Central frequency of each mel bin.
+  const torch::Tensor &f0 = mel_banks.GetCenterFreqs();
+  const float *f0_data = f0.data_ptr<float>();
+
+  *ans = torch::empty({1, n}, torch::kFloat);
+  float *ans_data = ans->data_ptr<float>();
+  for (int32_t i = 0; i < n; ++i) {
+    float fsq = f0_data[i] * f0_data[i];
+    float fsub = fsq / (fsq + 1.6e5);
+    ans_data[i] = fsub * fsub * ((fsq + 1.44e6) / (fsq + 9.61e6));
+  }
+}
+
+// Durbin's recursion - converts autocorrelation coefficients to the LPC
+// pTmp - temporal place [n]
+// pAC - autocorrelation coefficients [n + 1]
+// pLP - linear prediction coefficients [n]
+//       (predicted_sn = sum_1^P{a[i-1] * s[n-i]}})
+//       F(z) = 1 / (1 - A(z)), 1 is not stored in the denominator
+static float Durbin(int n, const float *pAC, float *pLP, float *pTmp) {
+  float ki;  // reflection coefficient
+  int i;
+  int j;
+
+  float E = pAC[0];
+
+  for (i = 0; i < n; ++i) {
+    // next reflection coefficient
+    ki = pAC[i + 1];
+
+    for (j = 0; j < i; ++j) ki += pLP[j] * pAC[i - j];
+
+    ki = ki / E;
+
+    // new error
+    float c = 1 - ki * ki;
+    if (c < 1.0e-5)  // remove NaNs for constant signal
+      c = 1.0e-5;
+
+    E *= c;
+
+    // new LP coefficients
+    pTmp[i] = -ki;
+
+    for (j = 0; j < i; ++j) pTmp[j] = pLP[j] - ki * pLP[i - j - 1];
+
+    for (j = 0; j <= i; ++j) pLP[j] = pTmp[j];
+  }
+
+  return E;
+}
+
+// Compute LP coefficients from autocorrelation coefficients.
+torch::Tensor ComputeLpc(const torch::Tensor &autocorr_in,
+                         torch::Tensor *lpc_out) {
+  KALDIFEAT_ASSERT(autocorr_in.dim() == 2);
+
+  int32_t num_frames = autocorr_in.size(0);
+  int32_t lpc_order = autocorr_in.size(1) - 1;
+
+  *lpc_out = torch::empty({num_frames, lpc_order}, torch::kFloat);
+  torch::Tensor ans = torch::empty({num_frames}, torch::kFloat);
+
+  // TODO(fangjun): Durbin runs only on CPU. Implement a CUDA version
+  torch::Device saved_device = autocorr_in.device();
+  torch::Device cpu("cpu");
+  torch::Tensor in_cpu = autocorr_in.to(cpu);
+
+  torch::Tensor tmp = torch::empty_like(*lpc_out);
+
+  int32_t in_stride = in_cpu.stride(0);
+  int32_t ans_stride = ans.stride(0);
+  int32_t tmp_stride = tmp.stride(0);
+  int32_t lpc_stride = lpc_out->stride(0);
+
+  const float *in_data = in_cpu.data_ptr<float>();
+  float *ans_data = ans.data_ptr<float>();
+  float *tmp_data = tmp.data_ptr<float>();
+  float *lpc_data = lpc_out->data_ptr<float>();
+
+  // see
+  // https://github.com/pytorch/pytorch/blob/master/aten/src/ATen/Parallel.h#L58
+  at::parallel_for(0, num_frames, 1, [&](int32_t begin, int32_t end) -> void {
+    for (int32_t i = begin; i != end; ++i) {
+      float ret = Durbin(lpc_order, in_data + i * in_stride,
+                         lpc_data + i * lpc_stride, tmp_data + i * tmp_stride);
+
+      if (ret <= 0.0) KALDIFEAT_WARN << "Zero energy in LPC computation";
+
+      ans_data[i] = -logf(1.0 / ret);  // forms the C0 value
+    }
+  });
+
+  *lpc_out = lpc_out->to(saved_device);
+  return ans.to(saved_device);
+}
+
+static void Lpc2CepstrumInternal(int n, const float *pLPC, float *pCepst) {
+  for (int32_t i = 0; i < n; ++i) {
+    double sum = 0.0;
+    for (int32_t j = 0; j < i; ++j) {
+      sum += (i - j) * pLPC[j] * pCepst[i - j - 1];
+    }
+    pCepst[i] = -pLPC[i] - sum / (i + 1);
+  }
+}
+
+torch::Tensor Lpc2Cepstrum(const torch::Tensor &lpc) {
+  KALDIFEAT_ASSERT(lpc.dim() == 2);
+  torch::Device cpu("cpu");
+  torch::Device saved_device = lpc.device();
+
+  // TODO(fangjun): support cuda
+  torch::Tensor in_cpu = lpc.to(cpu);
+
+  int32_t num_frames = in_cpu.size(0);
+  int32_t lpc_order = in_cpu.size(1);
+
+  const float *in_data = in_cpu.data_ptr<float>();
+  int32_t in_stride = in_cpu.stride(0);
+
+  torch::Tensor ans = torch::zeros({num_frames, lpc_order}, torch::kFloat);
+  int32_t ans_stride = ans.stride(0);
+  float *ans_data = ans.data_ptr<float>();
+
+  at::parallel_for(0, num_frames, 1, [&](int32_t begin, int32_t end) -> void {
+    for (int32_t i = begin; i != end; ++i) {
+      Lpc2CepstrumInternal(lpc_order, in_data + i * in_stride,
+                           ans_data + i * ans_stride);
+    }
+  });
+
+  return ans.to(saved_device);
 }
 
 }  // namespace kaldifeat

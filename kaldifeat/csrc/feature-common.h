@@ -18,7 +18,7 @@ class OfflineFeatureTpl {
 
   // Note: feature_window_function_ is the windowing function, which initialized
   // using the options class, that we cache at this level.
-  OfflineFeatureTpl(const Options &opts)
+  explicit OfflineFeatureTpl(const Options &opts)
       : computer_(opts),
         feature_window_function_(computer_.GetFrameOptions(), opts.device) {}
 

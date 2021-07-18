@@ -1,5 +1,7 @@
 # Copyright      2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
+from typing import List
+
 import numpy as np
 import soundfile as sf
 import torch
@@ -38,4 +40,13 @@ def read_ark_txt(filename) -> torch.Tensor:
             data = [float(d) for d in line if d != "]"]
             features.append(data)
     ans = torch.tensor(features)
+    return ans
+
+
+def get_devices() -> List[torch.device]:
+    ans = [torch.device("cpu")]
+    if torch.cuda.is_available():
+        ans.append(torch.device("cuda", 0))
+        if torch.cuda.device_count() > 1:
+            ans.append(torch.device("cuda", 1))
     return ans

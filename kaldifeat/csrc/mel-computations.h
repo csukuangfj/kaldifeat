@@ -5,6 +5,7 @@
 // This file is copied/modified from kaldi/src/feat/mel-computations.h
 
 #include <cmath>
+#include <string>
 
 #include "kaldifeat/csrc/feature-window.h"
 
@@ -74,7 +75,11 @@ class MelBanks {
            const FrameExtractionOptions &frame_opts, float vtln_warp_factor,
            torch::Device device);
 
-  int32_t NumBins() const { return static_cast<int32_t>(bins_mat_.size(0)); }
+  // CAUTION: we save a transposed version of bins_mat_, so return size(1) here
+  int32_t NumBins() const { return static_cast<int32_t>(bins_mat_.size(1)); }
+
+  // returns vector of central freq of each bin; needed by plp code.
+  const torch::Tensor &GetCenterFreqs() const { return center_freqs_; }
 
   torch::Tensor Compute(const torch::Tensor &spectrum) const;
 
@@ -82,8 +87,13 @@ class MelBanks {
   const torch::Tensor &GetBinsMat() const { return bins_mat_; }
 
  private:
-  // A 2-D matrix of shape [num_bins, num_fft_bins]
+  // A 2-D matrix. Its shape is NOT [num_bins, num_fft_bins]
+  // Its shape is [num_fft_bins, num_bins].
   torch::Tensor bins_mat_;
+
+  // center frequencies of bins, numbered from 0 ... num_bins-1.
+  // Needed by GetCenterFreqs().
+  torch::Tensor center_freqs_;  // It's always on CPU
 
   bool debug_;
   bool htk_mode_;
@@ -95,6 +105,26 @@ class MelBanks {
 //
 // coeffs is a 1-D float tensor
 void ComputeLifterCoeffs(float Q, torch::Tensor *coeffs);
+
+void GetEqualLoudnessVector(const MelBanks &mel_banks, torch::Tensor *ans);
+
+/* Compute LP coefficients from autocorrelation coefficients.
+ *
+ *  @param [in] autocorr_in  A 2-D tensor. Each row is a frame. Its number of
+ *                           columns is lpc_order + 1
+ *  @param [out] lpc_coeffs  A 2-D tensor. On return, it has as many rows as the
+ *                           input tensor. Its number of columns is lpc_order.
+ *
+ *  @return Returns log energy of residual in a 1-D tensor. It has as many
+ *          elements as the number of rows in `autocorr_in`.
+ */
+torch::Tensor ComputeLpc(const torch::Tensor &autocorr_in,
+                         torch::Tensor *lpc_coeffs);
+
+/*
+ * @param [in] lpc It is the output argument `lpc_coeffs` in ComputeLpc().
+ */
+torch::Tensor Lpc2Cepstrum(const torch::Tensor &lpc);
 
 }  // namespace kaldifeat
 

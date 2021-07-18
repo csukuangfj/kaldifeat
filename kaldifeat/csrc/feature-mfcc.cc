@@ -31,7 +31,7 @@ MfccComputer::MfccComputer(const MfccOptions &opts) : opts_(opts) {
   // energy we replace this with the energy.  This means a different
   // ordering of features than HTK.
 
-  using namespace torch::indexing;  // It imports: Slice, None
+  using namespace torch::indexing;  // It imports: Slice, None  // NOLINT
 
   // dct_matrix[:opts.num_cepts, :]
   torch::Tensor dct_rows =

@@ -7,6 +7,9 @@
 #ifndef KALDIFEAT_CSRC_FEATURE_MFCC_H_
 #define KALDIFEAT_CSRC_FEATURE_MFCC_H_
 
+#include <map>
+#include <string>
+
 #include "kaldifeat/csrc/feature-common.h"
 #include "kaldifeat/csrc/feature-window.h"
 #include "kaldifeat/csrc/mel-computations.h"

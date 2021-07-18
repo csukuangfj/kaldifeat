@@ -4,6 +4,8 @@
 
 #include "kaldifeat/python/csrc/feature-spectrogram.h"
 
+#include <string>
+
 #include "kaldifeat/csrc/feature-spectrogram.h"
 
 namespace kaldifeat {

@@ -1,26 +1,29 @@
-// kaldifeat/python/csrc/feature-mfcc.cc
+// kaldifeat/python/csrc/feature-plp.cc
 //
 // Copyright (c)  2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
-#include "kaldifeat/python/csrc/feature-mfcc.h"
+#include "kaldifeat/python/csrc/feature-plp.h"
 
 #include <string>
 
-#include "kaldifeat/csrc/feature-mfcc.h"
+#include "kaldifeat/csrc/feature-plp.h"
 
 namespace kaldifeat {
 
-void PybindMfccOptions(py::module &m) {
-  using PyClass = MfccOptions;
-  py::class_<PyClass>(m, "MfccOptions")
+void PybindPlpOptions(py::module &m) {
+  using PyClass = PlpOptions;
+  py::class_<PyClass>(m, "PlpOptions")
       .def(py::init<>())
       .def_readwrite("frame_opts", &PyClass::frame_opts)
       .def_readwrite("mel_opts", &PyClass::mel_opts)
+      .def_readwrite("lpc_order", &PyClass::lpc_order)
       .def_readwrite("num_ceps", &PyClass::num_ceps)
       .def_readwrite("use_energy", &PyClass::use_energy)
       .def_readwrite("energy_floor", &PyClass::energy_floor)
       .def_readwrite("raw_energy", &PyClass::raw_energy)
+      .def_readwrite("compress_factor", &PyClass::compress_factor)
       .def_readwrite("cepstral_lifter", &PyClass::cepstral_lifter)
+      .def_readwrite("cepstral_scale", &PyClass::cepstral_scale)
       .def_readwrite("htk_compat", &PyClass::htk_compat)
       .def_property(
           "device",
@@ -36,19 +39,19 @@ void PybindMfccOptions(py::module &m) {
            [](const PyClass &self) -> std::string { return self.ToString(); });
 }
 
-static void PybindMfcc(py::module &m) {
-  using PyClass = Mfcc;
-  py::class_<PyClass>(m, "Mfcc")
-      .def(py::init<const MfccOptions &>(), py::arg("opts"))
+static void PybindPlp(py::module &m) {
+  using PyClass = Plp;
+  py::class_<PyClass>(m, "Plp")
+      .def(py::init<const PlpOptions &>(), py::arg("opts"))
       .def("dim", &PyClass::Dim)
       .def_property_readonly("options", &PyClass::GetOptions)
       .def("compute_features", &PyClass::ComputeFeatures, py::arg("wave"),
            py::arg("vtln_warp"));
 }
 
-void PybindFeatureMfcc(py::module &m) {
-  PybindMfccOptions(m);
-  PybindMfcc(m);
+void PybindFeaturePlp(py::module &m) {
+  PybindPlpOptions(m);
+  PybindPlp(m);
 }
 
 }  // namespace kaldifeat
