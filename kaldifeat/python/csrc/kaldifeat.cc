@@ -7,6 +7,7 @@
 #include "kaldifeat/csrc/feature-fbank.h"
 #include "kaldifeat/python/csrc/feature-fbank.h"
 #include "kaldifeat/python/csrc/feature-mfcc.h"
+#include "kaldifeat/python/csrc/feature-plp.h"
 #include "kaldifeat/python/csrc/feature-spectrogram.h"
 #include "kaldifeat/python/csrc/feature-window.h"
 #include "kaldifeat/python/csrc/mel-computations.h"
@@ -21,6 +22,7 @@ PYBIND11_MODULE(_kaldifeat, m) {
   PybindMelComputations(m);
   PybindFeatureFbank(m);
   PybindFeatureMfcc(m);
+  PybindFeaturePlp(m);
   PybindFeatureSpectrogram(m);
 }
 

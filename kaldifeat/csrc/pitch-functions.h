@@ -4,8 +4,21 @@
 
 // This file is copied/modified from kaldi/src/feat/pitch-functions.h
 
-#ifndef KALDIFEAT_CSRC_FEATURE_PITCH_FUNCTIONS_H_
-#define KALDIFEAT_CSRC_FEATURE_PITCH_FUNCTIONS_H_
+#ifndef KALDIFEAT_CSRC_PITCH_FUNCTIONS_H_
+#define KALDIFEAT_CSRC_PITCH_FUNCTIONS_H_
+
+// References
+//
+// Talkin, David, and W. Bastiaan Kleijn. "A robust algorithm for pitch
+// tracking (RAPT)." coding and synthesis 495 (1995): 518.
+// (https://www.ee.columbia.edu/~dpwe/papers/Talkin95-rapt.pdf)
+//
+// Ghahremani, Pegah, et al. "A pitch extraction algorithm tuned for
+// automatic speech recognition." 2014 IEEE international conference on
+// acoustics, speech and signal processing (ICASSP). IEEE, 2014.
+// (http://danielpovey.com/files/2014_icassp_pitch.pdf)
+
+#include <string>
 
 #include "torch/torch.h"
 
@@ -134,6 +147,8 @@ struct PitchExtractionOptions {
   }
 };
 
+// TODO(fangjun): Implement it
+
 }  // namespace kaldifeat
 
-#endif  // KALDIFEAT_CSRC_FEATURE_PITCH_FUNCTIONS_H_
+#endif  // KALDIFEAT_CSRC_PITCH_FUNCTIONS_H_

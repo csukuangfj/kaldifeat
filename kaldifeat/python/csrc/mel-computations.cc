@@ -2,9 +2,11 @@
 //
 // Copyright (c)  2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
-#include "kaldifeat/csrc/mel-computations.h"
+#include "kaldifeat/python/csrc/mel-computations.h"
 
-#include "kaldifeat/python/csrc/feature-window.h"
+#include <string>
+
+#include "kaldifeat/csrc/mel-computations.h"
 
 namespace kaldifeat {
 
@@ -21,7 +23,6 @@ static void PybindMelBanksOptions(py::module &m) {
       .def_readwrite("htk_mode", &PyClass::htk_mode)
       .def("__str__",
            [](const PyClass &self) -> std::string { return self.ToString(); });
-  ;
 }
 
 void PybindMelComputations(py::module &m) { PybindMelBanksOptions(m); }

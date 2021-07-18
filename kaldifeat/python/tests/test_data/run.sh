@@ -33,6 +33,18 @@ if [ ! -f test-spectrogram.txt ]; then
   compute-spectrogram-feats --dither=0 scp:test.scp ark,t:test-spectrogram.txt
 fi
 
+if [ ! -f test-plp.txt ]; then
+  compute-plp-feats --dither=0 scp:test.scp ark,t:test-plp.txt
+fi
+
+if [ ! -f test-plp-no-snip-edges.txt ]; then
+  compute-plp-feats --dither=0 --snip-edges=0 scp:test.scp ark,t:test-plp-no-snip-edges.txt
+fi
+
+if [ ! -f test-plp-htk-10-cpes.txt ]; then
+  compute-plp-feats --dither=0 --htk-compat=1 --num-ceps=10 scp:test.scp ark,t:test-plp-htk-10-ceps.txt
+fi
+
 if [ ! -f test-spectrogram-no-snip-edges.txt ]; then
   compute-spectrogram-feats --dither=0 --snip-edges=0 scp:test.scp ark,t:test-spectrogram-no-snip-edges.txt
 fi

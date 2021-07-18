@@ -4,6 +4,8 @@
 
 // This file is copied/modified from kaldi/src/feat/feature-window.h
 
+#include <string>
+
 #include "kaldifeat/csrc/log.h"
 #include "torch/torch.h"
 

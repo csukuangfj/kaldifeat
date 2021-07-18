@@ -4,6 +4,8 @@
 
 #include "kaldifeat/python/csrc/feature-window.h"
 
+#include <string>
+
 #include "kaldifeat/csrc/feature-window.h"
 
 namespace kaldifeat {

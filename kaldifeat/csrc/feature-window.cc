@@ -7,6 +7,7 @@
 #include "kaldifeat/csrc/feature-window.h"
 
 #include <cmath>
+#include <vector>
 
 #include "torch/torch.h"
 
@@ -168,7 +169,7 @@ torch::Tensor Dither(const torch::Tensor &wave, float dither_value) {
 }
 
 torch::Tensor Preemphasize(float preemph_coeff, const torch::Tensor &wave) {
-  using namespace torch::indexing;  // It imports: Slice, None
+  using namespace torch::indexing;  // It imports: Slice, None  // NOLINT
   if (preemph_coeff == 0.0f) return wave;
 
   KALDIFEAT_ASSERT(preemph_coeff >= 0.0f && preemph_coeff <= 1.0f);

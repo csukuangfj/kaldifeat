@@ -2,6 +2,7 @@ add_definitions(-DTORCH_API_INCLUDE_EXTENSION_H)
 pybind11_add_module(_kaldifeat
   feature-fbank.cc
   feature-mfcc.cc
+  feature-plp.cc
   feature-spectrogram.cc
   feature-window.cc
   kaldifeat.cc
