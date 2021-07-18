@@ -48,10 +48,10 @@ class OfflineFeature(nn.Module):
             meaning no warping is to be done.  The value will be ignored for
             feature types that don't support VLTN, such as spectrogram features.
           chunk_size:
-            It specifies the number of frames for each computation. If
-            If None, it compute features at once (requiring more memory for
-            long waves) If not None, each computation takes this number of
-            frames (requiring less memory)
+            It specifies the number of frames for each computation.
+            If None, it computes features at once (requiring more memory for
+            long waves). If not None, each computation takes this number of
+            frames (requiring less memory).
         Returns:
           Return a list of 2-D tensors containing the features if the
           input is a list of 1-D tensors. The returned list has as many elements
@@ -97,15 +97,16 @@ class OfflineFeature(nn.Module):
             meaning no warping is to be done.  The value will be ignored for
             feature types that don't support VLTN, such as spectrogram features.
           chunk_size:
-            It specifies the number of frames for each computation. If
-            If None, it compute features at once (requiring more memory for
-            long waves) If not None, each computation takes this number of
-            frames (requiring less memory)
+            It specifies the number of frames for each computation.
+            If None, it computes features at once (requiring more memory for
+            long waves). If not None, each computation takes this number of
+            frames (requiring less memory).
         Returns:
           Return a 2-D tensor with as many rows as the input tensor. Its
           number of columns is the number mel bins.
         """
         assert x.ndim == 2
+        assert x.dtype == torch.float32
         if chunk_size is None:
             features = self.computer.compute_features(x, vtln_warp)
         else:
@@ -138,4 +139,6 @@ class OfflineFeature(nn.Module):
         Returns:
           Return a 2-D tensor.
         """
+        assert wave.ndim == 1
+        assert wave.dtype == torch.float32
         return _kaldifeat.get_strided(wave, self.opts.frame_opts)
