@@ -106,7 +106,7 @@ jobs:
           mkdir build_release
           cd build_release
           cmake ..
-          make -j
+          make VERBOSE=1
 
       - name: Run tests
         shell: bash
