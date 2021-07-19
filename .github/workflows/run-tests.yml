@@ -18,8 +18,11 @@ name: Run tests
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   run_tests:
