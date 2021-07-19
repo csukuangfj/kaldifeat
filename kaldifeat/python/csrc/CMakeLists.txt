@@ -9,4 +9,7 @@ pybind11_add_module(_kaldifeat
   mel-computations.cc
 )
 target_link_libraries(_kaldifeat PRIVATE kaldifeat_core)
-target_link_libraries(_kaldifeat PRIVATE ${TORCH_DIR}/lib/libtorch_python.so)
+if(UNIX AND NOT APPLE)
+  target_link_libraries(_kaldifeat PUBLIC ${TORCH_DIR}/lib/libtorch_python.so)
+  target_link_libraries(_kaldifeat PUBLIC ${PYTHON_LIBRARY})
+endif()

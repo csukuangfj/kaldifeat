@@ -23,17 +23,3 @@ execute_process(
 )
 
 message(STATUS "PyTorch version: ${TORCH_VERSION}")
-
-# Solve the following error for NVCC:
-#   unknown option `-Wall`
-#
-# It contains only some -Wno-* flags, so it is OK
-# to set them to empty
-set_property(TARGET torch_cuda
-  PROPERTY
-    INTERFACE_COMPILE_OPTIONS ""
-)
-set_property(TARGET torch_cpu
-  PROPERTY
-    INTERFACE_COMPILE_OPTIONS ""
-)

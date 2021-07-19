@@ -2,6 +2,7 @@
 
 import glob
 import os
+import platform
 import shutil
 import sys
 from pathlib import Path
@@ -15,6 +16,10 @@ def is_for_pypi():
     return ans is not None
 
 
+def is_macos():
+    return platform.system() == "Darwin"
+
+
 try:
     from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
 
@@ -23,7 +28,7 @@ try:
             _bdist_wheel.finalize_options(self)
             # In this case, the generated wheel has a name in the form
             # k2-xxx-pyxx-none-any.whl
-            if is_for_pypi():
+            if is_for_pypi() and not is_macos():
                 self.root_is_pure = True
             else:
                 # The generated wheel has a name ending with
@@ -85,6 +90,7 @@ class BuildExtension(build_ext):
             )
 
         lib_so = glob.glob(f"{self.build_temp}/lib/*kaldifeat*.so")
+        lib_so += glob.glob(f"{self.build_temp}/lib/*kaldifeat*.dylib")  # macOS
         for so in lib_so:
             print(f"Copying {so} to {self.build_lib}/")
             shutil.copy(f"{so}", f"{self.build_lib}/")

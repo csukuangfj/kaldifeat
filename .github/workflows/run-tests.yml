@@ -14,15 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: Publish to PyPI
+name: Run tests
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  pypi:
+  run_tests:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -73,8 +76,10 @@ jobs:
           torch: ${{ matrix.torch }}
         shell: bash
         run: |
+          sudo apt update
+          sudo apt install libsndfile1-dev libsndfile1 ffmpeg
           python3 -m pip install --upgrade pip
-          python3 -m pip install wheel twine typing_extensions
+          python3 -m pip install wheel twine typing_extensions soundfile
           python3 -m pip install bs4 requests tqdm
 
           ./scripts/github_actions/install_torch.sh
@@ -85,7 +90,7 @@ jobs:
         shell: bash
         run: |
           python3 -m pip install -qq --upgrade pip
-          python3 -m pip install -qq wheel twine typing_extensions
+          python3 -m pip install -qq wheel twine typing_extensions soundfile
           python3 -m pip install -qq torch==${{ matrix.torch }}
 
           python3 -c "import torch; print('torch version:', torch.__version__)"
@@ -97,25 +102,16 @@ jobs:
         run: |
           ./scripts/github_actions/install_cudnn.sh
 
-      - name: Build pip packages
+      - name: Build
         shell: bash
-        env:
-          KALDIFEAT_IS_FOR_PYPI: 1
         run: |
-          tag=$(python3 -c "import sys; print(''.join(sys.version[:3].split('.')))")
-          export KALDIFEAT_MAKE_ARGS="-j2"
-          python3 setup.py bdist_wheel --python-tag=py${tag}
-          ls -lh dist/
+          mkdir build_release
+          cd build_release
+          cmake ..
+          make VERBOSE=1
 
-      - name: Publish wheels to PyPI
-        env:
-          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      - name: Run tests
+        shell: bash
         run: |
-          twine upload dist/kaldifeat-*.whl
-
-      - name: Upload Wheel
-        uses: actions/upload-artifact@v2
-        with:
-          name: torch-${{ matrix.torch }}-python-${{ matrix.python-version }}-${{ matrix.os }}
-          path: dist/*.whl
+          cd build_release
+          ctest -R py --output-on-failure

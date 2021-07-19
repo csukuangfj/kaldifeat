@@ -1,5 +1,10 @@
 # kaldifeat
 
+<div align="center">
+<img src="/doc/source/images/os.svg">
+</div>
+
+
 <sub>
 <table>
 <tr>

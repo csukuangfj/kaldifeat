@@ -157,7 +157,7 @@ torch::Tensor GetStrided(const torch::Tensor &wave,
 }
 
 torch::Tensor Dither(const torch::Tensor &wave, float dither_value) {
-  if (dither_value == 0.0f) wave;
+  if (dither_value == 0.0f) return wave;
 
   torch::Tensor rand_gauss = torch::randn_like(wave);
 #if 1
