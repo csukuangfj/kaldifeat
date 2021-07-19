@@ -17,15 +17,9 @@
 name: Publish to PyPI
 
 on:
-  # push:
-  #   tags:
-  #     - '*'
   push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+    tags:
+      - '*'
 
 jobs:
   pypi:
@@ -34,7 +28,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-18.04, macos-10.15]
-        gcc: ["5"]
+        cuda: ["10.1"]
         torch: ["1.8.1"]
         python-version: [3.6, 3.7, 3.8]
     steps:
@@ -47,21 +41,61 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install GCC ${{ matrix.gcc }}
+      - name: Install GCC 7
+        if: startsWith(matrix.os, 'ubuntu')
         run: |
-          sudo apt-get install -y gcc-${{ matrix.gcc }} g++-${{ matrix.gcc }}
-          echo "CC=/usr/bin/gcc-${{ matrix.gcc }}" >> $GITHUB_ENV
-          echo "CXX=/usr/bin/g++-${{ matrix.gcc }}" >> $GITHUB_ENV
+          sudo apt-get install -y gcc-7 g++-7
+          echo "CC=/usr/bin/gcc-7" >> $GITHUB_ENV
+          echo "CXX=/usr/bin/g++-7" >> $GITHUB_ENV
+
+
+      - name: Install CUDA Toolkit ${{ matrix.cuda }}
+        if: startsWith(matrix.os, 'ubuntu')
+        shell: bash
+        env:
+          cuda: ${{ matrix.cuda }}
+        run: |
+          source ./scripts/github_actions/install_cuda.sh
+          echo "CUDA_HOME=${CUDA_HOME}" >> $GITHUB_ENV
+          echo "${CUDA_HOME}/bin" >> $GITHUB_PATH
+          echo "LD_LIBRARY_PATH=${CUDA_HOME}/lib:${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}" >> $GITHUB_ENV
+
+      - name: Display NVCC version
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          which nvcc
+          nvcc --version
 
       - name: Install PyTorch ${{ matrix.torch }}
+        if: startsWith(matrix.os, 'ubuntu')
+        env:
+          cuda: ${{ matrix.cuda }}
+          torch: ${{ matrix.torch }}
         shell: bash
         run: |
           python3 -m pip install --upgrade pip
           python3 -m pip install wheel twine typing_extensions
           python3 -m pip install bs4 requests tqdm
-          python3 -m pip install torch==${{ matrix.torch }}
+
+          ./scripts/github_actions/install_torch.sh
+          python3 -c "import torch; print('torch version:', torch.__version__)"
+
+      - name: Install PyTorch ${{ matrix.torch }}
+        if: startsWith(matrix.os, 'macos')
+        shell: bash
+        run: |
+          python3 -m pip install -qq --upgrade pip
+          python3 -m pip install -qq wheel twine typing_extensions
+          python3 -m pip install -qq torch==${{ matrix.torch }}
 
           python3 -c "import torch; print('torch version:', torch.__version__)"
+
+      - name: Download cudnn 8.0
+        if: startsWith(matrix.os, 'ubuntu')
+        env:
+          cuda: ${{ matrix.cuda }}
+        run: |
+          ./scripts/github_actions/install_cudnn.sh
 
       - name: Build pip packages
         shell: bash
@@ -73,12 +107,12 @@ jobs:
           python3 setup.py bdist_wheel --python-tag=py${tag}
           ls -lh dist/
 
-      - name: Publish wheels to PyPI
-        env:
-          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        run: |
-          twine upload dist/kaldifeat-*.whl
+      # - name: Publish wheels to PyPI
+      #   env:
+      #     TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+      #     TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      #   run: |
+      #     twine upload dist/kaldifeat-*.whl
 
       - name: Upload Wheel
         uses: actions/upload-artifact@v2
