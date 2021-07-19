@@ -14,12 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: Publish to PyPI
+name: Run tests
 
 on:
-  # push:
-  #   tags:
-  #     - '*'
   push:
     branches:
       - master
@@ -63,25 +60,15 @@ jobs:
 
           python3 -c "import torch; print('torch version:', torch.__version__)"
 
-      - name: Build pip packages
+      - name: Build
         shell: bash
-        env:
-          KALDIFEAT_IS_FOR_PYPI: 1
         run: |
-          tag=$(python3 -c "import sys; print(''.join(sys.version[:3].split('.')))")
-          export KALDIFEAT_MAKE_ARGS="-j2"
-          python3 setup.py bdist_wheel --python-tag=py${tag}
-          ls -lh dist/
+          mkdir build_release
+          cd build_release
+          make -j
 
-      - name: Publish wheels to PyPI
-        env:
-          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      - name: Run tests
+        shell: bash
         run: |
-          twine upload dist/kaldifeat-*.whl
-
-      - name: Upload Wheel
-        uses: actions/upload-artifact@v2
-        with:
-          name: torch-${{ matrix.torch }}-python-${{ matrix.python-version }}-${{ matrix.os }}
-          path: dist/*.whl
+          cd build_release
+          ctest -R py --output-on-failure

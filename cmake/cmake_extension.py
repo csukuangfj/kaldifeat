@@ -85,6 +85,7 @@ class BuildExtension(build_ext):
             )
 
         lib_so = glob.glob(f"{self.build_temp}/lib/*kaldifeat*.so")
+        lib_so += glob.glob(f"{self.build_temp}/lib/*kaldifeat*.dylib")  # macOS
         for so in lib_so:
             print(f"Copying {so} to {self.build_lib}/")
             shutil.copy(f"{so}", f"{self.build_lib}/")
