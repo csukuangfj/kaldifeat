@@ -20,8 +20,6 @@ on:
   push:
     tags:
       - '*'
-    branches:
-      - torch-1.7.1
 
 jobs:
   pypi:

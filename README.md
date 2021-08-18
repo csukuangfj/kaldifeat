@@ -211,6 +211,8 @@ for more examples.
 ## From PyPi with pip
 
 You need to install PyTorch and CMake first.
+cmake 3.11 is known to work. Other cmake versions may also work.
+PyTorch 1.7.1 and 1.8.1 are known to work. Other PyTorch versions may also work.
 
 ```bash
 pip install -v kaldilm
