@@ -6,6 +6,8 @@
 
 #include "kaldifeat/csrc/feature-spectrogram.h"
 
+#include "torch/fft.h"
+
 namespace kaldifeat {
 
 std::ostream &operator<<(std::ostream &os, const SpectrogramOptions &opts) {

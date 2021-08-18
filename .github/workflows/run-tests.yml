@@ -32,7 +32,7 @@ jobs:
       matrix:
         os: [ubuntu-18.04, macos-10.15]
         cuda: ["10.1"]
-        torch: ["1.8.1"]
+        torch: ["1.7.1"]
         python-version: [3.6, 3.7, 3.8]
     steps:
       - uses: actions/checkout@v2

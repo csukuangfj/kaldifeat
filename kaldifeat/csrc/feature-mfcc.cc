@@ -7,6 +7,7 @@
 #include "kaldifeat/csrc/feature-mfcc.h"
 
 #include "kaldifeat/csrc/matrix-functions.h"
+#include "torch/fft.h"
 
 namespace kaldifeat {
 
