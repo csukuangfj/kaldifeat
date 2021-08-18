@@ -1,0 +1,4 @@
+include CMakeLists.txt
+exclude pyproject.toml
+recursive-include kaldifeat *.*
+recursive-include cmake *.*
