@@ -5,7 +5,6 @@
 import re
 
 import setuptools
-import torch
 
 from cmake.cmake_extension import BuildExtension, bdist_wheel, cmake_extension
 
@@ -25,16 +24,6 @@ def get_package_version():
     return latest_version
 
 
-def get_pytorch_version():
-    # if it is 1.7.1+cuda101, then strip +cuda101
-    return torch.__version__.split("+")[0]
-
-
-install_requires = [
-    f"torch=={get_pytorch_version()}",
-]
-
-
 package_name = "kaldifeat"
 
 with open("kaldifeat/python/kaldifeat/__init__.py", "a") as f:
@@ -48,7 +37,6 @@ setuptools.setup(
     data_files=[("", ["LICENSE", "README.md"])],
     package_dir={package_name: "kaldifeat/python/kaldifeat"},
     packages=[package_name],
-    install_requires=install_requires,
     url="https://github.com/csukuangfj/kaldifeat",
     long_description=read_long_description(),
     long_description_content_type="text/markdown",
