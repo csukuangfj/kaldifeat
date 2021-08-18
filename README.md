@@ -210,15 +210,10 @@ for more examples.
 
 ## From PyPi with pip
 
-If you install `kaldifeat` using `pip`, it will also install
-PyTorch 1.8.1. If this is not what you want (i.e, you have installed a
-different version of PyTorch and you don't want to replace it
-with PyTorch 1.8.1), please add an option `--no-dependencies` to
-`pip install`.
+You need to install PyTorch and CMake first.
 
 ```bash
-pip install kaldifeat                     # also installs torch 1.8.1
-pip install --no-dependencies kaldifeat   # will NOT install torch 1.8.1
+pip install -v kaldilm
 ```
 
 ## From source
@@ -226,7 +221,7 @@ pip install --no-dependencies kaldifeat   # will NOT install torch 1.8.1
 The following are the commands to compile `kaldifeat` from source.
 We assume that you have installed `cmake` and PyTorch.
 cmake 3.11 is known to work. Other cmake versions may also work.
-PyTorch 1.8.1 is known to work. Other PyTorch versions may also work.
+PyTorch 1.7.1 and 1.8.1 are known to work. Other PyTorch versions may also work.
 
 ```bash
 mkdir /some/path
