@@ -4,6 +4,8 @@ cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
 project(kaldifeat)
 
+# remember to change the version in
+# scripts/conda/kaldifeat/meta.yaml
 set(kaldifeat_VERSION "1.5.4")
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
