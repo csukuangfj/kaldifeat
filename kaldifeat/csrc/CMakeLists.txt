@@ -14,6 +14,9 @@ set(kaldifeat_srcs
 add_library(kaldifeat_core SHARED ${kaldifeat_srcs})
 target_link_libraries(kaldifeat_core PUBLIC ${TORCH_LIBRARIES})
 
+target_compile_definitions(kaldifeat_core PUBLIC KALDIFEAT_TORCH_VERSION_MAJOR=${KALDIFEAT_TORCH_VERSION_MAJOR})
+target_compile_definitions(kaldifeat_core PUBLIC KALDIFEAT_TORCH_VERSION_MINOR=${KALDIFEAT_TORCH_VERSION_MINOR})
+
 add_executable(test_kaldifeat test_kaldifeat.cc)
 target_link_libraries(test_kaldifeat PRIVATE kaldifeat_core)
 

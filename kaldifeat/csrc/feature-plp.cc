@@ -7,7 +7,6 @@
 #include "kaldifeat/csrc/feature-plp.h"
 
 #include "kaldifeat/csrc/feature-functions.h"
-#include "torch/fft.h"
 #include "torch/torch.h"
 
 namespace kaldifeat {
@@ -98,7 +97,20 @@ torch::Tensor PlpComputer::Compute(torch::Tensor signal_raw_log_energy,
   }
 
   // note spectrum is in magnitude, not power, because of `abs()`
+#if defined(KALDIFEAT_HAS_FFT_NAMESPACE)
+  // signal_frame shape: [x, 512]
+  // spectrum shape [x, 257
   torch::Tensor spectrum = torch::fft::rfft(signal_frame).abs();
+#else
+  // signal_frame shape [x, 512]
+  // real_imag shape [x, 257, 2],
+  //   where [..., 0] is the real part
+  //         [..., 1] is the imaginary part
+  torch::Tensor real_imag = torch::rfft(signal_frame, 1);
+  torch::Tensor real = real_imag.index({"...", 0});
+  torch::Tensor imag = real_imag.index({"...", 1});
+  torch::Tensor spectrum = (real.square() + imag.square()).sqrt();
+#endif
 
   // remove the last column, i.e., the highest fft bin
   spectrum = spectrum.index(

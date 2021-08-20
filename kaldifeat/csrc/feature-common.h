@@ -7,7 +7,23 @@
 #ifndef KALDIFEAT_CSRC_FEATURE_COMMON_H_
 #define KALDIFEAT_CSRC_FEATURE_COMMON_H_
 
+#include "kaldifeat/csrc/feature-functions.h"
 #include "kaldifeat/csrc/feature-window.h"
+// See  "The torch.fft module in PyTorch 1.7"
+// https://github.com/pytorch/pytorch/wiki/The-torch.fft-module-in-PyTorch-1.7
+#if KALDIFEAT_TORCH_VERSION_MAJOR > 1 || \
+    (KALDIFEAT_TORCH_VERSION_MAJOR == 1 && KALDIFEAT_TORCH_VERSION_MINOR > 6)
+#include "torch/fft.h"
+#define KALDIFEAT_HAS_FFT_NAMESPACE
+// It uses torch::fft::rfft
+// Its input shape is [x, N], output shape is [x, N/2]
+// which is a complex tensor
+#else
+#include "ATen/Functions.h"
+// It uses torch::fft
+// Its input shape is [x, N], output shape is [x, N/2, 2]
+// which contains the real part [..., ], and imaginary part [..., 1]
+#endif
 
 namespace kaldifeat {
 

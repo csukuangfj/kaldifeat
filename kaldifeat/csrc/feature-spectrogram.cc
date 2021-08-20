@@ -6,8 +6,6 @@
 
 #include "kaldifeat/csrc/feature-spectrogram.h"
 
-#include "torch/fft.h"
-
 namespace kaldifeat {
 
 std::ostream &operator<<(std::ostream &os, const SpectrogramOptions &opts) {
@@ -38,7 +36,21 @@ torch::Tensor SpectrogramComputer::Compute(torch::Tensor signal_raw_log_energy,
   }
 
   // note spectrum is in magnitude, not power, because of `abs()`
+#if defined(KALDIFEAT_HAS_FFT_NAMESPACE)
+  // signal_frame shape: [x, 512]
+  // spectrum shape [x, 257
   torch::Tensor spectrum = torch::fft::rfft(signal_frame).abs();
+#else
+  // signal_frame shape [x, 512]
+  // real_imag shape [x, 257, 2],
+  //   where [..., 0] is the real part
+  //         [..., 1] is the imaginary part
+  torch::Tensor real_imag = torch::rfft(signal_frame, 1);
+  torch::Tensor real = real_imag.index({"...", 0});
+  torch::Tensor imag = real_imag.index({"...", 1});
+  torch::Tensor spectrum = (real.square() + imag.square()).sqrt();
+#endif
+
   if (opts_.return_raw_fft) {
     KALDIFEAT_ERR << "return raw fft is not supported yet";
   }

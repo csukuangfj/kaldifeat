@@ -208,11 +208,26 @@ for more examples.
 
 # Installation
 
+## From conda
+
+Supported versions of Python, PyTorch, and CUDA toolkit are listed below:
+
+[![Supported Python versions](/doc/source/images/python-3.6_3.7_3.8-blue.svg)](/doc/source/images/python-3.6_3.7_3.8-blue.svg)
+[![Supported PyTorch versions](/doc/source/images/pytorch-1.6.0_1.7.0_1.7.1_1.8.0_1.8.1_1.9.0-green.svg)](/doc/source/images/pytorch-1.6.0_1.7.0_1.7.1_1.8.0_1.8.1_1.9.0-green.svg)
+[![Supported CUDA versions](/doc/source/images/cuda-10.1_10.2_11.0_11.1-orange.svg)](/doc/source/images/cuda-10.1_10.2_11.0_11.1-orange.svg)
+
+```bash
+conda install -c kaldifeat -c pytorch -c conda-forge kaldifeat python=3.8 cudatoolkit=11.1 pytorch=1.8.1
+```
+
+You can select the supported Python version, CUDA toolkit version and PyTorch version as you wish.
+
+
 ## From PyPi with pip
 
 You need to install PyTorch and CMake first.
 cmake 3.11 is known to work. Other cmake versions may also work.
-PyTorch 1.7.1 and 1.8.1 are known to work. Other PyTorch versions may also work.
+PyTorch 1.6.1 and above are known to work. Other PyTorch versions may also work.
 
 ```bash
 pip install -v kaldilm

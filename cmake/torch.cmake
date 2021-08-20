@@ -23,3 +23,15 @@ execute_process(
 )
 
 message(STATUS "PyTorch version: ${TORCH_VERSION}")
+
+execute_process(
+  COMMAND "${PYTHON_EXECUTABLE}" -c "import torch; print(torch.__version__.split('.')[0])"
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  OUTPUT_VARIABLE KALDIFEAT_TORCH_VERSION_MAJOR
+)
+
+execute_process(
+  COMMAND "${PYTHON_EXECUTABLE}" -c "import torch; print(torch.__version__.split('.')[1])"
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  OUTPUT_VARIABLE KALDIFEAT_TORCH_VERSION_MINOR
+)
