@@ -229,7 +229,7 @@ You can select the supported Python version, CUDA toolkit version and PyTorch ve
 
 You need to install PyTorch and CMake first.
 cmake 3.11 is known to work. Other cmake versions may also work.
-PyTorch 1.6.1 and above are known to work. Other PyTorch versions may also work.
+PyTorch 1.6.0 and above are known to work. Other PyTorch versions may also work.
 
 ```bash
 pip install -v kaldilm
@@ -240,7 +240,7 @@ pip install -v kaldilm
 The following are the commands to compile `kaldifeat` from source.
 We assume that you have installed `cmake` and PyTorch.
 cmake 3.11 is known to work. Other cmake versions may also work.
-PyTorch 1.7.1 and 1.8.1 are known to work. Other PyTorch versions may also work.
+PyTorch 1.6.0 and above are known to work. Other PyTorch versions may also work.
 
 ```bash
 mkdir /some/path
