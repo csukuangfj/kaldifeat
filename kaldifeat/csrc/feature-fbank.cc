@@ -8,8 +8,6 @@
 
 #include <cmath>
 
-#include "torch/torch.h"
-
 namespace kaldifeat {
 
 std::ostream &operator<<(std::ostream &os, const FbankOptions &opts) {

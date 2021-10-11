@@ -11,7 +11,7 @@
 
 #include "kaldifeat/csrc/feature-common.h"
 #include "kaldifeat/csrc/feature-window.h"
-#include "torch/torch.h"
+#include "torch/script.h"
 
 namespace kaldifeat {
 

@@ -7,7 +7,6 @@
 #include "kaldifeat/csrc/feature-plp.h"
 
 #include "kaldifeat/csrc/feature-functions.h"
-#include "torch/torch.h"
 
 namespace kaldifeat {
 

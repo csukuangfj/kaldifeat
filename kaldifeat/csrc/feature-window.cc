@@ -9,8 +9,6 @@
 #include <cmath>
 #include <vector>
 
-#include "torch/torch.h"
-
 #ifndef M_2PI
 #define M_2PI 6.283185307179586476925286766559005
 #endif

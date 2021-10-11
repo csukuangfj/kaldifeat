@@ -7,7 +7,8 @@
 #include <string>
 
 #include "kaldifeat/csrc/log.h"
-#include "torch/torch.h"
+#include "torch/all.h"
+#include "torch/script.h"
 
 #ifndef KALDIFEAT_CSRC_FEATURE_WINDOW_H_
 #define KALDIFEAT_CSRC_FEATURE_WINDOW_H_

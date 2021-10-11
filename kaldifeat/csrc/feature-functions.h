@@ -7,7 +7,7 @@
 #ifndef KALDIFEAT_CSRC_FEATURE_FUNCTIONS_H_
 #define KALDIFEAT_CSRC_FEATURE_FUNCTIONS_H_
 
-#include "torch/torch.h"
+#include "torch/script.h"
 
 namespace kaldifeat {
 

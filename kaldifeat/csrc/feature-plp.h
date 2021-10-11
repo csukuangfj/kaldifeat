@@ -13,7 +13,7 @@
 #include "kaldifeat/csrc/feature-common.h"
 #include "kaldifeat/csrc/feature-window.h"
 #include "kaldifeat/csrc/mel-computations.h"
-#include "torch/torch.h"
+#include "torch/script.h"
 
 namespace kaldifeat {
 

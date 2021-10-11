@@ -20,7 +20,7 @@
 
 #include <string>
 
-#include "torch/torch.h"
+#include "torch/script.h"
 
 namespace kaldifeat {
 

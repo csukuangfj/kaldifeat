@@ -2,7 +2,7 @@
 //
 // Copyright (c)  2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
-#include "torch/torch.h"
+#include "torch/script.h"
 
 static void TestPreemph() {
   torch::Tensor a = torch::arange(0, 12).reshape({3, 4}).to(torch::kFloat);
