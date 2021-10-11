@@ -2,6 +2,7 @@
 //
 // Copyright (c)  2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
+#include "torch/all.h"
 #include "torch/script.h"
 
 static void TestPreemph() {

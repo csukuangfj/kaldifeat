@@ -6,6 +6,7 @@
 #define KALDIFEAT_PYTHON_CSRC_KALDIFEAT_H_
 
 #include "pybind11/pybind11.h"
+#include "torch/torch.h"
 namespace py = pybind11;
 
 #endif  // KALDIFEAT_PYTHON_CSRC_KALDIFEAT_H_
