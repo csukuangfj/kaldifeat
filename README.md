@@ -210,7 +210,7 @@ for more examples.
 
 # Installation
 
-## From conda
+## From conda (Only for Linux + CUDA)
 
 Supported versions of Python, PyTorch, and CUDA toolkit are listed below:
 
@@ -224,22 +224,25 @@ conda install -c kaldifeat -c pytorch -c conda-forge kaldifeat python=3.8 cudato
 
 You can select the supported Python version, CUDA toolkit version and PyTorch version as you wish.
 
+**Note:** If you want a CPU only version or want to install `kaldifeat` on other operating systems,
+e.g., macOS, please use `pip install` or compile `kaldifeat` from source.
+
 
 ## From PyPi with pip
 
 You need to install PyTorch and CMake first.
-cmake 3.11 is known to work. Other cmake versions may also work.
+CMake 3.11 is known to work. Other CMake versions may also work.
 PyTorch 1.6.0 and above are known to work. Other PyTorch versions may also work.
 
 ```bash
-pip install -v kaldilm
+pip install -v kaldifeat
 ```
 
 ## From source
 
 The following are the commands to compile `kaldifeat` from source.
-We assume that you have installed `cmake` and PyTorch.
-cmake 3.11 is known to work. Other cmake versions may also work.
+We assume that you have installed `CMake` and PyTorch.
+CMake 3.11 is known to work. Other CMake versions may also work.
 PyTorch 1.6.0 and above are known to work. Other PyTorch versions may also work.
 
 ```bash
