@@ -32,12 +32,15 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 
-option(BUILD_TESTS "Whether to build tests or not" ON)
+option(kaldifeat_BUILD_TESTS "Whether to build tests or not" ON)
 
-include(pybind11)
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+  include(pybind11)
+endif()
+
 include(torch)
 
-if(BUILD_TESTS)
+if(kaldifeat_BUILD_TESTS)
   include(googletest)
   enable_testing()
 endif()

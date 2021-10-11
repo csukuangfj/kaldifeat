@@ -36,7 +36,7 @@ function(kaldifeat_add_test source)
   )
 endfunction()
 
-if(BUILD_TESTS)
+if(kaldifeat_BUILD_TESTS)
   # please sort the source files alphabetically
   set(test_srcs
     feature-window-test.cc
