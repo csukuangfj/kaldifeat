@@ -7,6 +7,7 @@
 #include <string>
 
 #include "kaldifeat/csrc/feature-window.h"
+#include "kaldifeat/python/csrc/utils.h"
 
 namespace kaldifeat {
 
@@ -26,6 +27,14 @@ static void PybindFrameExtractionOptions(py::module &m) {
                      &FrameExtractionOptions::round_to_power_of_two)
       .def_readwrite("blackman_coeff", &FrameExtractionOptions::blackman_coeff)
       .def_readwrite("snip_edges", &FrameExtractionOptions::snip_edges)
+      .def("as_dict",
+           [](const FrameExtractionOptions &self) -> py::dict {
+             return AsDict(self);
+           })
+      .def_static("from_dict",
+                  [](py::dict dict) -> FrameExtractionOptions {
+                    return FrameExtractionOptionsFromDict(dict);
+                  })
 #if 0
       .def_readwrite("allow_downsample",
                      &FrameExtractionOptions::allow_downsample)

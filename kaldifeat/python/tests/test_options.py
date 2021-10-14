@@ -28,7 +28,19 @@ def test_frame_extraction_options():
     opts.round_to_power_of_two = False
     opts.blackman_coeff = 0.422
     opts.snip_edges = False
-    print(opts)
+
+    opts_dict = opts.as_dict()
+    for key, value in opts_dict.items():
+        assert value == getattr(opts, key)
+
+    opts2 = kaldifeat.FrameExtractionOptions.from_dict(opts_dict)
+
+    for key, value in opts_dict.items():
+        assert value == getattr(opts2, key)
+
+    assert str(opts) == str(opts2)
+
+    assert opts_dict == opts2.as_dict()
 
 
 def test_mel_banks_options():

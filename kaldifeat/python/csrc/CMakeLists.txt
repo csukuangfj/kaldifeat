@@ -7,6 +7,7 @@ pybind11_add_module(_kaldifeat
   feature-window.cc
   kaldifeat.cc
   mel-computations.cc
+  utils.cc
 )
 target_link_libraries(_kaldifeat PRIVATE kaldifeat_core)
 if(UNIX AND NOT APPLE)
