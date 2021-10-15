@@ -22,6 +22,7 @@ set(py_test_files
   test_frame_extraction_options.py
   test_mel_bank_options.py
   test_mfcc.py
+  test_mfcc_options.py
   test_options.py
   test_plp.py
   test_spectrogram.py

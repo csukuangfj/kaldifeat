@@ -9,7 +9,8 @@ import kaldifeat
 
 
 def test_default():
-    opts = kaldifeat.FbankOptions()
+    opts = kaldifeat.MfccOptions()
+
     assert opts.frame_opts.samp_freq == 16000
     assert opts.frame_opts.frame_shift_ms == 10.0
     assert opts.frame_opts.frame_length_ms == 25.0
@@ -29,19 +30,23 @@ def test_default():
     assert opts.mel_opts.debug_mel is False
     assert opts.mel_opts.htk_mode is False
 
-    assert opts.use_energy is False
-    assert opts.energy_floor == 0.0
+    assert opts.num_ceps == 13
+    assert opts.use_energy is True
+    assert opts.energy_floor == 0
     assert opts.raw_energy is True
+    assert opts.cepstral_lifter == 22.0
     assert opts.htk_compat is False
-    assert opts.use_log_fbank is True
-    assert opts.use_power is True
+
     assert opts.device.type == "cpu"
 
 
 def test_set_get():
-    opts = kaldifeat.FbankOptions()
-    opts.use_energy = True
-    assert opts.use_energy is True
+    opts = kaldifeat.MfccOptions()
+    opts.num_ceps = 22
+    assert opts.num_ceps == 22
+
+    opts.use_energy = False
+    assert opts.use_energy is False
 
     opts.energy_floor = 1
     assert opts.energy_floor == 1
@@ -49,14 +54,11 @@ def test_set_get():
     opts.raw_energy = False
     assert opts.raw_energy is False
 
+    opts.cepstral_lifter = 21
+    assert opts.cepstral_lifter == 21
+
     opts.htk_compat = True
     assert opts.htk_compat is True
-
-    opts.use_log_fbank = False
-    assert opts.use_log_fbank is False
-
-    opts.use_power = False
-    assert opts.use_power is False
 
     opts.device = torch.device("cuda", 1)
     assert opts.device.type == "cuda"
@@ -64,7 +66,7 @@ def test_set_get():
 
 
 def test_set_get_frame_opts():
-    opts = kaldifeat.FbankOptions()
+    opts = kaldifeat.MfccOptions()
 
     opts.frame_opts.samp_freq = 44100
     assert opts.frame_opts.samp_freq == 44100
@@ -98,7 +100,7 @@ def test_set_get_frame_opts():
 
 
 def test_set_get_mel_opts():
-    opts = kaldifeat.FbankOptions()
+    opts = kaldifeat.MfccOptions()
 
     opts.mel_opts.num_bins = 100
     assert opts.mel_opts.num_bins == 100
@@ -123,8 +125,8 @@ def test_set_get_mel_opts():
 
 
 def test_from_empty_dict():
-    opts = kaldifeat.FbankOptions.from_dict({})
-    opts2 = kaldifeat.FbankOptions()
+    opts = kaldifeat.MfccOptions.from_dict({})
+    opts2 = kaldifeat.MfccOptions()
 
     assert str(opts) == str(opts2)
 
@@ -135,10 +137,12 @@ def test_from_dict_partial():
         "htk_compat": True,
         "mel_opts": {"num_bins": 80, "vtln_low": 1},
         "frame_opts": {"window_type": "hanning"},
+        "device": "cuda:2",
     }
-    opts = kaldifeat.FbankOptions.from_dict(d)
+    opts = kaldifeat.MfccOptions.from_dict(d)
     assert opts.energy_floor == 10.5
     assert opts.htk_compat is True
+    assert opts.device == torch.device("cuda", 2)
     assert opts.mel_opts.num_bins == 80
     assert opts.mel_opts.vtln_low == 1
     assert opts.frame_opts.window_type == "hanning"
@@ -148,7 +152,7 @@ def test_from_dict_partial():
 
 
 def test_from_dict_full_and_as_dict():
-    opts = kaldifeat.FbankOptions()
+    opts = kaldifeat.MfccOptions()
     opts.htk_compat = True
     opts.mel_opts.num_bins = 80
     opts.frame_opts.samp_freq = 10
@@ -166,14 +170,14 @@ def test_from_dict_full_and_as_dict():
     frame_opts.samp_freq = 10
     assert d["frame_opts"] == frame_opts.as_dict()
 
-    opts2 = kaldifeat.FbankOptions.from_dict(d)
+    opts2 = kaldifeat.MfccOptions.from_dict(d)
     assert str(opts2) == str(opts)
 
     d["htk_compat"] = False
-    d["device"] = torch.device("cuda", 2)
-    opts3 = kaldifeat.FbankOptions.from_dict(d)
+    d["device"] = torch.device("cuda", 10)
+    opts3 = kaldifeat.MfccOptions.from_dict(d)
     assert opts3.htk_compat is False
-    assert opts3.device == torch.device("cuda", 2)
+    assert opts3.device == torch.device("cuda", 10)
 
 
 def main():

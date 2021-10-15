@@ -7,6 +7,7 @@
 #include <string>
 
 #include "kaldifeat/csrc/feature-mfcc.h"
+#include "kaldifeat/python/csrc/utils.h"
 
 namespace kaldifeat {
 
@@ -33,7 +34,12 @@ void PybindMfccOptions(py::module &m) {
             self.device = torch::Device(s);
           })
       .def("__str__",
-           [](const PyClass &self) -> std::string { return self.ToString(); });
+           [](const PyClass &self) -> std::string { return self.ToString(); })
+      .def("as_dict",
+           [](const PyClass &self) -> py::dict { return AsDict(self); })
+      .def_static("from_dict", [](py::dict dict) -> PyClass {
+        return MfccOptionsFromDict(dict);
+      });
 }
 
 static void PybindMfcc(py::module &m) {
