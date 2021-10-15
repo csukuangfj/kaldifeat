@@ -6,7 +6,11 @@
 
 #include "kaldifeat/csrc/feature-window.h"
 
-#define FROM_DICT(type, key) opts.key = py::type(dict[#key])
+#define FROM_DICT(type, key)         \
+  if (dict.contains(#key)) {         \
+    opts.key = py::type(dict[#key]); \
+  }
+
 #define AS_DICT(key) dict[#key] = opts.key
 
 namespace kaldifeat {

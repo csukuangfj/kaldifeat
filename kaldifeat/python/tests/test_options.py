@@ -16,33 +16,6 @@ sys.path.insert(0, f"{kaldi_feat_dir}/build/lib")
 import kaldifeat
 
 
-def test_frame_extraction_options():
-    opts = kaldifeat.FrameExtractionOptions()
-    opts.samp_freq = 220500
-    opts.frame_shift_ms = 15
-    opts.frame_length_ms = 40
-    opts.dither = 0.1
-    opts.preemph_coeff = 0.98
-    opts.remove_dc_offset = False
-    opts.window_type = "hanning"
-    opts.round_to_power_of_two = False
-    opts.blackman_coeff = 0.422
-    opts.snip_edges = False
-
-    opts_dict = opts.as_dict()
-    for key, value in opts_dict.items():
-        assert value == getattr(opts, key)
-
-    opts2 = kaldifeat.FrameExtractionOptions.from_dict(opts_dict)
-
-    for key, value in opts_dict.items():
-        assert value == getattr(opts2, key)
-
-    assert str(opts) == str(opts2)
-
-    assert opts_dict == opts2.as_dict()
-
-
 def test_mel_banks_options():
     opts = kaldifeat.MelBanksOptions()
     opts.num_bins = 23
@@ -180,7 +153,6 @@ def test_plp_options():
 
 
 def main():
-    test_frame_extraction_options()
     test_mel_banks_options()
     test_fbank_options()
     test_mfcc_options()
