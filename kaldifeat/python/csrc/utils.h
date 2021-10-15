@@ -5,6 +5,7 @@
 #ifndef KALDIFEAT_PYTHON_CSRC_UTILS_H_
 #define KALDIFEAT_PYTHON_CSRC_UTILS_H_
 
+#include "kaldifeat/csrc/feature-fbank.h"
 #include "kaldifeat/csrc/feature-window.h"
 #include "kaldifeat/csrc/mel-computations.h"
 #include "kaldifeat/python/csrc/kaldifeat.h"
@@ -28,6 +29,9 @@ py::dict AsDict(const FrameExtractionOptions &opts);
 
 MelBanksOptions MelBanksOptionsFromDict(py::dict dict);
 py::dict AsDict(const MelBanksOptions &opts);
+
+FbankOptions FbankOptionsFromDict(py::dict dict);
+py::dict AsDict(const FbankOptions &opts);
 
 }  // namespace kaldifeat
 

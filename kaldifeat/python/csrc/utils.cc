@@ -45,6 +45,7 @@ py::dict AsDict(const FrameExtractionOptions &opts) {
   AS_DICT(round_to_power_of_two);
   AS_DICT(blackman_coeff);
   AS_DICT(snip_edges);
+
   return dict;
 }
 
@@ -71,6 +72,49 @@ py::dict AsDict(const MelBanksOptions &opts) {
   AS_DICT(vtln_high);
   AS_DICT(debug_mel);
   AS_DICT(htk_mode);
+
+  return dict;
+}
+
+FbankOptions FbankOptionsFromDict(py::dict dict) {
+  FbankOptions opts;
+
+  if (dict.contains("frame_opts")) {
+    opts.frame_opts = FrameExtractionOptionsFromDict(dict["frame_opts"]);
+  }
+
+  if (dict.contains("mel_opts")) {
+    opts.mel_opts = MelBanksOptionsFromDict(dict["mel_opts"]);
+  }
+
+  FROM_DICT(bool_, use_energy);
+  FROM_DICT(float_, energy_floor);
+  FROM_DICT(bool_, raw_energy);
+  FROM_DICT(bool_, htk_compat);
+  FROM_DICT(bool_, use_log_fbank);
+  FROM_DICT(bool_, use_power);
+
+  if (dict.contains("device")) {
+    opts.device = torch::Device(std::string(py::str(dict["device"])));
+  }
+
+  return opts;
+}
+
+py::dict AsDict(const FbankOptions &opts) {
+  py::dict dict;
+
+  dict["frame_opts"] = AsDict(opts.frame_opts);
+  dict["mel_opts"] = AsDict(opts.mel_opts);
+  AS_DICT(use_energy);
+  AS_DICT(energy_floor);
+  AS_DICT(raw_energy);
+  AS_DICT(htk_compat);
+  AS_DICT(use_log_fbank);
+  AS_DICT(use_power);
+
+  auto torch_device = py::module_::import("torch").attr("device");
+  dict["device"] = torch_device(opts.device.str());
 
   return dict;
 }
