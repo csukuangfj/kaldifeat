@@ -199,7 +199,12 @@ Please refer to
   - [kaldifeat/python/tests/test_mfcc.py](kaldifeat/python/tests/test_mfcc.py)
   - [kaldifeat/python/tests/test_plp.py](kaldifeat/python/tests/test_plp.py)
   - [kaldifeat/python/tests/test_spectrogram.py](kaldifeat/python/tests/test_spectrogram.py)
-  - [kaldifeat/python/tests/test_options.py](kaldifeat/python/tests/test_options.py)
+  - [kaldifeat/python/tests/test_frame_extraction_options.py](kaldifeat/python/tests/test_frame_extraction_options.py)
+  - [kaldifeat/python/tests/test_mel_bank_options.py](kaldifeat/python/tests/test_mel_bank_options.py)
+  - [kaldifeat/python/tests/test_fbank_options.py](kaldifeat/python/tests/test_fbank_options.py)
+  - [kaldifeat/python/tests/test_mfcc_options.py](kaldifeat/python/tests/test_mfcc_options.py)
+  - [kaldifeat/python/tests/test_spectrogram_options.py](kaldifeat/python/tests/test_spectrogram_options.py)
+  - [kaldifeat/python/tests/test_plp_options.py](kaldifeat/python/tests/test_plp_options.py)
 
 for more examples.
 
