@@ -4,6 +4,8 @@
 
 #include "kaldifeat/python/csrc/utils.h"
 
+#include <string>
+
 #include "kaldifeat/csrc/feature-window.h"
 
 #define FROM_DICT(type, key)         \
