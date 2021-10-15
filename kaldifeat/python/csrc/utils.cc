@@ -195,6 +195,56 @@ py::dict AsDict(const SpectrogramOptions &opts) {
   return dict;
 }
 
+PlpOptions PlpOptionsFromDict(py::dict dict) {
+  PlpOptions opts;
+
+  if (dict.contains("frame_opts")) {
+    opts.frame_opts = FrameExtractionOptionsFromDict(dict["frame_opts"]);
+  }
+
+  if (dict.contains("mel_opts")) {
+    opts.mel_opts = MelBanksOptionsFromDict(dict["mel_opts"]);
+  }
+
+  FROM_DICT(int_, lpc_order);
+  FROM_DICT(int_, num_ceps);
+  FROM_DICT(bool_, use_energy);
+  FROM_DICT(float_, energy_floor);
+  FROM_DICT(bool_, raw_energy);
+  FROM_DICT(float_, compress_factor);
+  FROM_DICT(int_, cepstral_lifter);
+  FROM_DICT(float_, cepstral_scale);
+  FROM_DICT(bool_, htk_compat);
+
+  if (dict.contains("device")) {
+    opts.device = torch::Device(std::string(py::str(dict["device"])));
+  }
+
+  return opts;
+}
+
+py::dict AsDict(const PlpOptions &opts) {
+  py::dict dict;
+
+  dict["frame_opts"] = AsDict(opts.frame_opts);
+  dict["mel_opts"] = AsDict(opts.mel_opts);
+
+  AS_DICT(lpc_order);
+  AS_DICT(num_ceps);
+  AS_DICT(use_energy);
+  AS_DICT(energy_floor);
+  AS_DICT(raw_energy);
+  AS_DICT(compress_factor);
+  AS_DICT(cepstral_lifter);
+  AS_DICT(cepstral_scale);
+  AS_DICT(htk_compat);
+
+  auto torch_device = py::module_::import("torch").attr("device");
+  dict["device"] = torch_device(opts.device.str());
+
+  return dict;
+}
+
 #undef FROM_DICT
 #undef AS_DICT
 
