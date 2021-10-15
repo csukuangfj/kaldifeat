@@ -23,6 +23,7 @@ set(py_test_files
   test_spectrogram.py
   test_options.py
   test_frame_extraction_options.py
+  test_mel_bank_options.py
 )
 
 foreach(source IN LISTS py_test_files)

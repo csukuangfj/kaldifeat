@@ -16,18 +16,6 @@ sys.path.insert(0, f"{kaldi_feat_dir}/build/lib")
 import kaldifeat
 
 
-def test_mel_banks_options():
-    opts = kaldifeat.MelBanksOptions()
-    opts.num_bins = 23
-    opts.low_freq = 21
-    opts.high_freq = 8000
-    opts.vtln_low = 101
-    opts.vtln_high = -501
-    opts.debug_mel = True
-    opts.htk_mode = True
-    print(opts)
-
-
 def test_fbank_options():
     opts = kaldifeat.FbankOptions()
     frame_opts = opts.frame_opts
@@ -153,7 +141,6 @@ def test_plp_options():
 
 
 def main():
-    test_mel_banks_options()
     test_fbank_options()
     test_mfcc_options()
     test_spectogram_options()
