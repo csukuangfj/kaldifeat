@@ -149,12 +149,45 @@ py::dict AsDict(const MfccOptions &opts) {
 
   dict["frame_opts"] = AsDict(opts.frame_opts);
   dict["mel_opts"] = AsDict(opts.mel_opts);
+
   AS_DICT(num_ceps);
   AS_DICT(use_energy);
   AS_DICT(energy_floor);
   AS_DICT(raw_energy);
   AS_DICT(cepstral_lifter);
   AS_DICT(htk_compat);
+
+  auto torch_device = py::module_::import("torch").attr("device");
+  dict["device"] = torch_device(opts.device.str());
+
+  return dict;
+}
+
+SpectrogramOptions SpectrogramOptionsFromDict(py::dict dict) {
+  SpectrogramOptions opts;
+
+  if (dict.contains("frame_opts")) {
+    opts.frame_opts = FrameExtractionOptionsFromDict(dict["frame_opts"]);
+  }
+
+  FROM_DICT(float_, energy_floor);
+  FROM_DICT(bool_, raw_energy);
+  // FROM_DICT(bool_, return_raw_fft);
+
+  if (dict.contains("device")) {
+    opts.device = torch::Device(std::string(py::str(dict["device"])));
+  }
+
+  return opts;
+}
+
+py::dict AsDict(const SpectrogramOptions &opts) {
+  py::dict dict;
+
+  dict["frame_opts"] = AsDict(opts.frame_opts);
+
+  AS_DICT(energy_floor);
+  AS_DICT(raw_energy);
 
   auto torch_device = py::module_::import("torch").attr("device");
   dict["device"] = torch_device(opts.device.str());

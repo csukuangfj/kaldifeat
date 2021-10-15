@@ -7,6 +7,7 @@
 
 #include "kaldifeat/csrc/feature-fbank.h"
 #include "kaldifeat/csrc/feature-mfcc.h"
+#include "kaldifeat/csrc/feature-spectrogram.h"
 #include "kaldifeat/csrc/feature-window.h"
 #include "kaldifeat/csrc/mel-computations.h"
 #include "kaldifeat/python/csrc/kaldifeat.h"
@@ -36,6 +37,9 @@ py::dict AsDict(const FbankOptions &opts);
 
 MfccOptions MfccOptionsFromDict(py::dict dict);
 py::dict AsDict(const MfccOptions &opts);
+
+SpectrogramOptions SpectrogramOptionsFromDict(py::dict dict);
+py::dict AsDict(const SpectrogramOptions &opts);
 
 }  // namespace kaldifeat
 
