@@ -1,6 +1,6 @@
 package:
   name: kaldifeat
-  version: "1.8"
+  version: "1.9"
 
 source:
   path: "{{ environ.get('KALDIFEAT_ROOT_DIR') }}"
