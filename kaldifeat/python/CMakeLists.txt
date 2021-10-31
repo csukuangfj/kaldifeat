@@ -1,2 +1,5 @@
 add_subdirectory(csrc)
-add_subdirectory(tests)
+
+if(kaldifeat_BUILD_TESTS)
+  add_subdirectory(tests)
+endif()
