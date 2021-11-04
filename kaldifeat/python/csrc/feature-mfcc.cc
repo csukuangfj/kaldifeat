@@ -37,9 +37,12 @@ void PybindMfccOptions(py::module &m) {
            [](const PyClass &self) -> std::string { return self.ToString(); })
       .def("as_dict",
            [](const PyClass &self) -> py::dict { return AsDict(self); })
-      .def_static("from_dict", [](py::dict dict) -> PyClass {
-        return MfccOptionsFromDict(dict);
-      });
+      .def_static(
+          "from_dict",
+          [](py::dict dict) -> PyClass { return MfccOptionsFromDict(dict); })
+      .def(py::pickle(
+          [](const PyClass &self) -> py::dict { return AsDict(self); },
+          [](py::dict dict) -> PyClass { return MfccOptionsFromDict(dict); }));
 }
 
 static void PybindMfcc(py::module &m) {
@@ -49,7 +52,14 @@ static void PybindMfcc(py::module &m) {
       .def("dim", &PyClass::Dim)
       .def_property_readonly("options", &PyClass::GetOptions)
       .def("compute_features", &PyClass::ComputeFeatures, py::arg("wave"),
-           py::arg("vtln_warp"));
+           py::arg("vtln_warp"))
+      .def(py::pickle(
+          [](const PyClass &self) -> py::dict {
+            return AsDict(self.GetOptions());
+          },
+          [](py::dict dict) -> std::unique_ptr<PyClass> {
+            return std::make_unique<PyClass>(MfccOptionsFromDict(dict));
+          }));
 }
 
 void PybindFeatureMfcc(py::module &m) {

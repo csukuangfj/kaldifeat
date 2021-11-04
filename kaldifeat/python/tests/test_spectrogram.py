@@ -2,6 +2,7 @@
 
 # Copyright      2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
+import pickle
 from pathlib import Path
 
 from utils import get_devices, read_ark_txt, read_wave
@@ -50,6 +51,21 @@ def test_spectrogram_no_snip_edges():
         print(features[1, 145:148], gt[1, 145:148])  # they are different
 
 
+def test_pickle():
+    for device in get_devices():
+        opts = kaldifeat.SpectrogramOptions()
+        opts.device = device
+        opts.frame_opts.dither = 0
+        opts.frame_opts.snip_edges = False
+
+        spec = kaldifeat.Spectrogram(opts)
+        data = pickle.dumps(spec)
+        spec2 = pickle.loads(data)
+
+        assert str(spec.opts) == str(spec2.opts)
+
+
 if __name__ == "__main__":
     test_spectrogram_default()
     test_spectrogram_no_snip_edges()
+    test_pickle()

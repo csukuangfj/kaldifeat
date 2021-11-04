@@ -2,6 +2,7 @@
 
 # Copyright      2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
+import pickle
 from pathlib import Path
 
 import torch
@@ -156,6 +157,20 @@ def test_fbank_batch():
         assert torch.allclose(features[1], features1)
 
 
+def test_pickle():
+    for device in get_devices():
+        opts = kaldifeat.FbankOptions()
+        opts.use_energy = True
+        opts.use_power = False
+        opts.device = device
+
+        fbank = kaldifeat.Fbank(opts)
+        data = pickle.dumps(fbank)
+        fbank2 = pickle.loads(data)
+
+        assert str(fbank.opts) == str(fbank2.opts)
+
+
 if __name__ == "__main__":
     test_fbank_default()
     test_fbank_htk()
@@ -164,3 +179,4 @@ if __name__ == "__main__":
     test_fbank_40_bins_no_snip_edges()
     test_fbank_chunk()
     test_fbank_batch()
+    test_pickle()

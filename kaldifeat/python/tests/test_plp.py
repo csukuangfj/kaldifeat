@@ -2,6 +2,7 @@
 
 # Copyright      2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
+import pickle
 from pathlib import Path
 
 import torch
@@ -65,7 +66,22 @@ def test_plp_htk_10_ceps():
         assert torch.allclose(features.cpu(), gt, atol=1e-1)
 
 
+def test_pickle():
+    for device in get_devices():
+        opts = kaldifeat.PlpOptions()
+        opts.device = device
+        opts.frame_opts.dither = 0
+        opts.frame_opts.snip_edges = False
+
+        plp = kaldifeat.Plp(opts)
+        data = pickle.dumps(plp)
+        plp2 = pickle.loads(data)
+
+        assert str(plp.opts) == str(plp2.opts)
+
+
 if __name__ == "__main__":
     test_plp_default()
     test_plp_no_snip_edges()
     test_plp_htk_10_ceps()
+    test_pickle()
