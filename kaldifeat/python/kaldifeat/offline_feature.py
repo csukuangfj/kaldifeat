@@ -69,7 +69,7 @@ class OfflineFeature(nn.Module):
             for w in waves
         ]
 
-        strided = [self.convert_samples_to_frames(w) for w in waves]
+        strided = [self.convert_samples_to_frames(w.to(self.opts.device)) for w in waves]
         strided = torch.cat(strided, dim=0)
 
         features = self.compute(strided, vtln_warp)
