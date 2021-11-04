@@ -5,9 +5,9 @@
 import pickle
 from pathlib import Path
 
-from utils import get_devices, read_ark_txt, read_wave
-
 import kaldifeat
+
+from .utils import get_devices, read_ark_txt, read_wave
 
 cur_dir = Path(__file__).resolve().parent
 
