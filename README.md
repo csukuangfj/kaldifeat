@@ -281,3 +281,19 @@ To test whether `kaldifeat` was installed successfully, you can run:
 ```bash
 python3 -c "import kaldifeat; print(kaldifeat.__version__)"
 ```
+
+## FAQs
+
+### How to install a CUDA version
+
+There are two approaches:
+
+  - (1) Install using `conda`. It always installs a CUDA version of kaldifeat.
+  - (2) Install a CUDA version of PyTorch and then install kaldifeat from source
+    or use `pip install kaldifeat`.
+
+
+### How to install a CPU-only version
+
+You have to first install a CPU-only version of PyTorch and then install kaldifeat
+from source or use `pip install kaldifeat`.
