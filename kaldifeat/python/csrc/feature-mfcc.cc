@@ -4,6 +4,7 @@
 
 #include "kaldifeat/python/csrc/feature-mfcc.h"
 
+#include <memory>
 #include <string>
 
 #include "kaldifeat/csrc/feature-mfcc.h"

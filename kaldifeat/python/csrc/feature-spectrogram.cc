@@ -4,6 +4,7 @@
 
 #include "kaldifeat/python/csrc/feature-spectrogram.h"
 
+#include <memory>
 #include <string>
 
 #include "kaldifeat/csrc/feature-spectrogram.h"

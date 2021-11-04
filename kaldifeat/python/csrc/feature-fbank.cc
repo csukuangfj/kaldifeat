@@ -4,6 +4,7 @@
 
 #include "kaldifeat/python/csrc/feature-fbank.h"
 
+#include <memory>
 #include <string>
 
 #include "kaldifeat/csrc/feature-fbank.h"

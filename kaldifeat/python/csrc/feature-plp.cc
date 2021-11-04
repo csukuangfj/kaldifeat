@@ -4,6 +4,7 @@
 
 #include "kaldifeat/python/csrc/feature-plp.h"
 
+#include <memory>
 #include <string>
 
 #include "kaldifeat/csrc/feature-plp.h"
