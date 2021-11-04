@@ -2,6 +2,8 @@
 #
 # Copyright (c)  2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
+import pickle
+
 import kaldifeat
 
 
@@ -82,12 +84,23 @@ def test_from_dict_full_and_as_dict():
     assert opts3.htk_mode is True
 
 
+def test_pickle():
+    opts = kaldifeat.MelBanksOptions()
+    opts.num_bins = 100
+    opts.low_freq = 22
+    data = pickle.dumps(opts)
+
+    opts2 = pickle.loads(data)
+    assert str(opts) == str(opts2)
+
+
 def main():
     test_default()
     test_set_get()
     test_from_empty_dict()
     test_from_dict_partial()
     test_from_dict_full_and_as_dict()
+    test_pickle()
 
 
 if __name__ == "__main__":

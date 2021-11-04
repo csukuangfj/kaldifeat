@@ -26,9 +26,15 @@ static void PybindMelBanksOptions(py::module &m) {
            [](const PyClass &self) -> std::string { return self.ToString(); })
       .def("as_dict",
            [](const PyClass &self) -> py::dict { return AsDict(self); })
-      .def_static("from_dict", [](py::dict dict) -> PyClass {
-        return MelBanksOptionsFromDict(dict);
-      });
+      .def_static("from_dict",
+                  [](py::dict dict) -> PyClass {
+                    return MelBanksOptionsFromDict(dict);
+                  })
+      .def(py::pickle(
+          [](const PyClass &self) -> py::dict { return AsDict(self); },
+          [](py::dict dict) -> PyClass {
+            return MelBanksOptionsFromDict(dict);
+          }));
 }
 
 void PybindMelComputations(py::module &m) { PybindMelBanksOptions(m); }

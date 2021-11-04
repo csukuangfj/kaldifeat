@@ -40,10 +40,11 @@ static void PybindFrameExtractionOptions(py::module &m) {
 #endif
       .def("__str__",
            [](const PyClass &self) -> std::string { return self.ToString(); })
-      .def(py::pickle([](const PyClass &self) { return AsDict(self); },
-                      [](py::dict dict) -> PyClass {
-                        return FrameExtractionOptionsFromDict(dict);
-                      }));
+      .def(py::pickle(
+          [](const PyClass &self) -> py::dict { return AsDict(self); },
+          [](py::dict dict) -> PyClass {
+            return FrameExtractionOptionsFromDict(dict);
+          }));
 
   m.def("num_frames", &NumFrames, py::arg("num_samples"), py::arg("opts"),
         py::arg("flush") = true);
