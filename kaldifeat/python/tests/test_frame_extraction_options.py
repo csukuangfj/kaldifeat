@@ -2,6 +2,8 @@
 #
 # Copyright (c)  2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
+import pickle
+
 import kaldifeat
 
 
@@ -94,12 +96,23 @@ def test_from_dict_full_and_as_dict():
     assert opts3.window_type == "hanning"
 
 
+def test_pickle():
+    opts = kaldifeat.FrameExtractionOptions()
+    opts.samp_freq = 44100
+    opts.dither = 5.5
+    data = pickle.dumps(opts)
+
+    opts2 = pickle.loads(data)
+    assert str(opts) == str(opts2)
+
+
 def main():
     test_default()
     test_set_get()
     test_from_empty_dict()
     test_from_dict_partial()
     test_from_dict_full_and_as_dict()
+    test_pickle()
 
 
 if __name__ == "__main__":

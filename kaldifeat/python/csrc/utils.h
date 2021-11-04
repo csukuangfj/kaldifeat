@@ -15,7 +15,7 @@
 
 /*
  * This file contains code about `from_dict` and
- * `to_dict` for various options in kaldifeat.
+ * `as_dict` for various options in kaldifeat.
  *
  * Regarding `from_dict`, users don't need to provide
  * all the fields in the options. If some fields
