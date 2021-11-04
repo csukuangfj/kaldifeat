@@ -3,6 +3,8 @@
 # Copyright (c)  2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
 
+import pickle
+
 import torch
 
 import kaldifeat
@@ -180,6 +182,28 @@ def test_from_dict_full_and_as_dict():
     assert opts3.device == torch.device("cuda", 10)
 
 
+def test_pickle():
+    opts = kaldifeat.MfccOptions()
+    opts.num_ceps = 222
+    opts.use_energy = False
+    opts.cepstral_lifter = 21
+    opts.htk_compat = True
+    opts.device = torch.device("cuda", 3)
+
+    opts.frame_opts.samp_freq = 44100
+    opts.frame_opts.frame_length_ms = 1
+    opts.frame_opts.dither = 0.5
+
+    opts.mel_opts.num_bins = 100
+    opts.mel_opts.low_freq = 22
+    opts.mel_opts.vtln_high = -100
+
+    data = pickle.dumps(opts)
+
+    opts2 = pickle.loads(data)
+    assert str(opts) == str(opts2)
+
+
 def main():
     test_default()
     test_set_get()
@@ -188,6 +212,7 @@ def main():
     test_from_empty_dict()
     test_from_dict_partial()
     test_from_dict_full_and_as_dict()
+    test_pickle()
 
 
 if __name__ == "__main__":

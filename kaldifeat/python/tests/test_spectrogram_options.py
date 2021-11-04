@@ -3,6 +3,8 @@
 # Copyright (c)  2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
 
+import pickle
+
 import torch
 
 import kaldifeat
@@ -121,6 +123,21 @@ def test_from_dict_full_and_as_dict():
     assert str(opts3) == str(opts)
 
 
+def test_pickle():
+    opts = kaldifeat.SpectrogramOptions()
+    opts.energy_floor = 1
+    opts.raw_energy = False
+    opts.device = torch.device("cuda", 1)
+
+    opts.frame_opts.samp_freq = 44100
+    opts.frame_opts.snip_edges = False
+
+    data = pickle.dumps(opts)
+
+    opts2 = pickle.loads(data)
+    assert str(opts) == str(opts2)
+
+
 def main():
     test_default()
     test_set_get()
@@ -128,6 +145,7 @@ def main():
     test_from_empty_dict()
     test_from_dict_partial()
     test_from_dict_full_and_as_dict()
+    test_pickle()
 
 
 if __name__ == "__main__":

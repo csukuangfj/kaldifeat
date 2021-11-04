@@ -213,6 +213,26 @@ for more examples.
 - ``kaldifeat`` supports batch processing as well as chunk processing
 - ``kaldifeat`` uses the same options as `Kaldi`'s `compute-fbank-feats` and `compute-mfcc-feats`
 
+# Usage in other projects
+
+## icefall
+
+[icefall](https://github.com/k2-fsa/icefall) uses kaldifeat to extract features for a pre-trained model.
+
+See <https://github.com/k2-fsa/icefall/blob/master/egs/librispeech/ASR/conformer_ctc/pretrained.py>.
+
+## k2
+
+[k2](https://github.com/k2-fsa/k2) uses kaldifeat's C++ API.
+
+See <https://github.com/k2-fsa/k2/blob/v2.0-pre/k2/torch/csrc/features.cu>.
+
+## lhotse
+
+[lhotse](https://github.com/lhotse-speech/lhotse) uses kaldifeat to extract features on GPU.
+
+See <https://github.com/lhotse-speech/lhotse/blob/master/lhotse/features/kaldifeat.py>.
+
 # Installation
 
 ## From conda (Only for Linux + CUDA)

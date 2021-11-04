@@ -4,6 +4,7 @@
 
 #include "kaldifeat/python/csrc/feature-plp.h"
 
+#include <memory>
 #include <string>
 
 #include "kaldifeat/csrc/feature-plp.h"
@@ -40,9 +41,12 @@ void PybindPlpOptions(py::module &m) {
            [](const PyClass &self) -> std::string { return self.ToString(); })
       .def("as_dict",
            [](const PyClass &self) -> py::dict { return AsDict(self); })
-      .def_static("from_dict", [](py::dict dict) -> PyClass {
-        return PlpOptionsFromDict(dict);
-      });
+      .def_static(
+          "from_dict",
+          [](py::dict dict) -> PyClass { return PlpOptionsFromDict(dict); })
+      .def(py::pickle(
+          [](const PyClass &self) -> py::dict { return AsDict(self); },
+          [](py::dict dict) -> PyClass { return PlpOptionsFromDict(dict); }));
 }
 
 static void PybindPlp(py::module &m) {
@@ -52,7 +56,14 @@ static void PybindPlp(py::module &m) {
       .def("dim", &PyClass::Dim)
       .def_property_readonly("options", &PyClass::GetOptions)
       .def("compute_features", &PyClass::ComputeFeatures, py::arg("wave"),
-           py::arg("vtln_warp"));
+           py::arg("vtln_warp"))
+      .def(py::pickle(
+          [](const PyClass &self) -> py::dict {
+            return AsDict(self.GetOptions());
+          },
+          [](py::dict dict) -> std::unique_ptr<PyClass> {
+            return std::make_unique<PyClass>(PlpOptionsFromDict(dict));
+          }));
 }
 
 void PybindFeaturePlp(py::module &m) {

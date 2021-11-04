@@ -2,6 +2,7 @@
 
 # Copyright      2021  Xiaomi Corporation (authors: Fangjun Kuang)
 
+import pickle
 from pathlib import Path
 
 import torch
@@ -46,6 +47,21 @@ def test_mfcc_no_snip_edges():
         assert torch.allclose(features.cpu(), gt, rtol=1e-1)
 
 
+def test_pickle():
+    for device in get_devices():
+        opts = kaldifeat.MfccOptions()
+        opts.device = device
+        opts.frame_opts.dither = 0
+        opts.frame_opts.snip_edges = False
+
+        mfcc = kaldifeat.Mfcc(opts)
+        data = pickle.dumps(mfcc)
+        mfcc2 = pickle.loads(data)
+
+        assert str(mfcc.opts) == str(mfcc2.opts)
+
+
 if __name__ == "__main__":
     test_mfcc_default()
     test_mfcc_no_snip_edges()
+    test_pickle()
