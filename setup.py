@@ -34,7 +34,6 @@ setuptools.setup(
     version=get_package_version(),
     author="Fangjun Kuang",
     author_email="csukuangfj@gmail.com",
-    data_files=[("", ["LICENSE", "README.md"])],
     package_dir={package_name: "kaldifeat/python/kaldifeat"},
     packages=[package_name],
     url="https://github.com/csukuangfj/kaldifeat",
