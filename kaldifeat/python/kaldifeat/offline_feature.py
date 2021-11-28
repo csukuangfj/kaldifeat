@@ -122,7 +122,7 @@ class OfflineFeature(nn.Module):
                 )
                 features.append(this_chunk)
             if end < x.size(0):
-                last_chunk = self.compute_features(x[end:], vtln_warp)
+                last_chunk = self.computer.compute_features(x[end:], vtln_warp)
                 features.append(last_chunk)
             features = torch.cat(features, dim=0)
 
