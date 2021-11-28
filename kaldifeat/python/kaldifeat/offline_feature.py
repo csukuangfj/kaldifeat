@@ -72,7 +72,7 @@ class OfflineFeature(nn.Module):
         strided = [self.convert_samples_to_frames(w) for w in waves]
         strided = torch.cat(strided, dim=0)
 
-        features = self.compute(strided, vtln_warp)
+        features = self.compute(strided, vtln_warp, chunk_size=chunk_size)
 
         if is_list:
             return list(features.split(num_frames_per_wave))
