@@ -42,6 +42,8 @@ class OfflineFeature(nn.Module):
             Kaldi, you should scale the samples to [-32768, 32767] before
             calling this function. Note: You are not required to scale them if
             you don't care about the compatibility with Kaldi.
+            **Note:** It does not have to be on the same device as
+            `self.opts.device`.
           vtln_warp
             The VTLN warping factor that the user wants to be applied when
             computing features for this utterance.  Will normally be 1.0,
@@ -57,6 +59,8 @@ class OfflineFeature(nn.Module):
           input is a list of 1-D tensors. The returned list has as many elements
           as the input list.
           Return a single 2-D tensor if the input is a single tensor.
+          Note: The returned `features` is on the same device as the input
+          waves.
         """
         if isinstance(waves, list):
             is_list = True
@@ -105,10 +109,15 @@ class OfflineFeature(nn.Module):
           Return a 2-D tensor with as many rows as the input tensor. Its
           number of columns is the number mel bins.
         """
+        x_device = x.device
+        self_device = self.opts.device
         assert x.ndim == 2
         assert x.dtype == torch.float32
         if chunk_size is None:
-            features = self.computer.compute_features(x, vtln_warp)
+            features = self.computer.compute_features(
+                x.to(self_device), vtln_warp
+            )
+            features = features.to(x_device)
         else:
             assert chunk_size > 0
             num_chunks = x.size(0) // chunk_size
@@ -118,12 +127,14 @@ class OfflineFeature(nn.Module):
                 start = i * chunk_size
                 end = start + chunk_size
                 this_chunk = self.computer.compute_features(
-                    x[start:end], vtln_warp
+                    x[start:end].to(self_device), vtln_warp
                 )
-                features.append(this_chunk)
+                features.append(this_chunk.to(x_device))
             if end < x.size(0):
-                last_chunk = self.computer.compute_features(x[end:], vtln_warp)
-                features.append(last_chunk)
+                last_chunk = self.computer.compute_features(
+                    x[end:].to(self_device), vtln_warp
+                )
+                features.append(last_chunk.to(x_device))
             features = torch.cat(features, dim=0)
 
         return features
