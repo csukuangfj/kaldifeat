@@ -22,10 +22,16 @@ def test_fbank_default():
         opts.frame_opts.dither = 0
         fbank = kaldifeat.Fbank(opts)
         filename = cur_dir / "test_data/test.wav"
-        wave = read_wave(filename).to(device)
+        wave = read_wave(filename)
 
         features = fbank(wave)
+        assert features.device.type == "cpu"
         gt = read_ark_txt(cur_dir / "test_data/test.txt")
+        assert torch.allclose(features, gt, rtol=1e-1)
+
+        wave = wave.to(device)
+        features = fbank(wave)
+        assert features.device == device
         assert torch.allclose(features.cpu(), gt, rtol=1e-1)
 
 
@@ -41,10 +47,16 @@ def test_fbank_htk():
 
         fbank = kaldifeat.Fbank(opts)
         filename = cur_dir / "test_data/test.wav"
-        wave = read_wave(filename).to(device)
+        wave = read_wave(filename)
 
         features = fbank(wave)
+        assert features.device.type == "cpu"
         gt = read_ark_txt(cur_dir / "test_data/test-htk.txt")
+        assert torch.allclose(features, gt, rtol=1e-1)
+
+        wave = wave.to(device)
+        features = fbank(wave)
+        assert features.device == device
         assert torch.allclose(features.cpu(), gt, rtol=1e-1)
 
 
@@ -59,10 +71,16 @@ def test_fbank_with_energy():
 
         fbank = kaldifeat.Fbank(opts)
         filename = cur_dir / "test_data/test.wav"
-        wave = read_wave(filename).to(device)
+        wave = read_wave(filename)
 
         features = fbank(wave)
         gt = read_ark_txt(cur_dir / "test_data/test-with-energy.txt")
+        assert torch.allclose(features, gt, rtol=1e-1)
+        assert features.device.type == "cpu"
+
+        wave = wave.to(device)
+        features = fbank(wave)
+        assert features.device == device
         assert torch.allclose(features.cpu(), gt, rtol=1e-1)
 
 
@@ -77,10 +95,16 @@ def test_fbank_40_bins():
 
         fbank = kaldifeat.Fbank(opts)
         filename = cur_dir / "test_data/test.wav"
-        wave = read_wave(filename).to(device)
+        wave = read_wave(filename)
 
         features = fbank(wave)
+        assert features.device.type == "cpu"
         gt = read_ark_txt(cur_dir / "test_data/test-40.txt")
+        assert torch.allclose(features, gt, rtol=1e-1)
+
+        wave = wave.to(device)
+        features = fbank(wave)
+        assert features.device == device
         assert torch.allclose(features.cpu(), gt, rtol=1e-1)
 
 
@@ -96,10 +120,16 @@ def test_fbank_40_bins_no_snip_edges():
 
         fbank = kaldifeat.Fbank(opts)
         filename = cur_dir / "test_data/test.wav"
-        wave = read_wave(filename).to(device)
+        wave = read_wave(filename)
 
         features = fbank(wave)
+        assert features.device.type == "cpu"
         gt = read_ark_txt(cur_dir / "test_data/test-40-no-snip-edges.txt")
+        assert torch.allclose(features, gt, rtol=1e-1)
+
+        wave = wave.to(device)
+        features = fbank(wave)
+        assert features.device == device
         assert torch.allclose(features.cpu(), gt, rtol=1e-1)
 
 
@@ -123,7 +153,7 @@ def test_fbank_chunk():
         opts.frame_opts.snip_edges = False
 
         fbank = kaldifeat.Fbank(opts)
-        wave = read_wave(filename).to(device)
+        wave = read_wave(filename)
 
         # You can use
         #
@@ -132,16 +162,27 @@ def test_fbank_chunk():
         # to view memory consumption
         #
         # 100 frames per chunk
-        features = fbank(wave, chunk_size=100 * 10)
-        print(features.shape)
+        features1 = fbank(wave, chunk_size=100 * 10)
+        features2 = fbank(wave)
+        assert torch.allclose(features1, features2)
+        assert features1.device == features2.device
+        assert features1.device.type == "cpu"
+
+        if device.type == "cuda":
+            wave = wave.to(device)
+            features1 = fbank(wave, chunk_size=100 * 10)
+            features2 = fbank(wave)
+            assert torch.allclose(features1, features2)
+            assert features1.device == features2.device
+            assert features1.device == device
 
 
 def test_fbank_batch():
-    print("=====test_fbank_chunk=====")
+    print("=====test_fbank_batch=====")
     for device in get_devices():
         print("device", device)
-        wave0 = read_wave(cur_dir / "test_data/test.wav").to(device)
-        wave1 = read_wave(cur_dir / "test_data/test2.wav").to(device)
+        wave0 = read_wave(cur_dir / "test_data/test.wav")
+        wave1 = read_wave(cur_dir / "test_data/test2.wav")
 
         opts = kaldifeat.FbankOptions()
         opts.device = device
@@ -155,6 +196,18 @@ def test_fbank_batch():
 
         assert torch.allclose(features[0], features0)
         assert torch.allclose(features[1], features1)
+
+        if device.type == "cuda":
+            wave0 = wave0.to(device)
+            wave1 = wave1.to(device)
+
+            features = fbank([wave0, wave1], chunk_size=10)
+
+            features0 = fbank(wave0)
+            features1 = fbank(wave1)
+
+            assert torch.allclose(features[0], features0)
+            assert torch.allclose(features[1], features1)
 
 
 def test_pickle():
