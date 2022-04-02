@@ -48,12 +48,7 @@ OnlineGenericBaseFeature<C>::OnlineGenericBaseFeature(
       window_function_(opts.frame_opts, opts.device),
       features_(opts.frame_opts.max_feature_vectors),
       input_finished_(false),
-      waveform_offset_(0) {
-  // Casting to uint32_t, an unsigned type, means that -1 would be treated
-  // as `very large`.
-  KALDIFEAT_ASSERT(static_cast<uint32_t>(opts.frame_opts.max_feature_vectors) >
-                   200);
-}
+      waveform_offset_(0) {}
 
 template <class C>
 void OnlineGenericBaseFeature<C>::AcceptWaveform(
@@ -61,6 +56,7 @@ void OnlineGenericBaseFeature<C>::AcceptWaveform(
   if (original_waveform.numel() == 0) return;  // Nothing to do.
 
   KALDIFEAT_ASSERT(original_waveform.dim() == 1);
+  KALDIFEAT_ASSERT(sampling_rate == computer_.GetFrameOptions().samp_freq);
 
   if (input_finished_)
     KALDIFEAT_ERR << "AcceptWaveform called after InputFinished() was called.";

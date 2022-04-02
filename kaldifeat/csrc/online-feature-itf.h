@@ -56,7 +56,8 @@ class OnlineFeatureInterface {
   /// it's more efficient to do things in a batch).
   ///
   /// The returned tensor has shape (frames.size(), Dim()).
-  virtual torch::Tensor GetFrames(const std::vector<int32_t> &frames) {
+  virtual std::vector<torch::Tensor> GetFrames(
+      const std::vector<int32_t> &frames) {
     std::vector<torch::Tensor> features;
     features.reserve(frames.size());
 
@@ -64,8 +65,9 @@ class OnlineFeatureInterface {
       torch::Tensor f = GetFrame(i);
       features.push_back(std::move(f));
     }
+    return features;
 
-    return torch::cat(features, /*dim*/ 0);
+    // return torch::cat(features, [>dim<] 0);
   }
 
   /// This would be called from the application, when you get more wave data.

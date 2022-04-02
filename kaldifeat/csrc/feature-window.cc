@@ -240,6 +240,7 @@ torch::Tensor ExtractWindow(int64_t sample_offset, const torch::Tensor &wave,
 
       p_window[s] = p_wave[s_in_wave];
     }
+    return window;
   }
 }
 
