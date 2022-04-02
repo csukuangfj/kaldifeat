@@ -7,6 +7,7 @@
 #ifndef KALDIFEAT_CSRC_ONLINE_FEATURE_ITF_H_
 #define KALDIFEAT_CSRC_ONLINE_FEATURE_ITF_H_
 
+#include <utility>
 #include <vector>
 
 #include "torch/script.h"

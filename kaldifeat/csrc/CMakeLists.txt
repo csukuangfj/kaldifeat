@@ -9,6 +9,7 @@ set(kaldifeat_srcs
   feature-window.cc
   matrix-functions.cc
   mel-computations.cc
+  online-feature.cc
 )
 
 add_library(kaldifeat_core SHARED ${kaldifeat_srcs})
@@ -40,6 +41,7 @@ if(kaldifeat_BUILD_TESTS)
   # please sort the source files alphabetically
   set(test_srcs
     feature-window-test.cc
+    online-feature-test.cc
   )
 
   foreach(source IN LISTS test_srcs)
