@@ -32,7 +32,7 @@ features = fbank(wave)
 </tr>
 
 <tr>
-<td>Online FBANK</td>
+<td>Streaming FBANK</td>
 <td><code>kaldifeat.FbankOptions</code></td>
 <td><code>kaldifeat.OnlineFbank</code></td>
 <td>
@@ -57,6 +57,17 @@ features = mfcc(wave)
 </tr>
 
 <tr>
+<td>Streaming MFCC</td>
+<td><code>kaldifeat.MfccOptions</code></td>
+<td><code>kaldifeat.OnlineMfcc</code></td>
+<td>
+See <a href="./kaldifeat/python/tests/test_mfcc.py">
+./kaldifeat/python/tests/test_mfcc.py
+</a>
+</td>
+</tr>
+
+<tr>
 <td>PLP</td>
 <td><code>kaldifeat.PlpOptions</code></td>
 <td><code>kaldifeat.Plp</code></td>
@@ -67,6 +78,17 @@ opts.mel_opts.num_bins = 23
 plp = kaldifeat.Plp(opts)
 features = plp(wave)
 </pre>
+</td>
+</tr>
+
+<tr>
+<td>Streaming PLP</td>
+<td><code>kaldifeat.PlpOptions</code></td>
+<td><code>kaldifeat.OnlinePlp</code></td>
+<td>
+See <a href="./kaldifeat/python/tests/test_plp.py">
+./kaldifeat/python/tests/test_plp.py
+</a>
 </td>
 </tr>
 
@@ -98,6 +120,8 @@ The following kaldi-compatible commandline tools are implemented:
   - `compute-spectrogram-feats`
 
 (**NOTE**: We will implement other types of features, e.g., Pitch, ivector, etc, soon.)
+
+**HINT**: It supports also streaming feature extractors for Fbank, MFCC, and Plp.
 
 # Usage
 
