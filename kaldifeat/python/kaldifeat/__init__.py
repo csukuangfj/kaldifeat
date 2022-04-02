@@ -9,6 +9,6 @@ from _kaldifeat import (
 )
 
 from .fbank import Fbank, OnlineFbank
-from .mfcc import Mfcc
+from .mfcc import Mfcc, OnlineMfcc
 from .plp import Plp
 from .spectrogram import Spectrogram

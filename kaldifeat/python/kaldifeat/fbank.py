@@ -20,4 +20,4 @@ class OnlineFbank(OnlineFeature):
 
     def __setstate__(self, state):
         self.opts = _kaldifeat.FbankOptions.from_dict(state)
-        self.computer = _kaldifeat.Fbank(self.opts)
+        self.computer = _kaldifeat.OnlineFbank(self.opts)

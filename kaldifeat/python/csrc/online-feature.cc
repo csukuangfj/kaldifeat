@@ -4,8 +4,9 @@
 
 #include "kaldifeat/python/csrc/online-feature.h"
 
-#include "kaldifeat/csrc/online-feature.h"
+#include <string>
 
+#include "kaldifeat/csrc/online-feature.h"
 namespace kaldifeat {
 
 template <typename C>

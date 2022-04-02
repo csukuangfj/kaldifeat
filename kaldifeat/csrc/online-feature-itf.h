@@ -66,8 +66,9 @@ class OnlineFeatureInterface {
       features.push_back(std::move(f));
     }
     return features;
-
-    // return torch::cat(features, [>dim<] 0);
+#if 0
+    return torch::cat(features, /*dim*/ 0);
+#endif
   }
 
   /// This would be called from the application, when you get more wave data.
