@@ -161,19 +161,20 @@ torch::Tensor Dither(const torch::Tensor &wave, float dither_value) {
 #if 1
   return wave + rand_gauss * dither_value;
 #else
-  // use in-place version of wave and change its to pointer type
+  // use in-place version of wave and change it to pointer type
   wave_->add_(rand_gauss, dither_value);
 #endif
 }
 
 torch::Tensor Preemphasize(float preemph_coeff, const torch::Tensor &wave) {
-  using namespace torch::indexing;  // It imports: Slice, None  // NOLINT
   if (preemph_coeff == 0.0f) return wave;
 
   KALDIFEAT_ASSERT(preemph_coeff >= 0.0f && preemph_coeff <= 1.0f);
 
   torch::Tensor ans = torch::empty_like(wave);
 
+  using torch::indexing::None;
+  using torch::indexing::Slice;
   // right = wave[:, 1:]
   torch::Tensor right = wave.index({"...", Slice(1, None, None)});
 
@@ -186,6 +187,61 @@ torch::Tensor Preemphasize(float preemph_coeff, const torch::Tensor &wave) {
   ans.index({"...", 0}) = wave.index({"...", 0}) * (1 - preemph_coeff);
 
   return ans;
+}
+
+torch::Tensor ExtractWindow(int64_t sample_offset, const torch::Tensor &wave,
+                            int32_t f, const FrameExtractionOptions &opts) {
+  KALDIFEAT_ASSERT(sample_offset >= 0 && wave.numel() != 0);
+
+  int32_t frame_length = opts.WindowSize();
+  int64_t num_samples = sample_offset + wave.numel();
+  int64_t start_sample = FirstSampleOfFrame(f, opts);
+  int64_t end_sample = start_sample + frame_length;
+
+  if (opts.snip_edges) {
+    KALDIFEAT_ASSERT(start_sample >= sample_offset &&
+                     end_sample <= num_samples);
+  } else {
+    KALDIFEAT_ASSERT(sample_offset == 0 || start_sample >= sample_offset);
+  }
+
+  // wave_start and wave_end are start and end indexes into 'wave', for the
+  // piece of wave that we're trying to extract.
+  int32_t wave_start = static_cast<int32_t>(start_sample - sample_offset);
+  int32_t wave_end = wave_start + frame_length;
+
+  if (wave_start >= 0 && wave_end <= wave.numel()) {
+    // the normal case -- no edge effects to consider.
+    // return wave[wave_start:wave_end]
+    return wave.index({torch::indexing::Slice(wave_start, wave_end)});
+  } else {
+    torch::Tensor window = torch::empty({frame_length}, torch::kFloat);
+    auto p_window = window.accessor<float, 1>();
+    auto p_wave = wave.accessor<float, 1>();
+
+    // Deal with any end effects by reflection, if needed.  This code will only
+    // be reached for about two frames per utterance, so we don't concern
+    // ourselves excessively with efficiency.
+    int32_t wave_dim = wave.numel();
+    for (int32_t s = 0; s != frame_length; ++s) {
+      int32_t s_in_wave = s + wave_start;
+      while (s_in_wave < 0 || s_in_wave >= wave_dim) {
+        // reflect around the beginning or end of the wave.
+        // e.g. -1 -> 0, -2 -> 1.
+        // dim -> dim - 1, dim + 1 -> dim - 2.
+        // the code supports repeated reflections, although this
+        // would only be needed in pathological cases.
+        if (s_in_wave < 0) {
+          s_in_wave = -s_in_wave - 1;
+        } else {
+          s_in_wave = 2 * wave_dim - 1 - s_in_wave;
+        }
+      }
+
+      p_window[s] = p_wave[s_in_wave];
+    }
+    return window;
+  }
 }
 
 }  // namespace kaldifeat

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright      2021  Xiaomi Corporation (authors: Fangjun Kuang)
+# Copyright      2021-2022  Xiaomi Corporation (authors: Fangjun Kuang)
 
 import pickle
 from pathlib import Path
@@ -13,30 +13,88 @@ import kaldifeat
 cur_dir = Path(__file__).resolve().parent
 
 
+def test_online_fbank(
+    opts: kaldifeat.FbankOptions,
+    wave: torch.Tensor,
+    cpu_features: torch.Tensor,
+):
+    """
+    Args:
+      opts:
+        The options to create the online fbank extractor.
+      wave:
+        The input 1-D waveform.
+      cpu_features:
+        The groud truth features that are computed offline
+    """
+    online_fbank = kaldifeat.OnlineFbank(opts)
+
+    num_processed_frames = 0
+    i = 0  # current sample index to feed
+    while not online_fbank.is_last_frame(num_processed_frames - 1):
+        while num_processed_frames < online_fbank.num_frames_ready:
+            # There are new frames to be processed
+            frame = online_fbank.get_frame(num_processed_frames)
+            assert torch.allclose(
+                frame.squeeze(0), cpu_features[num_processed_frames]
+            )
+            num_processed_frames += 1
+
+        # Simulate streaming . Send a random number of audio samples
+        # to the extractor
+        num_samples = torch.randint(300, 1000, (1,)).item()
+
+        samples = wave[i : (i + num_samples)]  # noqa
+        i += num_samples
+        if len(samples) == 0:
+            online_fbank.input_finished()
+            continue
+
+        online_fbank.accept_waveform(16000, samples)
+
+    assert num_processed_frames == online_fbank.num_frames_ready
+    assert num_processed_frames == cpu_features.size(0)
+
+
 def test_fbank_default():
     print("=====test_fbank_default=====")
+    filename = cur_dir / "test_data/test.wav"
+    wave = read_wave(filename)
+    gt = read_ark_txt(cur_dir / "test_data/test.txt")
+
+    cpu_features = None
     for device in get_devices():
         print("device", device)
         opts = kaldifeat.FbankOptions()
         opts.device = device
         opts.frame_opts.dither = 0
         fbank = kaldifeat.Fbank(opts)
-        filename = cur_dir / "test_data/test.wav"
-        wave = read_wave(filename)
 
         features = fbank(wave)
         assert features.device.type == "cpu"
-        gt = read_ark_txt(cur_dir / "test_data/test.txt")
         assert torch.allclose(features, gt, rtol=1e-1)
+        if cpu_features is None:
+            cpu_features = features
 
-        wave = wave.to(device)
-        features = fbank(wave)
+        features = fbank(wave.to(device))
         assert features.device == device
         assert torch.allclose(features.cpu(), gt, rtol=1e-1)
+
+    # Now for online fbank
+    opts = kaldifeat.FbankOptions()
+    opts.frame_opts.dither = 0
+    opts.frame_opts.max_feature_vectors = 100
+
+    test_online_fbank(opts, wave, cpu_features)
 
 
 def test_fbank_htk():
     print("=====test_fbank_htk=====")
+    filename = cur_dir / "test_data/test.wav"
+    wave = read_wave(filename)
+    gt = read_ark_txt(cur_dir / "test_data/test-htk.txt")
+
+    cpu_features = None
     for device in get_devices():
         print("device", device)
         opts = kaldifeat.FbankOptions()
@@ -46,22 +104,32 @@ def test_fbank_htk():
         opts.htk_compat = True
 
         fbank = kaldifeat.Fbank(opts)
-        filename = cur_dir / "test_data/test.wav"
-        wave = read_wave(filename)
 
         features = fbank(wave)
         assert features.device.type == "cpu"
-        gt = read_ark_txt(cur_dir / "test_data/test-htk.txt")
         assert torch.allclose(features, gt, rtol=1e-1)
+        if cpu_features is None:
+            cpu_features = features
 
-        wave = wave.to(device)
-        features = fbank(wave)
+        features = fbank(wave.to(device))
         assert features.device == device
         assert torch.allclose(features.cpu(), gt, rtol=1e-1)
+
+    opts = kaldifeat.FbankOptions()
+    opts.frame_opts.dither = 0
+    opts.use_energy = True
+    opts.htk_compat = True
+
+    test_online_fbank(opts, wave, cpu_features)
 
 
 def test_fbank_with_energy():
     print("=====test_fbank_with_energy=====")
+    filename = cur_dir / "test_data/test.wav"
+    wave = read_wave(filename)
+    gt = read_ark_txt(cur_dir / "test_data/test-with-energy.txt")
+
+    cpu_features = None
     for device in get_devices():
         print("device", device)
         opts = kaldifeat.FbankOptions()
@@ -70,22 +138,31 @@ def test_fbank_with_energy():
         opts.use_energy = True
 
         fbank = kaldifeat.Fbank(opts)
-        filename = cur_dir / "test_data/test.wav"
-        wave = read_wave(filename)
 
         features = fbank(wave)
-        gt = read_ark_txt(cur_dir / "test_data/test-with-energy.txt")
         assert torch.allclose(features, gt, rtol=1e-1)
         assert features.device.type == "cpu"
+        if cpu_features is None:
+            cpu_features = features
 
-        wave = wave.to(device)
-        features = fbank(wave)
+        features = fbank(wave.to(device))
         assert features.device == device
         assert torch.allclose(features.cpu(), gt, rtol=1e-1)
+
+    opts = kaldifeat.FbankOptions()
+    opts.frame_opts.dither = 0
+    opts.use_energy = True
+
+    test_online_fbank(opts, wave, cpu_features)
 
 
 def test_fbank_40_bins():
     print("=====test_fbank_40_bins=====")
+    filename = cur_dir / "test_data/test.wav"
+    wave = read_wave(filename)
+    gt = read_ark_txt(cur_dir / "test_data/test-40.txt")
+
+    cpu_features = None
     for device in get_devices():
         print("device", device)
         opts = kaldifeat.FbankOptions()
@@ -94,22 +171,31 @@ def test_fbank_40_bins():
         opts.mel_opts.num_bins = 40
 
         fbank = kaldifeat.Fbank(opts)
-        filename = cur_dir / "test_data/test.wav"
-        wave = read_wave(filename)
 
         features = fbank(wave)
         assert features.device.type == "cpu"
-        gt = read_ark_txt(cur_dir / "test_data/test-40.txt")
         assert torch.allclose(features, gt, rtol=1e-1)
+        if cpu_features is None:
+            cpu_features = features
 
-        wave = wave.to(device)
-        features = fbank(wave)
+        features = fbank(wave.to(device))
         assert features.device == device
         assert torch.allclose(features.cpu(), gt, rtol=1e-1)
+
+    opts = kaldifeat.FbankOptions()
+    opts.frame_opts.dither = 0
+    opts.mel_opts.num_bins = 40
+
+    test_online_fbank(opts, wave, cpu_features)
 
 
 def test_fbank_40_bins_no_snip_edges():
     print("=====test_fbank_40_bins_no_snip_edges=====")
+    filename = cur_dir / "test_data/test.wav"
+    wave = read_wave(filename)
+    gt = read_ark_txt(cur_dir / "test_data/test-40-no-snip-edges.txt")
+
+    cpu_features = None
     for device in get_devices():
         print("device", device)
         opts = kaldifeat.FbankOptions()
@@ -119,18 +205,23 @@ def test_fbank_40_bins_no_snip_edges():
         opts.frame_opts.snip_edges = False
 
         fbank = kaldifeat.Fbank(opts)
-        filename = cur_dir / "test_data/test.wav"
-        wave = read_wave(filename)
 
         features = fbank(wave)
         assert features.device.type == "cpu"
-        gt = read_ark_txt(cur_dir / "test_data/test-40-no-snip-edges.txt")
         assert torch.allclose(features, gt, rtol=1e-1)
+        if cpu_features is None:
+            cpu_features = features
 
-        wave = wave.to(device)
-        features = fbank(wave)
+        features = fbank(wave.to(device))
         assert features.device == device
         assert torch.allclose(features.cpu(), gt, rtol=1e-1)
+
+    opts = kaldifeat.FbankOptions()
+    opts.frame_opts.dither = 0
+    opts.mel_opts.num_bins = 40
+    opts.frame_opts.snip_edges = False
+
+    test_online_fbank(opts, wave, cpu_features)
 
 
 def test_fbank_chunk():
@@ -222,6 +313,16 @@ def test_pickle():
         fbank2 = pickle.loads(data)
 
         assert str(fbank.opts) == str(fbank2.opts)
+
+    opts = kaldifeat.FbankOptions()
+    opts.use_energy = True
+    opts.use_power = False
+
+    fbank = kaldifeat.OnlineFbank(opts)
+    data = pickle.dumps(fbank)
+    fbank2 = pickle.loads(data)
+
+    assert str(fbank.opts) == str(fbank2.opts)
 
 
 if __name__ == "__main__":

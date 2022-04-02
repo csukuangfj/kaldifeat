@@ -11,6 +11,7 @@
 #include "kaldifeat/python/csrc/feature-spectrogram.h"
 #include "kaldifeat/python/csrc/feature-window.h"
 #include "kaldifeat/python/csrc/mel-computations.h"
+#include "kaldifeat/python/csrc/online-feature.h"
 #include "torch/torch.h"
 
 namespace kaldifeat {
@@ -24,6 +25,7 @@ PYBIND11_MODULE(_kaldifeat, m) {
   PybindFeatureMfcc(m);
   PybindFeaturePlp(m);
   PybindFeatureSpectrogram(m);
+  PybindOnlineFeature(m);
 }
 
 }  // namespace kaldifeat

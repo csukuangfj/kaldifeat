@@ -8,7 +8,7 @@ from _kaldifeat import (
     SpectrogramOptions,
 )
 
-from .fbank import Fbank
-from .mfcc import Mfcc
-from .plp import Plp
+from .fbank import Fbank, OnlineFbank
+from .mfcc import Mfcc, OnlineMfcc
+from .plp import OnlinePlp, Plp
 from .spectrogram import Spectrogram

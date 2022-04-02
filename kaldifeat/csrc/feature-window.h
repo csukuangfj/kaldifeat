@@ -44,7 +44,11 @@ struct FrameExtractionOptions {
   bool snip_edges = true;
   // bool allow_downsample = false;
   // bool allow_upsample = false;
-  // int32_t max_feature_vectors = -1;
+
+  // Used for streaming feature extraction. It indicates the number
+  // of feature frames to keep in the recycling vector. -1 means to
+  // keep all feature frames.
+  int32_t max_feature_vectors = -1;
 
   int32_t WindowShift() const {
     return static_cast<int32_t>(samp_freq * 0.001f * frame_shift_ms);
@@ -71,7 +75,7 @@ struct FrameExtractionOptions {
     KALDIFEAT_PRINT(snip_edges);
     // KALDIFEAT_PRINT(allow_downsample);
     // KALDIFEAT_PRINT(allow_upsample);
-    // KALDIFEAT_PRINT(max_feature_vectors);
+    KALDIFEAT_PRINT(max_feature_vectors);
 #undef KALDIFEAT_PRINT
     return os.str();
   }
@@ -100,11 +104,11 @@ class FeatureWindowFunction {
 
       @param [in] flush   True if we are asserting that this number of samples
    is 'all there is', false if we expecting more data to possibly come in.  This
-   only makes a difference to the answer if opts.snips_edges
-             == false.  For offline feature extraction you always want flush ==
-             true.  In an online-decoding context, once you know (or decide)
-   that no more data is coming in, you'd call it with flush == true at the end
-   to flush out any remaining data.
+   only makes a difference to the answer
+   if opts.snips_edges== false.  For offline feature extraction you always want
+   flush == true.  In an online-decoding context, once you know (or decide) that
+   no more data is coming in, you'd call it with flush == true at the end to
+   flush out any remaining data.
 */
 int32_t NumFrames(int64_t num_samples, const FrameExtractionOptions &opts,
                   bool flush = true);
@@ -132,6 +136,29 @@ torch::Tensor GetStrided(const torch::Tensor &wave,
 torch::Tensor Dither(const torch::Tensor &wave, float dither_value);
 
 torch::Tensor Preemphasize(float preemph_coeff, const torch::Tensor &wave);
+
+/*
+  ExtractWindow() extracts "frame_length" samples from the given waveform.
+  Note: This function only extracts "frame_length" samples
+  from the input waveform, without any further processing.
+
+  @param [in] sample_offset  If 'wave' is not the entire waveform, but
+                   part of it to the left has been discarded, then the
+                   number of samples prior to 'wave' that we have
+                   already discarded.  Set this to zero if you are
+                   processing the entire waveform in one piece, or
+                   if you get 'no matching function' compilation
+                   errors when updating the code.
+  @param [in] wave  The waveform
+  @param [in] f     The frame index to be extracted, with
+                    0 <= f < NumFrames(sample_offset + wave.numel(), opts, true)
+  @param [in] opts  The options class to be used
+  @return  Return a tensor containing "frame_length" samples extracted from
+           `wave`, without any further processing. Its shape is
+           (1, frame_length).
+*/
+torch::Tensor ExtractWindow(int64_t sample_offset, const torch::Tensor &wave,
+                            int32_t f, const FrameExtractionOptions &opts);
 
 }  // namespace kaldifeat
 
