@@ -2,9 +2,9 @@
 
 <div align="center">
 <img src="/doc/source/images/os.svg">
-<img src="/doc/source/images/python-3.6_3.7_3.8-blue.svg">
-<img src="/doc/source/images/pytorch-1.6.0_1.7.0_1.7.1_1.8.0_1.8.1_1.9.0-green.svg">
-<img src="/doc/source/images/cuda-10.1_10.2_11.0_11.1-orange.svg">
+<img src="/doc/source/images/python_ge_3.6-blue.svg">
+<img src="/doc/source/images/pytorch_ge_1.5.0-green.svg">
+<img src="/doc/source/images/cuda_ge_10.1-orange.svg">
 </div>
 
 <sub>
