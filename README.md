@@ -32,6 +32,17 @@ features = fbank(wave)
 </tr>
 
 <tr>
+<td>Online FBANK</td>
+<td><code>kaldifeat.FbankOptions</code></td>
+<td><code>kaldifeat.OnlineFbank</code></td>
+<td>
+See <a href="./kaldifeat/python/tests/test_fbank.py">
+./kaldifeat/python/tests/test_fbank.py
+</a>
+</td>
+</tr>
+
+<tr>
 <td>MFCC</td>
 <td><code>kaldifeat.MfccOptions</code></td>
 <td><code>kaldifeat.Mfcc</code></td>
