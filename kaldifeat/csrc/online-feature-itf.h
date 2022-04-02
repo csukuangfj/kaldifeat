@@ -19,6 +19,10 @@ class OnlineFeatureInterface {
   virtual ~OnlineFeatureInterface() = default;
 
   virtual int32_t Dim() const = 0;  /// returns the feature dimension.
+                                    //
+  // Returns frame shift in seconds.  Helps to estimate duration from frame
+  // counts.
+  virtual float FrameShiftInSeconds() const = 0;
 
   /// Returns the total number of frames, since the start of the utterance, that
   /// are now available.  In an online-decoding context, this will likely
@@ -63,10 +67,6 @@ class OnlineFeatureInterface {
 
     return torch::cat(features, /*dim*/ 0);
   }
-
-  // Returns frame shift in seconds.  Helps to estimate duration from frame
-  // counts.
-  virtual float FrameShiftInSeconds() const = 0;
 
   /// This would be called from the application, when you get more wave data.
   /// Note: the sampling_rate is typically only provided so the code can assert

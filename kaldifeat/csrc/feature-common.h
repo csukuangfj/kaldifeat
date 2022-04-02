@@ -62,6 +62,10 @@ class OfflineFeatureTpl {
   int32_t Dim() const { return computer_.Dim(); }
   const Options &GetOptions() const { return computer_.GetOptions(); }
 
+  const FrameExtractionOptions &GetFrameOptions() const {
+    return GetOptions().frame_opts;
+  }
+
   // Copy constructor.
   OfflineFeatureTpl(const OfflineFeatureTpl<F> &) = delete;
   OfflineFeatureTpl<F> &operator=(const OfflineFeatureTpl<F> &) = delete;

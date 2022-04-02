@@ -25,6 +25,7 @@ static void PybindFrameExtractionOptions(py::module &m) {
       .def_readwrite("round_to_power_of_two", &PyClass::round_to_power_of_two)
       .def_readwrite("blackman_coeff", &PyClass::blackman_coeff)
       .def_readwrite("snip_edges", &PyClass::snip_edges)
+      .def_readwrite("max_feature_vectors", &PyClass::max_feature_vectors)
       .def("as_dict",
            [](const PyClass &self) -> py::dict { return AsDict(self); })
       .def_static("from_dict",
@@ -35,8 +36,6 @@ static void PybindFrameExtractionOptions(py::module &m) {
       .def_readwrite("allow_downsample",
                      &PyClass::allow_downsample)
       .def_readwrite("allow_upsample", &PyClass::allow_upsample)
-      .def_readwrite("max_feature_vectors",
-                     &PyClass::max_feature_vectors)
 #endif
       .def("__str__",
            [](const PyClass &self) -> std::string { return self.ToString(); })

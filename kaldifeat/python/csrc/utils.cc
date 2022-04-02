@@ -30,6 +30,7 @@ FrameExtractionOptions FrameExtractionOptionsFromDict(py::dict dict) {
   FROM_DICT(bool_, round_to_power_of_two);
   FROM_DICT(float_, blackman_coeff);
   FROM_DICT(bool_, snip_edges);
+  FROM_DICT(int_, max_feature_vectors);
 
   return opts;
 }
@@ -47,6 +48,7 @@ py::dict AsDict(const FrameExtractionOptions &opts) {
   AS_DICT(round_to_power_of_two);
   AS_DICT(blackman_coeff);
   AS_DICT(snip_edges);
+  AS_DICT(max_feature_vectors);
 
   return dict;
 }
