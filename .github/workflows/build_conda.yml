@@ -20,8 +20,8 @@ name: build_conda_cuda
 
 on:
   push:
-    branches:
-      - conda-cuda
+    tags:
+      - '*'
 
 env:
   KALDIFEAT_BUILD_TYPE: Release
