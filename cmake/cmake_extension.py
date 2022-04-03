@@ -116,13 +116,13 @@ class BuildExtension(build_ext):
         lib_so = glob.glob(f"{self.build_temp}/lib/*kaldifeat*.so")
         lib_so += glob.glob(f"{self.build_temp}/lib/*kaldifeat*.dylib")  # macOS
 
-        # bin/Release/_k2.cp38-win_amd64.pyd
-        lib_so = glob.glob(
+        # bin/Release/_kaldifeat.cp38-win_amd64.pyd
+        lib_so += glob.glob(
             f"{self.build_temp}/**/*kaldifeat*.pyd", recursive=True
         )  # windows
 
         # lib/Release/*.lib
-        lib_so = glob.glob(
+        lib_so += glob.glob(
             f"{self.build_temp}/**/*kaldifeat*.lib", recursive=True
         )  # windows
         for so in lib_so:
