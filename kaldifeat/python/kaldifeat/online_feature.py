@@ -91,5 +91,15 @@ class OnlineFeature(object):
         """
         self.computer.input_finished()
 
+    @property
+    def dim(self) -> int:
+        """Return the feature dimension of this extractor"""
+        return self.computer.dim
+
+    @property
+    def frame_shift_in_seconds(self) -> int:
+        """Return frame shift in seconds of this extractor"""
+        return self.computer.frame_shift_in_seconds
+
     def __getstate__(self):
         return self.opts.as_dict()

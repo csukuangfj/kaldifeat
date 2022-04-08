@@ -5,6 +5,7 @@ exclude =
   .git,
   build,
   build_release,
+  cmake/cmake_extension.py,
   kaldifeat/python/kaldifeat/__init__.py
 
 ignore =
