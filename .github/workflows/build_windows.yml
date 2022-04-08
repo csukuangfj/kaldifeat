@@ -1,0 +1,88 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-windows:
+    # see https://github.com/actions/virtual-environments/blob/win19/20210525.0/images/win/Windows2019-Readme.md
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2019]
+        torch: ["1.6.0", "1.7.0", "1.7.1", "1.8.0", "1.8.1", "1.9.0", "1.10.0", "1.11.0"]
+        python-version: [3.6, 3.7, 3.8, 3.9]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # see https://github.com/microsoft/setup-msbuild
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+
+      - name: Install PyTorch ${{ matrix.torch }}
+        run: |
+          pip3 install -qq torch==${{ matrix.torch }}+cpu -f https://download.pytorch.org/whl/torch_stable.html
+          pip3 install -qq wheel twine dataclasses numpy typing_extensions soundfile
+
+      - name: Display CMake version
+        run: |
+          cmake --version
+          cmake --help
+
+      - name: Configure CMake
+        shell: bash
+        run: |
+          mkdir build_release
+          cd build_release
+          cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
+          ls -lh
+
+      - name: Build kaldifeat
+        run: |
+          cd build_release
+          cmake --build . --target _kaldifeat --config Release
+
+      - name: Display generated files
+        shell: bash
+        run: |
+          cd build_release
+          ls -lh lib/*/*
+
+      - name: Build wheel
+        shell: bash
+        run: |
+          python3 setup.py bdist_wheel
+          ls -lh dist/
+          pip install ./dist/*.whl
+          python3 -c "import kaldifeat; print(kaldifeat.__version__)"
+
+      - name: Upload Wheel
+        uses: actions/upload-artifact@v2
+        with:
+          name: python-${{ matrix.python-version }}-${{ matrix.os }}-cpu
+          path: dist/*.whl
+
+      - name: Build tests
+        shell: bash
+        run: |
+          cd build_release
+          cmake --build . --target ALL_BUILD --config Release
+          ls -lh bin/*/*
+          ctest -C Release --verbose --output-on-failure

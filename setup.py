@@ -41,6 +41,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     ext_modules=[cmake_extension("_kaldifeat")],
     cmdclass={"build_ext": BuildExtension, "bdist_wheel": bdist_wheel},
+    zip_safe=False,
     classifiers=[
         "Programming Language :: C++",
         "Programming Language :: Python",
