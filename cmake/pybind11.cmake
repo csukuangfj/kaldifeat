@@ -8,12 +8,9 @@ function(download_pybind11)
 
   include(FetchContent)
 
-  set(pybind11_URL  "https://github.com/pybind/pybind11/archive/v2.6.0.tar.gz")
-  set(pybind11_HASH "SHA256=90b705137b69ee3b5fc655eaca66d0dc9862ea1759226f7ccd3098425ae69571")
+  set(pybind11_URL  "https://github.com/pybind/pybind11/archive/v2.9.2.tar.gz")
+  set(pybind11_HASH "SHA256=6bd528c4dbe2276635dc787b6b1f2e5316cf6b49ee3e150264e455a0d68d19c1")
 
-  set(double_quotes "\"")
-  set(dollar "\$")
-  set(semicolon "\;")
   FetchContent_Declare(pybind11
     URL               ${pybind11_URL}
     URL_HASH          ${pybind11_HASH}
