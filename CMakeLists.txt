@@ -51,5 +51,11 @@ if(kaldifeat_BUILD_TESTS)
   enable_testing()
 endif()
 
+# TORCH_VERSION is defined in cmake/torch.cmake
+configure_file(
+  ${CMAKE_SOURCE_DIR}/kaldifeat/python/kaldifeat/torch_version.py.in
+  ${CMAKE_SOURCE_DIR}/kaldifeat/python/kaldifeat/torch_version.py @ONLY
+)
+
 include_directories(${CMAKE_SOURCE_DIR})
 add_subdirectory(kaldifeat)
