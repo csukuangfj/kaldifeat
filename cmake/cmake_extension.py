@@ -128,3 +128,11 @@ class BuildExtension(build_ext):
         for so in lib_so:
             print(f"Copying {so} to {self.build_lib}/")
             shutil.copy(f"{so}", f"{self.build_lib}/")
+
+        print(
+            f"Copying {kaldifeat_dir}/kaldifeat/python/kaldifeat/torch_version.py to {self.build_lib}/kaldifeat"  # noqa
+        )
+        shutil.copy(
+            f"{kaldifeat_dir}/kaldifeat/python/kaldifeat/torch_version.py",
+            f"{self.build_lib}/kaldifeat",
+        )
