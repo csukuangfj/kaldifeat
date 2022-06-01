@@ -80,7 +80,7 @@ jobs:
           sudo apt install libsndfile1-dev libsndfile1 ffmpeg
           python3 -m pip install --upgrade pip
           python3 -m pip install wheel twine typing_extensions soundfile
-          python3 -m pip install bs4 requests tqdm
+          python3 -m pip install bs4 requests tqdm numpy
 
           ./scripts/github_actions/install_torch.sh
           python3 -c "import torch; print('torch version:', torch.__version__)"
@@ -91,7 +91,7 @@ jobs:
         run: |
           python3 -m pip install -qq --upgrade pip
           python3 -m pip install -qq wheel twine typing_extensions soundfile
-          python3 -m pip install -qq torch==${{ matrix.torch }}
+          python3 -m pip install -qq torch==${{ matrix.torch }} numpy
 
           python3 -c "import torch; print('torch version:', torch.__version__)"
 
