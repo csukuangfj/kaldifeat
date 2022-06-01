@@ -14,21 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: Nightly tests ubuntu cuda
+name: Nightly tests ubuntu cpu
 
 on:
   push:
     branches:
-      - nightly-test-2
-
-  schedule:
-    # minute (0-59)
-    # hour (0-23)
-    # day of the month (1-31)
-    # month (1-12)
-    # day of the week (0-6)
-    # nightly build at 23:50 UTC time every day
-    - cron: "50 23 * * *"
+      - nightly-test
 
 jobs:
   generate_build_matrix:
@@ -44,11 +35,11 @@ jobs:
         id: set-matrix
         run: |
           # outputting for debugging purposes
-          python scripts/github_actions/generate_build_matrix.py --enable-cuda
-          MATRIX=$(python scripts/github_actions/generate_build_matrix.py --enable-cuda)
+          python scripts/github_actions/generate_build_matrix.py
+          MATRIX=$(python scripts/github_actions/generate_build_matrix.py)
           echo "::set-output name=matrix::${MATRIX}"
 
-  run_nightly_tests_ubuntu_cuda:
+  run_nightly_tests_ubuntu_cpu:
     needs: generate_build_matrix
     runs-on: ubuntu-18.04
     strategy:
@@ -66,47 +57,31 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+
       - name: Install GCC 7
         run: |
           sudo apt-get install -y gcc-7 g++-7
           echo "CC=/usr/bin/gcc-7" >> $GITHUB_ENV
           echo "CXX=/usr/bin/g++-7" >> $GITHUB_ENV
 
-      - name: Install CUDA Toolkit ${{ matrix.cuda }}
-        shell: bash
-        env:
-          cuda: ${{ matrix.cuda }}
+      - name: Display GCC version
         run: |
-          source ./scripts/github_actions/install_cuda.sh
-          echo "CUDA_HOME=${CUDA_HOME}" >> $GITHUB_ENV
-          echo "${CUDA_HOME}/bin" >> $GITHUB_PATH
-          echo "LD_LIBRARY_PATH=${CUDA_HOME}/lib:${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}" >> $GITHUB_ENV
-
-      - name: Display NVCC version
-        run: |
-          which nvcc
-          nvcc --version
+          gcc --version
 
       - name: Install PyTorch ${{ matrix.torch }}
-        env:
-          cuda: ${{ matrix.cuda }}
-          torch: ${{ matrix.torch }}
         shell: bash
         run: |
           sudo apt-get update
           sudo apt-get install -y libsndfile1-dev libsndfile1 ffmpeg
-          python3 -m pip install --upgrade pip
-          python3 -m pip install wheel twine typing_extensions soundfile
-          python3 -m pip install bs4 requests tqdm numpy
 
-          ./scripts/github_actions/install_torch.sh
+          python3 -m pip install -qq --upgrade pip
+          python3 -m pip install -qq wheel twine typing_extensions numpy
+          python3 -m pip install -qq torch==${{ matrix.torch }}+cpu -f https://download.pytorch.org/whl/torch_stable.html
+          python3 -m pip install -qq dataclasses graphviz
+
           python3 -c "import torch; print('torch version:', torch.__version__)"
-
-      - name: Download cudnn 8.0
-        env:
-          cuda: ${{ matrix.cuda }}
-        run: |
-          ./scripts/github_actions/install_cudnn.sh
 
       - name: Install from PyPI
         shell: bash
