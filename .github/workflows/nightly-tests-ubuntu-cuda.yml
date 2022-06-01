@@ -13,18 +13,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# refer to https://github.com/actions/starter-workflows/pull/47/files
-
-name: build_conda_cuda
+#
+name: Nightly tests ubuntu cuda
 
 on:
   push:
-    tags:
-      - '*'
-
-env:
-  KALDIFEAT_BUILD_TYPE: Release
+    branches:
+      - nightly-test
 
 jobs:
   generate_build_matrix:
@@ -44,7 +39,7 @@ jobs:
           MATRIX=$(python scripts/github_actions/generate_build_matrix.py --enable-cuda)
           echo "::set-output name=matrix::${MATRIX}"
 
-  build_conda_cuda:
+  run_nightly_tests_ubuntu_cuda:
     needs: generate_build_matrix
     runs-on: ubuntu-18.04
     strategy:
@@ -53,13 +48,25 @@ jobs:
         ${{ fromJson(needs.generate_build_matrix.outputs.matrix) }}
 
     steps:
-      # refer to https://github.com/actions/checkout
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install GCC 7
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo apt-get install -y gcc-7 g++-7
+          echo "CC=/usr/bin/gcc-7" >> $GITHUB_ENV
+          echo "CXX=/usr/bin/g++-7" >> $GITHUB_ENV
+
       - name: Install CUDA Toolkit ${{ matrix.cuda }}
-        shell: bash -l {0}
+        if: startsWith(matrix.os, 'ubuntu')
+        shell: bash
         env:
           cuda: ${{ matrix.cuda }}
         run: |
@@ -69,55 +76,40 @@ jobs:
           echo "LD_LIBRARY_PATH=${CUDA_HOME}/lib:${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}" >> $GITHUB_ENV
 
       - name: Display NVCC version
-        shell: bash -l {0}
+        if: startsWith(matrix.os, 'ubuntu')
         run: |
           which nvcc
           nvcc --version
 
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          auto-update-conda: true
-          python-version: ${{ matrix.python-version }}
-          activate-environment: kaldifeat
-
-      - name: Display Python version
-        shell: bash -l {0}
+      - name: Install PyTorch ${{ matrix.torch }}
+        env:
+          cuda: ${{ matrix.cuda }}
+          torch: ${{ matrix.torch }}
+        shell: bash
         run: |
-          python3 -c "import sys; print(sys.version)"
-          which python3
+          sudo apt update
+          sudo apt install libsndfile1-dev libsndfile1 ffmpeg
+          python3 -m pip install --upgrade pip
+          python3 -m pip install wheel twine typing_extensions soundfile
+          python3 -m pip install bs4 requests tqdm
 
-      - name: Install conda dependencies
-        shell: bash -l {0}
-        run: |
-          conda install -y -q anaconda-client
-          conda install -y -q conda-build
-          conda install -y -q bs4 requests tqdm
-          conda install -y -q -c pytorch -c conda-forge pytorch=${{ matrix.torch }} cudatoolkit=${{ matrix.cuda }}
-
-      - name: Display conda info
-        shell: bash -l {0}
-        run: |
-          which conda
-          conda env list
-          conda info
-          nproc
+          ./scripts/github_actions/install_torch.sh
+          python3 -c "import torch; print('torch version:', torch.__version__)"
 
       - name: Download cudnn 8.0
-        shell: bash -l {0}
+        if: startsWith(matrix.os, 'ubuntu')
         env:
           cuda: ${{ matrix.cuda }}
         run: |
           ./scripts/github_actions/install_cudnn.sh
 
-      - name: Build kaldifeat
-        shell: bash -l {0}
-        env:
-          KALDIFEAT_CUDA_VERSION: ${{ matrix.cuda }}
-          KALDIFEAT_PYTHON_VERSION: ${{ matrix.python-version}}
-          KALDIFEAT_TORCH_VERSION: ${{ matrix.torch }}
-          KALDIFEAT_CONDA_TOKEN: ${{ secrets.KALDIFEAT_CONDA_TOKEN}}
-          KALDIFEAT_IS_GITHUB_ACTIONS: 1
-          KALDIFEAT_IS_FOR_CONDA: 1
+      - name: Install from PyPI
+        shell: bash
         run: |
-          export KALDIFEAT_BUILD_TYPE=$KALDIFEAT_BUILD_TYPE
-          ./scripts/build_conda.sh
+          pip install --verbose kaldifeat
+
+      - name: Run tests
+        shell: bash
+        run: |
+          cd kaldifeat/python/tests
+          make test
