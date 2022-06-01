@@ -43,7 +43,7 @@ jobs:
     needs: generate_build_matrix
     runs-on: ubuntu-18.04
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         ${{ fromJson(needs.generate_build_matrix.outputs.matrix) }}
 
@@ -58,14 +58,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install GCC 7
-        if: startsWith(matrix.os, 'ubuntu')
         run: |
           sudo apt-get install -y gcc-7 g++-7
           echo "CC=/usr/bin/gcc-7" >> $GITHUB_ENV
           echo "CXX=/usr/bin/g++-7" >> $GITHUB_ENV
 
       - name: Install CUDA Toolkit ${{ matrix.cuda }}
-        if: startsWith(matrix.os, 'ubuntu')
         shell: bash
         env:
           cuda: ${{ matrix.cuda }}
@@ -76,7 +74,6 @@ jobs:
           echo "LD_LIBRARY_PATH=${CUDA_HOME}/lib:${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}" >> $GITHUB_ENV
 
       - name: Display NVCC version
-        if: startsWith(matrix.os, 'ubuntu')
         run: |
           which nvcc
           nvcc --version
@@ -97,7 +94,6 @@ jobs:
           python3 -c "import torch; print('torch version:', torch.__version__)"
 
       - name: Download cudnn 8.0
-        if: startsWith(matrix.os, 'ubuntu')
         env:
           cuda: ${{ matrix.cuda }}
         run: |
