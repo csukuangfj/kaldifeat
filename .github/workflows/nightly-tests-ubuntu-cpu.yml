@@ -19,7 +19,16 @@ name: Nightly tests ubuntu cpu
 on:
   push:
     branches:
-      - nightly-test
+      - nightly-test-2
+
+  schedule:
+    # minute (0-59)
+    # hour (0-23)
+    # day of the month (1-31)
+    # month (1-12)
+    # day of the week (0-6)
+    # nightly build at 23:50 UTC time every day
+    - cron: "50 23 * * *"
 
 jobs:
   generate_build_matrix:
