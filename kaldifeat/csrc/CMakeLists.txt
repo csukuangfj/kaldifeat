@@ -31,9 +31,15 @@ function(kaldifeat_add_test source)
       gtest_main
   )
 
+  # NOTE: We set the working directory here so that
+  # it works also on windows. The reason is that
+  # the required DLLs are inside ${TORCH_DIR}/lib
+  # and they can be found by the exe if the current
+  # working directory is ${TORCH_DIR}\lib
   add_test(NAME "Test.${name}"
     COMMAND
     $<TARGET_FILE:${name}>
+    WORKING_DIRECTORY ${TORCH_DIR}/lib
   )
 endfunction()
 
@@ -47,4 +53,5 @@ if(kaldifeat_BUILD_TESTS)
   foreach(source IN LISTS test_srcs)
     kaldifeat_add_test(${source})
   endforeach()
+
 endif()
