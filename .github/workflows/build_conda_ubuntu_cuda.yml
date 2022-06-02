@@ -20,8 +20,6 @@ name: build_conda_ubuntu_cuda
 
 on:
   push:
-    branches:
-      - nightly-test
     tags:
       - '*'
 

@@ -14,12 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: Nightly tests ubuntu cpu
+name: Nightly tests windows pip cpu
 
 on:
   push:
     branches:
-      - nightly-test-2
+      - nightly-test
 
   schedule:
     # minute (0-59)
@@ -48,9 +48,9 @@ jobs:
           MATRIX=$(python scripts/github_actions/generate_build_matrix.py)
           echo "::set-output name=matrix::${MATRIX}"
 
-  run_nightly_tests_ubuntu_cpu:
+  run_nightly_tests_windows_pip_cpu:
     needs: generate_build_matrix
-    runs-on: ubuntu-18.04
+    runs-on: windows-2019
     strategy:
       fail-fast: true
       matrix:
@@ -61,6 +61,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      # see https://github.com/microsoft/setup-msbuild
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
@@ -69,26 +73,13 @@ jobs:
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
 
-      - name: Install GCC 7
-        run: |
-          sudo apt-get install -y gcc-7 g++-7
-          echo "CC=/usr/bin/gcc-7" >> $GITHUB_ENV
-          echo "CXX=/usr/bin/g++-7" >> $GITHUB_ENV
-
-      - name: Display GCC version
-        run: |
-          gcc --version
-
       - name: Install PyTorch ${{ matrix.torch }}
         shell: bash
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libsndfile1-dev libsndfile1 ffmpeg
-
           python3 -m pip install -qq --upgrade pip
-          python3 -m pip install -qq wheel twine typing_extensions numpy soundfile
+          python3 -m pip install -qq wheel twine numpy typing_extensions
+          python3 -m pip install -qq dataclasses soundfile numpy
           python3 -m pip install -qq torch==${{ matrix.torch }}+cpu -f https://download.pytorch.org/whl/torch_stable.html
-          python3 -m pip install -qq dataclasses
 
           python3 -c "import torch; print('torch version:', torch.__version__)"
 
@@ -102,4 +93,14 @@ jobs:
         shell: bash
         run: |
           cd kaldifeat/python/tests
-          make test
+
+          python3 ./test_fbank.py
+          python3 ./test_fbank_options.py
+          python3 ./test_frame_extraction_options.py
+          python3 ./test_mel_bank_options.py
+          python3 ./test_mfcc.py
+          python3 ./test_mfcc_options.py
+          python3 ./test_plp.py
+          python3 ./test_plp_options.py
+          python3 ./test_spectrogram.py
+          python3 ./test_spectrogram_options.py
