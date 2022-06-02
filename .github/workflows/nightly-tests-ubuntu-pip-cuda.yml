@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: Nightly tests ubuntu cuda
+name: Nightly tests ubuntu pip cuda
 
 on:
   push:
@@ -48,7 +48,7 @@ jobs:
           MATRIX=$(python scripts/github_actions/generate_build_matrix.py --enable-cuda)
           echo "::set-output name=matrix::${MATRIX}"
 
-  run_nightly_tests_ubuntu_cuda:
+  run_nightly_tests_ubuntu_pip_cuda:
     needs: generate_build_matrix
     runs-on: ubuntu-18.04
     strategy:
