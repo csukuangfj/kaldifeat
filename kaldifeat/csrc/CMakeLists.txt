@@ -15,6 +15,14 @@ set(kaldifeat_srcs
 add_library(kaldifeat_core ${kaldifeat_srcs})
 target_link_libraries(kaldifeat_core PUBLIC ${TORCH_LIBRARIES})
 
+if(EXISTS /usr/local/miniconda/envs/kaldifeat/lib/libmkl_intel_ilp64.dylib)
+  message(STATUS "Linking kaldifeat_core with /usr/local/miniconda/envs/kaldifeat/lib/libmkl_intel_ilp64.dylib")
+  target_link_libraries(kaldifeat_core PUBLIC "/usr/local/miniconda/envs/kaldifeat/lib/libmkl_intel_ilp64.dylib")
+  target_link_libraries(kaldifeat_core PUBLIC "-L/usr/local/miniconda/envs/kaldifeat/lib")
+else()
+  message(STATUS "Not linking kaldifeat_core with /usr/local/miniconda/envs/kaldifeat/lib/libmkl_intel_ilp64.dylib")
+endif()
+
 target_compile_definitions(kaldifeat_core PUBLIC KALDIFEAT_TORCH_VERSION_MAJOR=${KALDIFEAT_TORCH_VERSION_MAJOR})
 target_compile_definitions(kaldifeat_core PUBLIC KALDIFEAT_TORCH_VERSION_MINOR=${KALDIFEAT_TORCH_VERSION_MINOR})
 

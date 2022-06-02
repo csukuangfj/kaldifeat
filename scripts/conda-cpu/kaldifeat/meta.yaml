@@ -1,0 +1,44 @@
+package:
+  name: kaldifeat
+  version: "1.15.4"
+
+source:
+  path: "{{ environ.get('KALDIFEAT_ROOT_DIR') }}"
+
+build:
+  number: 0
+  string: cpu_py{{ environ.get('KALDIFEAT_PYTHON_VERSION') }}_torch{{ environ.get('KALDIFEAT_TORCH_VERSION') }}
+  script_env:
+    - KALDIFEAT_IS_GITHUB_ACTIONS
+    - KALDIFEAT_TORCH_VERSION
+    - KALDIFEAT_PYTHON_VERSION
+    - KALDIFEAT_BUILD_TYPE
+    - KALDIFEAT_BUILD_VERSION
+    - KALDIFEAT_IS_FOR_CONDA
+
+requirements:
+  build:
+    - {{ compiler('c') }} # [win]
+    - {{ compiler('cxx') }} # [win]
+
+  host:
+    - cmake=3.18
+    - python
+    - pytorch={{ environ.get('KALDIFEAT_TORCH_VERSION') }}
+    - gcc_linux-64=7 # [linux]
+    - cpuonly
+    - numpy
+
+  run:
+    - python
+    - pytorch={{ environ.get('KALDIFEAT_TORCH_VERSION') }}
+    - numpy
+
+about:
+  home: https://github.com/csukuangfj/kaldifeat
+  license: Apache V2
+  license_file: LICENSE
+  summary: Kaldi-compatible feature extraction with PyTorch
+  description: |
+    Kaldi-compatible feature extraction with PyTorch,
+    supporting CUDA, batch processing, chunk processing, and autograd

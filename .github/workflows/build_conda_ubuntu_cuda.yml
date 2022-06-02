@@ -16,10 +16,12 @@
 
 # refer to https://github.com/actions/starter-workflows/pull/47/files
 
-name: build_conda_cuda
+name: build_conda_ubuntu_cuda
 
 on:
   push:
+    branches:
+      - nightly-test
     tags:
       - '*'
 
@@ -44,11 +46,11 @@ jobs:
           MATRIX=$(python scripts/github_actions/generate_build_matrix.py --enable-cuda)
           echo "::set-output name=matrix::${MATRIX}"
 
-  build_conda_cuda:
+  build_conda_ubuntu_cuda:
     needs: generate_build_matrix
     runs-on: ubuntu-18.04
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         ${{ fromJson(needs.generate_build_matrix.outputs.matrix) }}
 
@@ -91,7 +93,6 @@ jobs:
         run: |
           conda install -y -q anaconda-client
           conda install -y -q conda-build
-          conda install -y -q bs4 requests tqdm
           conda install -y -q -c pytorch -c conda-forge pytorch=${{ matrix.torch }} cudatoolkit=${{ matrix.cuda }}
 
       - name: Display conda info
@@ -115,9 +116,19 @@ jobs:
           KALDIFEAT_CUDA_VERSION: ${{ matrix.cuda }}
           KALDIFEAT_PYTHON_VERSION: ${{ matrix.python-version}}
           KALDIFEAT_TORCH_VERSION: ${{ matrix.torch }}
-          KALDIFEAT_CONDA_TOKEN: ${{ secrets.KALDIFEAT_CONDA_TOKEN}}
+          # KALDIFEAT_CONDA_TOKEN: ${{ secrets.KALDIFEAT_CONDA_TOKEN}}
           KALDIFEAT_IS_GITHUB_ACTIONS: 1
           KALDIFEAT_IS_FOR_CONDA: 1
         run: |
           export KALDIFEAT_BUILD_TYPE=$KALDIFEAT_BUILD_TYPE
           ./scripts/build_conda.sh
+
+      - name: Display generated files
+        run: |
+          ls -lh /usr/share/miniconda/envs/kaldifeat/conda-bld/linux-64
+
+      - name: Upload generated files
+        uses: actions/upload-artifact@v2
+        with:
+          name: cuda-${{ matrix.cuda }}-torch-${{ matrix.torch }}-python-${{ matrix.python-version }}-${{ matrix.os }}
+          path: /usr/share/miniconda/envs/kaldifeat/conda-bld/linux-64/*.tar.bz2
