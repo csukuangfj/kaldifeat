@@ -20,6 +20,8 @@ name: build_conda_ubuntu_cpu
 
 on:
   push:
+    branches:
+      - nightly-test
     tags:
       - '*'
 

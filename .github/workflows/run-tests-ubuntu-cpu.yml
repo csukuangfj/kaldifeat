@@ -14,21 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: Nightly tests ubuntu conda cpu
+name: Run tests ubuntu cpu
 
 on:
   push:
     branches:
+      - master
       - nightly-test
-
-  schedule:
-    # minute (0-59)
-    # hour (0-23)
-    # day of the month (1-31)
-    # month (1-12)
-    # day of the week (0-6)
-    # nightly build at 23:50 UTC time every day
-    - cron: "50 23 * * *"
+  pull_request:
+    branches:
+      - master
 
 jobs:
   generate_build_matrix:
@@ -48,7 +43,7 @@ jobs:
           MATRIX=$(python scripts/github_actions/generate_build_matrix.py)
           echo "::set-output name=matrix::${MATRIX}"
 
-  run_nightly_tests_ubuntu_conda_cpu:
+  run_tests_ubuntu_cpu:
     needs: generate_build_matrix
     runs-on: ubuntu-18.04
     strategy:
@@ -61,25 +56,39 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: conda-incubator/setup-miniconda@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
         with:
-          auto-update-conda: true
           python-version: ${{ matrix.python-version }}
-          activate-environment: kaldifeat
 
-      - name: Display Python version
-        shell: bash -l {0}
+      - name: Install GCC 7
         run: |
-          python3 -c "import sys; print(sys.version)"
-          which python3
+          sudo apt-get install -y gcc-7 g++-7
+          echo "CC=/usr/bin/gcc-7" >> $GITHUB_ENV
+          echo "CXX=/usr/bin/g++-7" >> $GITHUB_ENV
 
-      - name: Install kaldifeat
-        shell: bash -l {0}
+      - name: Install PyTorch ${{ matrix.torch }}
+        shell: bash
         run: |
-          conda install -y -c kaldifeat -c pytorch cpuonly pytorch=${{ matrix.torch }} kaldifeat
+          sudo apt update
+          sudo apt install libsndfile1-dev libsndfile1 ffmpeg
+          python3 -m pip install --upgrade pip
+          python3 -m pip install wheel twine typing_extensions soundfile
+          python3 -m pip install bs4 requests tqdm numpy
+          python3 -m pip install -qq torch==${{ matrix.torch }}+cpu -f https://download.pytorch.org/whl/torch_stable.html
+
+          python3 -c "import torch; print('torch version:', torch.__version__)"
+
+      - name: Build
+        shell: bash
+        run: |
+          mkdir build_release
+          cd build_release
+          cmake ..
+          make VERBOSE=1 -j3
 
       - name: Run tests
         shell: bash
         run: |
-          cd kaldifeat/python/tests
-          make test
+          cd build_release
+          ctest --output-on-failure

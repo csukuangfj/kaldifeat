@@ -19,7 +19,7 @@ name: Nightly tests ubuntu pip cpu
 on:
   push:
     branches:
-      - nightly-test-2
+      - nightly-test
 
   schedule:
     # minute (0-59)
@@ -52,7 +52,7 @@ jobs:
     needs: generate_build_matrix
     runs-on: ubuntu-18.04
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         ${{ fromJson(needs.generate_build_matrix.outputs.matrix) }}
 

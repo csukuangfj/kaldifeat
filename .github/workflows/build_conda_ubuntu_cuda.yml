@@ -20,6 +20,8 @@ name: build_conda_ubuntu_cuda
 
 on:
   push:
+    branches:
+      - nightly-test
     tags:
       - '*'
 
@@ -48,7 +50,7 @@ jobs:
     needs: generate_build_matrix
     runs-on: ubuntu-18.04
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         ${{ fromJson(needs.generate_build_matrix.outputs.matrix) }}
 
