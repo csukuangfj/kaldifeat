@@ -17,10 +17,6 @@
 name: Nightly tests ubuntu pip cuda
 
 on:
-  push:
-    branches:
-      - nightly-test
-
   schedule:
     # minute (0-59)
     # hour (0-23)

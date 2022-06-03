@@ -20,7 +20,7 @@ on:
   push:
     branches:
       - master
-      - nightly-test
+
   pull_request:
     branches:
       - master

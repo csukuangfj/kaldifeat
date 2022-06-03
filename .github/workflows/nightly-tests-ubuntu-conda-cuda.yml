@@ -73,13 +73,10 @@ jobs:
           python3 -c "import sys; print(sys.version)"
           which python3
 
-      - name: Install kaldifeat
+      - name: Install kaldifeat and run tests
         shell: bash -l {0}
         run: |
-          conda install -y -c kaldifeat -c pytorch -c conda-forge pytorch=${{ matrix.torch }} cudatoolkit=${{ matrix.cuda }} kaldifeat
+          conda install -y -c kaldifeat -c pytorch -c conda-forge pytorch=${{ matrix.torch }} cudatoolkit=${{ matrix.cuda }} kaldifeat python=${{ matrix.python-version }}
 
-      - name: Run tests
-        shell: bash
-        run: |
           cd kaldifeat/python/tests
           make test
