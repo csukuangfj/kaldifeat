@@ -94,8 +94,9 @@ jobs:
           ls -lh *
           ls -lh */*
 
-          echo "PWD: $PWD"
+          sed -i '59i#define CUDNN_MAJOR 8' cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/include/cudnn.h
 
+          echo "PWD: $PWD"
 
       - name: Install PyTorch ${{ matrix.torch }}
         shell: bash
@@ -130,6 +131,7 @@ jobs:
           ls -lh
 
       - name: Build kaldifeat
+        shell: bash
         run: |
           cd build_release
           cmake --build . --target _kaldifeat --config Release
@@ -143,6 +145,7 @@ jobs:
       - name: Build wheel
         shell: bash
         run: |
+          export KALDIFEAT_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCUDNN_INCLUDE_PATH=/d/a/kaldifeat/kaldifeat/cudnn-for-windows/cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/include -DCUDNN_LIBRARY_PATH=/d/a/kaldifeat/kaldifeat/cudnn-for-windows/cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/lib/cudnn.lib"
           python3 setup.py bdist_wheel
           ls -lh dist/
           pip install ./dist/*.whl

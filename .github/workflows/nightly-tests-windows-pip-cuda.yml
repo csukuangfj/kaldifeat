@@ -19,7 +19,7 @@ name: Nightly tests windows pip cuda
 on:
   push:
     branches:
-      - nightly-test-2
+      - nightly-test
 
   schedule:
     # minute (0-59)
@@ -44,8 +44,8 @@ jobs:
         id: set-matrix
         run: |
           # outputting for debugging purposes
-          python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows
-          MATRIX=$(python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows)
+          python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows --test-only-latest-torch
+          MATRIX=$(python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows --test-only-latest-torch)
           echo "::set-output name=matrix::${MATRIX}"
 
   run_nightly_tests_windows_pip_cuda:
@@ -75,7 +75,7 @@ jobs:
 
       # See https://github.com/Jimver/cuda-toolkit/blob/master/src/links/windows-links.ts
       # for available CUDA versions
-      - uses: Jimver/cuda-toolkit@v0.2.5
+      - uses: Jimver/cuda-toolkit@v0.2.7
         id: cuda-toolkit
         with:
           cuda: ${{ matrix.cuda }}
@@ -85,6 +85,21 @@ jobs:
           echo "Installed cuda version is: ${{ steps.cuda-toolkit.outputs.cuda }}"
           echo "Cuda install location: ${{steps.cuda-toolkit.outputs.CUDA_PATH}}"
           nvcc --version
+
+      - name: Download cuDNN
+        shell: bash
+        run: |
+          GIT_LFS_SKIP_SMUDGE=1 git clone https://huggingface.co/csukuangfj/cudnn-for-windows
+          cd cudnn-for-windows
+          git lfs pull --include="cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive.zip"
+          unzip cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive.zip
+          ls -lh *
+          ls -lh */*
+          cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive
+
+          sed -i '59i#define CUDNN_MAJOR 8' cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/include/cudnn.h
+
+          echo "PWD: $PWD"
 
       - name: Install PyTorch ${{ matrix.torch }}
         shell: bash
@@ -105,6 +120,7 @@ jobs:
       - name: Install from PyPI
         shell: bash
         run: |
+          export KALDIFEAT_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCUDNN_INCLUDE_PATH=/d/a/kaldifeat/kaldifeat/cudnn-for-windows/cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/include -DCUDNN_LIBRARY_PATH=/d/a/kaldifeat/kaldifeat/cudnn-for-windows/cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/lib/cudnn.lib"
           export KALDIFEAT_MAKE_ARGS="-j 3"
           pip install --verbose kaldifeat
 
