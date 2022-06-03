@@ -90,8 +90,8 @@ jobs:
           torch: ${{ matrix.torch }}
         shell: bash
         run: |
-          sudo apt update
-          sudo apt install libsndfile1-dev libsndfile1 ffmpeg
+          sudo apt-get update
+          sudo apt-get install -y libsndfile1-dev libsndfile1 ffmpeg
           python3 -m pip install --upgrade pip
           python3 -m pip install wheel twine typing_extensions soundfile
           python3 -m pip install bs4 requests tqdm numpy

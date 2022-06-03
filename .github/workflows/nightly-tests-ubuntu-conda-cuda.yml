@@ -77,6 +77,7 @@ jobs:
         shell: bash -l {0}
         run: |
           conda install -y -c kaldifeat -c pytorch -c conda-forge pytorch=${{ matrix.torch }} cudatoolkit=${{ matrix.cuda }} kaldifeat python=${{ matrix.python-version }}
+          conda install -y -c conda-forge pysoundfile
 
           cd kaldifeat/python/tests
           make test

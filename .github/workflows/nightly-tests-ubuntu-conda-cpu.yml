@@ -76,7 +76,12 @@ jobs:
       - name: Install kaldifeat and run tests
         shell: bash -l {0}
         run: |
+          sudo apt-get update
+          sudo apt-get install -y libsndfile1-dev libsndfile1 ffmpeg
+
           conda install -y -c kaldifeat -c pytorch cpuonly pytorch=${{ matrix.torch }} kaldifeat python=${{ matrix.python-version }}
+          conda install -y -c conda-forge pysoundfile
+
 
           cd kaldifeat/python/tests
           make test
