@@ -110,7 +110,7 @@ def generate_build_matrix(enable_cuda, for_windows, test_only_latest_torch):
             "python-version": ["3.7", "3.8", "3.9", "3.10"],
             "cuda": ["10.2", "11.3", "11.5"]
             if not for_windows
-            else ["10.2.89", "11.3.1", "11.5.2"],
+            else ["11.3.1", "11.5.2"],
         },
     }
     if test_only_latest_torch:

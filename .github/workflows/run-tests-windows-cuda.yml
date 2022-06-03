@@ -94,6 +94,8 @@ jobs:
           ls -lh *
           ls -lh */*
 
+          echo "PWD: $PWD"
+
 
       - name: Install PyTorch ${{ matrix.torch }}
         shell: bash
@@ -119,9 +121,12 @@ jobs:
       - name: Configure CMake
         shell: bash
         run: |
+          echo "PWD: $PWD"
+          ls -lh
+
           mkdir build_release
           cd build_release
-          cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
+          cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCUDNN_INCLUDE_PATH=/d/a/kaldifeat/kaldifeat/cudnn-for-windows/cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/include -DCUDNN_LIBRARY_PATH=/d/a/kaldifeat/kaldifeat/cudnn-for-windows/cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/lib/cudnn.lib ..
           ls -lh
 
       - name: Build kaldifeat
