@@ -97,8 +97,6 @@ jobs:
           ls -lh */*
           cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive
 
-          sed -i '59i#define CUDNN_MAJOR 8' cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/include/cudnn.h
-
           echo "PWD: $PWD"
 
       - name: Install PyTorch ${{ matrix.torch }}
@@ -120,7 +118,8 @@ jobs:
       - name: Install from PyPI
         shell: bash
         run: |
-          export KALDIFEAT_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCUDNN_INCLUDE_PATH=/d/a/kaldifeat/kaldifeat/cudnn-for-windows/cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/include -DCUDNN_LIBRARY_PATH=/d/a/kaldifeat/kaldifeat/cudnn-for-windows/cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/lib/cudnn.lib"
+          echo "PWD: $PWD"
+          export KALDIFEAT_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCUDNN_INCLUDE_PATH=d:/a/kaldifeat/kaldifeat/cudnn-for-windows/cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/include -DCUDNN_LIBRARY_PATH=d:/a/kaldifeat/kaldifeat/cudnn-for-windows/cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/lib/cudnn.lib"
           export KALDIFEAT_MAKE_ARGS="-j 3"
           pip install --verbose kaldifeat
 
