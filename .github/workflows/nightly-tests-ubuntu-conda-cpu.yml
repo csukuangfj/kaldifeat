@@ -19,7 +19,7 @@ name: Nightly tests ubuntu conda cpu
 on:
   push:
     branches:
-      - nightly-test
+      - nightly-test-2
 
   schedule:
     # minute (0-59)
@@ -44,13 +44,13 @@ jobs:
         id: set-matrix
         run: |
           # outputting for debugging purposes
-          python scripts/github_actions/generate_build_matrix.py
-          MATRIX=$(python scripts/github_actions/generate_build_matrix.py)
+          python scripts/github_actions/generate_build_matrix.py --test-only-latest-torch
+          MATRIX=$(python scripts/github_actions/generate_build_matrix.py --test-only-latest-torch)
           echo "::set-output name=matrix::${MATRIX}"
 
   run_nightly_tests_ubuntu_conda_cpu:
     needs: generate_build_matrix
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:

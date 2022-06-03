@@ -41,8 +41,8 @@ jobs:
         id: set-matrix
         run: |
           # outputting for debugging purposes
-          python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows
-          MATRIX=$(python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows)
+          python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows --test-only-latest-torch
+          MATRIX=$(python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows --test-only-latest-torch)
           echo "::set-output name=matrix::${MATRIX}"
 
   run_tests_windows_cuda:
@@ -72,16 +72,28 @@ jobs:
 
       # See https://github.com/Jimver/cuda-toolkit/blob/master/src/links/windows-links.ts
       # for available CUDA versions
-      - uses: Jimver/cuda-toolkit@v0.2.5
+      - uses: Jimver/cuda-toolkit@v0.2.7
         id: cuda-toolkit
         with:
           cuda: ${{ matrix.cuda }}
 
       - name: Display CUDA version
+        shell: bash
         run: |
           echo "Installed cuda version is: ${{ steps.cuda-toolkit.outputs.cuda }}"
           echo "Cuda install location: ${{steps.cuda-toolkit.outputs.CUDA_PATH}}"
           nvcc --version
+
+      - name: Download cuDNN
+        shell: bash
+        run: |
+          GIT_LFS_SKIP_SMUDGE=1 git clone https://huggingface.co/csukuangfj/cudnn-for-windows
+          cd cudnn-for-windows
+          git lfs pull --include="cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive.zip"
+          unzip cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive.zip
+          ls -lh *
+          ls -lh */*
+
 
       - name: Install PyTorch ${{ matrix.torch }}
         shell: bash

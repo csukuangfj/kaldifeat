@@ -19,7 +19,7 @@ name: Nightly tests windows pip cuda
 on:
   push:
     branches:
-      - nightly-test
+      - nightly-test-2
 
   schedule:
     # minute (0-59)
