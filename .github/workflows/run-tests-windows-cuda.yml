@@ -41,8 +41,8 @@ jobs:
         id: set-matrix
         run: |
           # outputting for debugging purposes
-          python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows --test-only-latest-torch
-          MATRIX=$(python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows --test-only-latest-torch)
+          python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows
+          MATRIX=$(python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows)
           echo "::set-output name=matrix::${MATRIX}"
 
   run_tests_windows_cuda:
@@ -84,6 +84,11 @@ jobs:
           echo "Cuda install location: ${{steps.cuda-toolkit.outputs.CUDA_PATH}}"
           nvcc --version
 
+      - name: Remove CUDA installation package
+        shell: bash
+        run: |
+          rm "C:/hostedtoolcache/windows/cuda_installer-windows/${{ matrix.cuda }}/x64/cuda_installer_${{ matrix.cuda }}.exe"
+
       - name: Download cuDNN
         shell: bash
         run: |
@@ -91,6 +96,7 @@ jobs:
           cd cudnn-for-windows
           git lfs pull --include="cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive.zip"
           unzip cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive.zip
+          rm cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive.zip
           ls -lh *
           ls -lh */*
 
@@ -102,11 +108,13 @@ jobs:
           version=${{ matrix.cuda }}
           major=${version:0:2}
           minor=${version:3:1}
+          v=${major}${minor}
+          if [ ${v} -eq 102 ]; then v=""; else v="+cu${v}"; fi
 
           python3 -m pip install -qq --upgrade pip
           python3 -m pip install -qq wheel twine numpy typing_extensions
           python3 -m pip install -qq dataclasses soundfile numpy
-          python3 -m pip install -qq torch==${{ matrix.torch }}+cu${major}${minor} -f https://download.pytorch.org/whl/torch_stable.html numpy
+          python3 -m pip install -qq torch==${{ matrix.torch }}${v} -f https://download.pytorch.org/whl/torch_stable.html numpy
 
           python3 -c "import torch; print('torch version:', torch.__version__)"
 
