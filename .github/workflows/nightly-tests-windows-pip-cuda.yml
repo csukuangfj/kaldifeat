@@ -27,7 +27,24 @@ on:
     - cron: "50 23 * * *"
 
 jobs:
+  enable_nightly_build:
+    runs-on: ubuntu-latest
+    outputs:
+      enabled: ${{ steps.set-enabled.outputs.enabled }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set enabled
+        id: set-enabled
+        run: |
+          enabled=$(python scripts/github_actions/run-nightly-build.py)
+          echo "enabled: $enabled"
+          echo "::set-output name=enabled::${enabled}"
+
   generate_build_matrix:
+    needs: enable_nightly_build
+    if: needs.enable_nightly_build.outputs.enabled == 'true'
     # see https://github.com/pytorch/pytorch/pull/50633
     runs-on: ubuntu-latest
     outputs:
