@@ -16,7 +16,7 @@
 
 # refer to https://github.com/actions/starter-workflows/pull/47/files
 
-name: build_conda_cuda
+name: build_conda_ubuntu_cpu
 
 on:
   push:
@@ -41,10 +41,10 @@ jobs:
         run: |
           # outputting for debugging purposes
           python scripts/github_actions/generate_build_matrix.py
-          MATRIX=$(python scripts/github_actions/generate_build_matrix.py --enable-cuda)
+          MATRIX=$(python scripts/github_actions/generate_build_matrix.py)
           echo "::set-output name=matrix::${MATRIX}"
 
-  build_conda_cuda:
+  build_conda_ubuntu_cpu:
     needs: generate_build_matrix
     runs-on: ubuntu-18.04
     strategy:
@@ -57,22 +57,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-      - name: Install CUDA Toolkit ${{ matrix.cuda }}
-        shell: bash -l {0}
-        env:
-          cuda: ${{ matrix.cuda }}
-        run: |
-          source ./scripts/github_actions/install_cuda.sh
-          echo "CUDA_HOME=${CUDA_HOME}" >> $GITHUB_ENV
-          echo "${CUDA_HOME}/bin" >> $GITHUB_PATH
-          echo "LD_LIBRARY_PATH=${CUDA_HOME}/lib:${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}" >> $GITHUB_ENV
-
-      - name: Display NVCC version
-        shell: bash -l {0}
-        run: |
-          which nvcc
-          nvcc --version
 
       - uses: conda-incubator/setup-miniconda@v2
         with:
@@ -91,8 +75,7 @@ jobs:
         run: |
           conda install -y -q anaconda-client
           conda install -y -q conda-build
-          conda install -y -q bs4 requests tqdm
-          conda install -y -q -c pytorch -c conda-forge pytorch=${{ matrix.torch }} cudatoolkit=${{ matrix.cuda }}
+          conda install -y -q -c pytorch pytorch=${{ matrix.torch }} cpuonly
 
       - name: Display conda info
         shell: bash -l {0}
@@ -102,17 +85,9 @@ jobs:
           conda info
           nproc
 
-      - name: Download cudnn 8.0
-        shell: bash -l {0}
-        env:
-          cuda: ${{ matrix.cuda }}
-        run: |
-          ./scripts/github_actions/install_cudnn.sh
-
       - name: Build kaldifeat
         shell: bash -l {0}
         env:
-          KALDIFEAT_CUDA_VERSION: ${{ matrix.cuda }}
           KALDIFEAT_PYTHON_VERSION: ${{ matrix.python-version}}
           KALDIFEAT_TORCH_VERSION: ${{ matrix.torch }}
           KALDIFEAT_CONDA_TOKEN: ${{ secrets.KALDIFEAT_CONDA_TOKEN}}
@@ -120,4 +95,14 @@ jobs:
           KALDIFEAT_IS_FOR_CONDA: 1
         run: |
           export KALDIFEAT_BUILD_TYPE=$KALDIFEAT_BUILD_TYPE
-          ./scripts/build_conda.sh
+          ./scripts/build_conda_cpu.sh
+
+      - name: Display generated files
+        run: |
+          ls -lh /usr/share/miniconda/envs/kaldifeat/conda-bld/linux-64
+
+      - name: Upload generated files
+        uses: actions/upload-artifact@v2
+        with:
+          name: cpu-torch-${{ matrix.torch }}-python-${{ matrix.python-version }}-${{ matrix.os }}
+          path: /usr/share/miniconda/envs/kaldifeat/conda-bld/linux-64/*.tar.bz2

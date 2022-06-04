@@ -20,18 +20,14 @@ CONDA_ENV_DIR=$CONDA_PREFIX
 
 echo "KALDIFEAT_PYTHON_VERSION: $KALDIFEAT_PYTHON_VERSION"
 echo "KALDIFEAT_TORCH_VERSION: $KALDIFEAT_TORCH_VERSION"
-echo "KALDIFEAT_CUDA_VERSION: $KALDIFEAT_CUDA_VERSION"
 echo "KALDIFEAT_BUILD_TYPE: $KALDIFEAT_BUILD_TYPE"
 echo "KALDIFEAT_BUILD_VERSION: $KALDIFEAT_BUILD_VERSION"
-python3 --version
-
-echo "CC is: $CC"
-echo "GCC is: $GCC"
-echo "which nvcc: $(which nvcc)"
-echo "gcc version: $($CC --version)"
-echo "nvcc version: $(nvcc --version)"
 
 export KALDIFEAT_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=${KALDIFEAT_BUILD_TYPE}"
-export KALDIFEAT_MAKE_ARGS="-j3"
+export KALDIFEAT_MAKE_ARGS="-j1 VERBOSE=1"
+
+export LIBRARY_PATH="/usr/local/miniconda/envs/kaldifeat/lib":$LIBRARY_PATH
+export LD_LIBRARY_PATH="/usr/local/miniconda/envs/kaldifeat/lib":$LD_LIBRARY_PATH
+export DYLD_LIBRARY_PATH="/usr/local/miniconda/envs/kaldifeat/lib":$DYLD_LIBRARY_PATH
 
 python3 setup.py install --single-version-externally-managed --record=record.txt
