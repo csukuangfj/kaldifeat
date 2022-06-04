@@ -20,7 +20,6 @@ name: Run tests windows cuda
 on:
   push:
     branches:
-      - nightly-test
       - master
 
   pull_request:
@@ -41,8 +40,8 @@ jobs:
         id: set-matrix
         run: |
           # outputting for debugging purposes
-          python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows
-          MATRIX=$(python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows)
+          python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows --test-only-latest-torch
+          MATRIX=$(python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows --test-only-latest-torch)
           echo "::set-output name=matrix::${MATRIX}"
 
   run_tests_windows_cuda:

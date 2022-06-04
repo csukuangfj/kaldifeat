@@ -17,10 +17,6 @@
 name: Nightly tests ubuntu conda cpu
 
 on:
-  push:
-    branches:
-      - nightly-test-2
-
   schedule:
     # minute (0-59)
     # hour (0-23)
