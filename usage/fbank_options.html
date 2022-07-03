@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kaldifeat.FbankOptions &mdash; kaldifeat 1.16 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="kaldifeat.Fbank" href="fbank.html" />
+    <link rel="prev" title="Usage" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> kaldifeat
+          </a>
+              <div class="version">
+                1.16
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Usage</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">kaldifeat.FbankOptions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-usage">Example usage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="fbank.html">kaldifeat.Fbank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="online_fbank.html">kaldifeat.OnlineFbank</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">kaldifeat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Usage</a> &raquo;</li>
+      <li>kaldifeat.FbankOptions</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/csukuangfj/kaldifeat/blob/master/kaldifeat/docs/source/usage/fbank_options.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="kaldifeat-fbankoptions">
+<h1>kaldifeat.FbankOptions<a class="headerlink" href="#kaldifeat-fbankoptions" title="Permalink to this heading"></a></h1>
+<p>If you want to construct an instance of <a class="reference external" href="https://github.com/csukuangfj/kaldifeat/blob/master/kaldifeat/python/kaldifeat/fbank.py#L10">kaldifeat.Fbank</a> or
+<a class="reference external" href="https://github.com/csukuangfj/kaldifeat/blob/master/kaldifeat/python/kaldifeat/fbank.py#L16">kaldifeat.OnlineFbank</a>, you have to provide an instance of
+<a class="reference external" href="https://github.com/csukuangfj/kaldifeat/blob/master/kaldifeat/csrc/feature-fbank.h#L19">kaldifeat.FbankOptions</a>.</p>
+<p>The following code shows how to construct an instance of <a class="reference external" href="https://github.com/csukuangfj/kaldifeat/blob/master/kaldifeat/csrc/feature-fbank.h#L19">kaldifeat.FbankOptions</a>.</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-number">Listing 1 </span><span class="caption-text">Usage of <a class="reference external" href="https://github.com/csukuangfj/kaldifeat/blob/master/kaldifeat/csrc/feature-fbank.h#L19">kaldifeat.FbankOptions</a></span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>$ python3
+Python 3.8.0 (default, Oct 28 2019, 16:14:01)
+[GCC 8.3.0] on linux
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; import kaldifeat
+<span class="hll">&gt;&gt;&gt; opts = kaldifeat.FbankOptions()
+</span>&gt;&gt;&gt; print(opts)
+<span class="hll">frame_opts:
+</span>samp_freq: 16000
+frame_shift_ms: 10
+frame_length_ms: 25
+dither: 1
+preemph_coeff: 0.97
+remove_dc_offset: 1
+window_type: povey
+round_to_power_of_two: 1
+blackman_coeff: 0.42
+snip_edges: 1
+max_feature_vectors: -1
+
+
+<span class="hll">mel_opts:
+</span>num_bins: 23
+low_freq: 20
+high_freq: 0
+vtln_low: 100
+vtln_high: -500
+debug_mel: 0
+htk_mode: 0
+
+use_energy: 0
+energy_floor: 0
+raw_energy: 1
+htk_compat: 0
+use_log_fbank: 1
+use_power: 1
+<span class="hll">device: cpu
+</span>
+&gt;&gt;&gt; print(opts.dither)
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+AttributeError: &#39;_kaldifeat.FbankOptions&#39; object has no attribute &#39;dither&#39;
+&gt;&gt;&gt;
+&gt;&gt;&gt; print(opts.frame_opts.dither)
+1.0
+&gt;&gt;&gt; opts.frame_opts.dither = 0 # disable dither
+&gt;&gt;&gt; print(opts.frame_opts.dither)
+0.0
+&gt;&gt;&gt; import torch
+&gt;&gt;&gt; print(opts.device)
+cpu
+&gt;&gt;&gt; opts.device = &#39;cuda:0&#39;
+&gt;&gt;&gt; print(opts.device)
+cuda:0
+&gt;&gt;&gt; opts.device = torch.device(&#39;cuda&#39;, 1)
+&gt;&gt;&gt; print(opts.device)
+cuda:1
+&gt;&gt;&gt; opts.device = &#39;cpu&#39;
+&gt;&gt;&gt; print(opts.device)
+cpu
+&gt;&gt;&gt; print(opts.mel_opts.num_bins)
+23
+&gt;&gt;&gt; opts.mel_opts.num_bins = 80
+&gt;&gt;&gt; print(opts.mel_opts.num_bins)
+80
+</pre></div>
+</div>
+</div>
+<p>Note that we reuse the same option name with <a class="reference external" href="https://github.com/kaldi-asr/kaldi/blob/master/src/featbin/compute-fbank-feats.cc">compute-fbank-feats</a> from <a class="reference external" href="https://github.com/kaldi-asr/kaldi">Kaldi</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ compute-fbank-feats --help
+</pre></div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-number">Listing 2 </span><span class="caption-text">Output of <code class="docutils literal notranslate"><span class="pre">compute-fbank-feats</span> <span class="pre">--help</span></code></span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">compute</span><span class="o">-</span><span class="n">fbank</span><span class="o">-</span><span class="n">feats</span> 
+
+<span class="n">Create</span> <span class="n">Mel</span><span class="o">-</span><span class="nb">filter</span> <span class="n">bank</span> <span class="p">(</span><span class="n">FBANK</span><span class="p">)</span> <span class="n">feature</span> <span class="n">files</span><span class="o">.</span>
+<span class="n">Usage</span><span class="p">:</span>  <span class="n">compute</span><span class="o">-</span><span class="n">fbank</span><span class="o">-</span><span class="n">feats</span> <span class="p">[</span><span class="n">options</span><span class="o">...</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">wav</span><span class="o">-</span><span class="n">rspecifier</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">feats</span><span class="o">-</span><span class="n">wspecifier</span><span class="o">&gt;</span>
+
+<span class="n">Options</span><span class="p">:</span>
+  <span class="o">--</span><span class="n">allow</span><span class="o">-</span><span class="n">downsample</span>          <span class="p">:</span> <span class="n">If</span> <span class="n">true</span><span class="p">,</span> <span class="n">allow</span> <span class="n">the</span> <span class="nb">input</span> <span class="n">waveform</span> <span class="n">to</span> <span class="n">have</span> <span class="n">a</span> <span class="n">higher</span> <span class="n">frequency</span> <span class="n">than</span> <span class="n">the</span> <span class="n">specified</span> <span class="o">--</span><span class="n">sample</span><span class="o">-</span><span class="n">frequency</span> <span class="p">(</span><span class="ow">and</span> <span class="n">we</span><span class="s1">&#39;ll downsample). (bool, default = false)</span>
+  <span class="o">--</span><span class="n">allow</span><span class="o">-</span><span class="n">upsample</span>            <span class="p">:</span> <span class="n">If</span> <span class="n">true</span><span class="p">,</span> <span class="n">allow</span> <span class="n">the</span> <span class="nb">input</span> <span class="n">waveform</span> <span class="n">to</span> <span class="n">have</span> <span class="n">a</span> <span class="n">lower</span> <span class="n">frequency</span> <span class="n">than</span> <span class="n">the</span> <span class="n">specified</span> <span class="o">--</span><span class="n">sample</span><span class="o">-</span><span class="n">frequency</span> <span class="p">(</span><span class="ow">and</span> <span class="n">we</span><span class="s1">&#39;ll upsample). (bool, default = false)</span>
+  <span class="o">--</span><span class="n">blackman</span><span class="o">-</span><span class="n">coeff</span>            <span class="p">:</span> <span class="n">Constant</span> <span class="n">coefficient</span> <span class="k">for</span> <span class="n">generalized</span> <span class="n">Blackman</span> <span class="n">window</span><span class="o">.</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="mf">0.42</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">channel</span>                   <span class="p">:</span> <span class="n">Channel</span> <span class="n">to</span> <span class="n">extract</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">-&gt;</span> <span class="n">expect</span> <span class="n">mono</span><span class="p">,</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="n">left</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-&gt;</span> <span class="n">right</span><span class="p">)</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">debug</span><span class="o">-</span><span class="n">mel</span>                 <span class="p">:</span> <span class="n">Print</span> <span class="n">out</span> <span class="n">debugging</span> <span class="n">information</span> <span class="k">for</span> <span class="n">mel</span> <span class="nb">bin</span> <span class="n">computation</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="n">false</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">dither</span>                    <span class="p">:</span> <span class="n">Dithering</span> <span class="n">constant</span> <span class="p">(</span><span class="mf">0.0</span> <span class="n">means</span> <span class="n">no</span> <span class="n">dither</span><span class="p">)</span><span class="o">.</span> <span class="n">If</span> <span class="n">you</span> <span class="n">turn</span> <span class="n">this</span> <span class="n">off</span><span class="p">,</span> <span class="n">you</span> <span class="n">should</span> <span class="nb">set</span> <span class="n">the</span> <span class="o">--</span><span class="n">energy</span><span class="o">-</span><span class="n">floor</span> <span class="n">option</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="n">to</span> <span class="mf">1.0</span> <span class="ow">or</span> <span class="mf">0.1</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">energy</span><span class="o">-</span><span class="n">floor</span>              <span class="p">:</span> <span class="n">Floor</span> <span class="n">on</span> <span class="n">energy</span> <span class="p">(</span><span class="n">absolute</span><span class="p">,</span> <span class="ow">not</span> <span class="n">relative</span><span class="p">)</span> <span class="ow">in</span> <span class="n">FBANK</span> <span class="n">computation</span><span class="o">.</span> <span class="n">Only</span> <span class="n">makes</span> <span class="n">a</span> <span class="n">difference</span> <span class="k">if</span> <span class="o">--</span><span class="n">use</span><span class="o">-</span><span class="n">energy</span><span class="o">=</span><span class="n">true</span><span class="p">;</span> <span class="n">only</span> <span class="n">necessary</span> <span class="k">if</span> <span class="o">--</span><span class="n">dither</span><span class="o">=</span><span class="mf">0.0</span><span class="o">.</span>  <span class="n">Suggested</span> <span class="n">values</span><span class="p">:</span> <span class="mf">0.1</span> <span class="ow">or</span> <span class="mf">1.0</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">frame</span><span class="o">-</span><span class="n">length</span>              <span class="p">:</span> <span class="n">Frame</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">milliseconds</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="mi">25</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">frame</span><span class="o">-</span><span class="n">shift</span>               <span class="p">:</span> <span class="n">Frame</span> <span class="n">shift</span> <span class="ow">in</span> <span class="n">milliseconds</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">high</span><span class="o">-</span><span class="n">freq</span>                 <span class="p">:</span> <span class="n">High</span> <span class="n">cutoff</span> <span class="n">frequency</span> <span class="k">for</span> <span class="n">mel</span> <span class="n">bins</span> <span class="p">(</span><span class="k">if</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">offset</span> <span class="kn">from</span> <span class="nn">Nyquist</span><span class="p">)</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">htk</span><span class="o">-</span><span class="n">compat</span>                <span class="p">:</span> <span class="n">If</span> <span class="n">true</span><span class="p">,</span> <span class="n">put</span> <span class="n">energy</span> <span class="n">last</span><span class="o">.</span>  <span class="ne">Warning</span><span class="p">:</span> <span class="ow">not</span> <span class="n">sufficient</span> <span class="n">to</span> <span class="n">get</span> <span class="n">HTK</span> <span class="n">compatible</span> <span class="n">features</span> <span class="p">(</span><span class="n">need</span> <span class="n">to</span> <span class="n">change</span> <span class="n">other</span> <span class="n">parameters</span><span class="p">)</span><span class="o">.</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="n">false</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">low</span><span class="o">-</span><span class="n">freq</span>                  <span class="p">:</span> <span class="n">Low</span> <span class="n">cutoff</span> <span class="n">frequency</span> <span class="k">for</span> <span class="n">mel</span> <span class="n">bins</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
+  <span class="o">--</span><span class="nb">max</span><span class="o">-</span><span class="n">feature</span><span class="o">-</span><span class="n">vectors</span>       <span class="p">:</span> <span class="n">Memory</span> <span class="n">optimization</span><span class="o">.</span> <span class="n">If</span> <span class="n">larger</span> <span class="n">than</span> <span class="mi">0</span><span class="p">,</span> <span class="n">periodically</span> <span class="n">remove</span> <span class="n">feature</span> <span class="n">vectors</span> <span class="n">so</span> <span class="n">that</span> <span class="n">only</span> <span class="n">this</span> <span class="n">number</span> <span class="n">of</span> <span class="n">the</span> <span class="n">latest</span> <span class="n">feature</span> <span class="n">vectors</span> <span class="ow">is</span> <span class="n">retained</span><span class="o">.</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+  <span class="o">--</span><span class="nb">min</span><span class="o">-</span><span class="n">duration</span>              <span class="p">:</span> <span class="n">Minimum</span> <span class="n">duration</span> <span class="n">of</span> <span class="n">segments</span> <span class="n">to</span> <span class="n">process</span> <span class="p">(</span><span class="ow">in</span> <span class="n">seconds</span><span class="p">)</span><span class="o">.</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">num</span><span class="o">-</span><span class="n">mel</span><span class="o">-</span><span class="n">bins</span>              <span class="p">:</span> <span class="n">Number</span> <span class="n">of</span> <span class="n">triangular</span> <span class="n">mel</span><span class="o">-</span><span class="n">frequency</span> <span class="n">bins</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="mi">23</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">output</span><span class="o">-</span><span class="nb">format</span>             <span class="p">:</span> <span class="n">Format</span> <span class="n">of</span> <span class="n">the</span> <span class="n">output</span> <span class="n">files</span> <span class="p">[</span><span class="n">kaldi</span><span class="p">,</span> <span class="n">htk</span><span class="p">]</span> <span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;kaldi&quot;</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">preemphasis</span><span class="o">-</span><span class="n">coefficient</span>   <span class="p">:</span> <span class="n">Coefficient</span> <span class="k">for</span> <span class="n">use</span> <span class="ow">in</span> <span class="n">signal</span> <span class="n">preemphasis</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="mf">0.97</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">raw</span><span class="o">-</span><span class="n">energy</span>                <span class="p">:</span> <span class="n">If</span> <span class="n">true</span><span class="p">,</span> <span class="n">compute</span> <span class="n">energy</span> <span class="n">before</span> <span class="n">preemphasis</span> <span class="ow">and</span> <span class="n">windowing</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="n">true</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">remove</span><span class="o">-</span><span class="n">dc</span><span class="o">-</span><span class="n">offset</span>          <span class="p">:</span> <span class="n">Subtract</span> <span class="n">mean</span> <span class="kn">from</span> <span class="nn">waveform</span> <span class="n">on</span> <span class="n">each</span> <span class="n">frame</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="n">true</span><span class="p">)</span>
+  <span class="o">--</span><span class="nb">round</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">power</span><span class="o">-</span><span class="n">of</span><span class="o">-</span><span class="n">two</span>     <span class="p">:</span> <span class="n">If</span> <span class="n">true</span><span class="p">,</span> <span class="nb">round</span> <span class="n">window</span> <span class="n">size</span> <span class="n">to</span> <span class="n">power</span> <span class="n">of</span> <span class="n">two</span> <span class="n">by</span> <span class="n">zero</span><span class="o">-</span><span class="n">padding</span> <span class="nb">input</span> <span class="n">to</span> <span class="n">FFT</span><span class="o">.</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="n">true</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">sample</span><span class="o">-</span><span class="n">frequency</span>          <span class="p">:</span> <span class="n">Waveform</span> <span class="n">data</span> <span class="n">sample</span> <span class="n">frequency</span> <span class="p">(</span><span class="n">must</span> <span class="n">match</span> <span class="n">the</span> <span class="n">waveform</span> <span class="n">file</span><span class="p">,</span> <span class="k">if</span> <span class="n">specified</span> <span class="n">there</span><span class="p">)</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="mi">16000</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">snip</span><span class="o">-</span><span class="n">edges</span>                <span class="p">:</span> <span class="n">If</span> <span class="n">true</span><span class="p">,</span> <span class="n">end</span> <span class="n">effects</span> <span class="n">will</span> <span class="n">be</span> <span class="n">handled</span> <span class="n">by</span> <span class="n">outputting</span> <span class="n">only</span> <span class="n">frames</span> <span class="n">that</span> <span class="n">completely</span> <span class="n">fit</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">file</span><span class="p">,</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">frames</span> <span class="n">depends</span> <span class="n">on</span> <span class="n">the</span> <span class="n">frame</span><span class="o">-</span><span class="n">length</span><span class="o">.</span>  <span class="n">If</span> <span class="n">false</span><span class="p">,</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">frames</span> <span class="n">depends</span> <span class="n">only</span> <span class="n">on</span> <span class="n">the</span> <span class="n">frame</span><span class="o">-</span><span class="n">shift</span><span class="p">,</span> <span class="ow">and</span> <span class="n">we</span> <span class="n">reflect</span> <span class="n">the</span> <span class="n">data</span> <span class="n">at</span> <span class="n">the</span> <span class="n">ends</span><span class="o">.</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="n">true</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">subtract</span><span class="o">-</span><span class="n">mean</span>             <span class="p">:</span> <span class="n">Subtract</span> <span class="n">mean</span> <span class="n">of</span> <span class="n">each</span> <span class="n">feature</span> <span class="n">file</span> <span class="p">[</span><span class="n">CMS</span><span class="p">];</span> <span class="ow">not</span> <span class="n">recommended</span> <span class="n">to</span> <span class="n">do</span> <span class="n">it</span> <span class="n">this</span> <span class="n">way</span><span class="o">.</span>  <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="n">false</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">use</span><span class="o">-</span><span class="n">energy</span>                <span class="p">:</span> <span class="n">Add</span> <span class="n">an</span> <span class="n">extra</span> <span class="n">dimension</span> <span class="k">with</span> <span class="n">energy</span> <span class="n">to</span> <span class="n">the</span> <span class="n">FBANK</span> <span class="n">output</span><span class="o">.</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="n">false</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">use</span><span class="o">-</span><span class="n">log</span><span class="o">-</span><span class="n">fbank</span>             <span class="p">:</span> <span class="n">If</span> <span class="n">true</span><span class="p">,</span> <span class="n">produce</span> <span class="n">log</span><span class="o">-</span><span class="n">filterbank</span><span class="p">,</span> <span class="k">else</span> <span class="n">produce</span> <span class="n">linear</span><span class="o">.</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="n">true</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">use</span><span class="o">-</span><span class="n">power</span>                 <span class="p">:</span> <span class="n">If</span> <span class="n">true</span><span class="p">,</span> <span class="n">use</span> <span class="n">power</span><span class="p">,</span> <span class="k">else</span> <span class="n">use</span> <span class="n">magnitude</span><span class="o">.</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="n">true</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">utt2spk</span>                   <span class="p">:</span> <span class="n">Utterance</span> <span class="n">to</span> <span class="n">speaker</span><span class="o">-</span><span class="nb">id</span> <span class="nb">map</span> <span class="p">(</span><span class="k">if</span> <span class="n">doing</span> <span class="n">VTLN</span> <span class="ow">and</span> <span class="n">you</span> <span class="n">have</span> <span class="n">warps</span> <span class="n">per</span> <span class="n">speaker</span><span class="p">)</span> <span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">vtln</span><span class="o">-</span><span class="n">high</span>                 <span class="p">:</span> <span class="n">High</span> <span class="n">inflection</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">piecewise</span> <span class="n">linear</span> <span class="n">VTLN</span> <span class="n">warping</span> <span class="n">function</span> <span class="p">(</span><span class="k">if</span> <span class="n">negative</span><span class="p">,</span> <span class="n">offset</span> <span class="kn">from</span> <span class="nn">high</span><span class="o">-</span><span class="n">mel</span><span class="o">-</span><span class="n">freq</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="o">-</span><span class="mi">500</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">vtln</span><span class="o">-</span><span class="n">low</span>                  <span class="p">:</span> <span class="n">Low</span> <span class="n">inflection</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">piecewise</span> <span class="n">linear</span> <span class="n">VTLN</span> <span class="n">warping</span> <span class="n">function</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">vtln</span><span class="o">-</span><span class="nb">map</span>                  <span class="p">:</span> <span class="n">Map</span> <span class="kn">from</span> <span class="nn">utterance</span> <span class="ow">or</span> <span class="n">speaker</span><span class="o">-</span><span class="nb">id</span> <span class="n">to</span> <span class="n">vtln</span> <span class="n">warp</span> <span class="n">factor</span> <span class="p">(</span><span class="n">rspecifier</span><span class="p">)</span> <span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">vtln</span><span class="o">-</span><span class="n">warp</span>                 <span class="p">:</span> <span class="n">Vtln</span> <span class="n">warp</span> <span class="n">factor</span> <span class="p">(</span><span class="n">only</span> <span class="n">applicable</span> <span class="k">if</span> <span class="n">vtln</span><span class="o">-</span><span class="nb">map</span> <span class="ow">not</span> <span class="n">specified</span><span class="p">)</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">window</span><span class="o">-</span><span class="nb">type</span>               <span class="p">:</span> <span class="n">Type</span> <span class="n">of</span> <span class="n">window</span> <span class="p">(</span><span class="s2">&quot;hamming&quot;</span><span class="o">|</span><span class="s2">&quot;hanning&quot;</span><span class="o">|</span><span class="s2">&quot;povey&quot;</span><span class="o">|</span><span class="s2">&quot;rectangular&quot;</span><span class="o">|</span><span class="s2">&quot;sine&quot;</span><span class="o">|</span><span class="s2">&quot;blackmann&quot;</span><span class="p">)</span> <span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;povey&quot;</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">write</span><span class="o">-</span><span class="n">utt2dur</span>             <span class="p">:</span> <span class="n">Wspecifier</span> <span class="n">to</span> <span class="n">write</span> <span class="n">duration</span> <span class="n">of</span> <span class="n">each</span> <span class="n">utterance</span> <span class="ow">in</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="s1">&#39;ark,t:utt2dur&#39;</span><span class="o">.</span> <span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">Standard</span> <span class="n">options</span><span class="p">:</span>
+  <span class="o">--</span><span class="n">config</span>                    <span class="p">:</span> <span class="n">Configuration</span> <span class="n">file</span> <span class="n">to</span> <span class="n">read</span> <span class="p">(</span><span class="n">this</span> <span class="n">option</span> <span class="n">may</span> <span class="n">be</span> <span class="n">repeated</span><span class="p">)</span> <span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">help</span>                      <span class="p">:</span> <span class="n">Print</span> <span class="n">out</span> <span class="n">usage</span> <span class="n">message</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="n">false</span><span class="p">)</span>
+  <span class="o">--</span><span class="nb">print</span><span class="o">-</span><span class="n">args</span>                <span class="p">:</span> <span class="n">Print</span> <span class="n">the</span> <span class="n">command</span> <span class="n">line</span> <span class="n">arguments</span> <span class="p">(</span><span class="n">to</span> <span class="n">stderr</span><span class="p">)</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="n">true</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">verbose</span>                   <span class="p">:</span> <span class="n">Verbose</span> <span class="n">level</span> <span class="p">(</span><span class="n">higher</span><span class="o">-&gt;</span><span class="n">more</span> <span class="n">logging</span><span class="p">)</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+<p>Please refer to the output of <code class="docutils literal notranslate"><span class="pre">compute-fbank-feats</span> <span class="pre">--help</span></code> for the meaning
+of each field of <a class="reference external" href="https://github.com/csukuangfj/kaldifeat/blob/master/kaldifeat/csrc/feature-fbank.h#L19">kaldifeat.FbankOptions</a>.</p>
+<p>One thing worth noting is that <a class="reference external" href="https://github.com/csukuangfj/kaldifeat/blob/master/kaldifeat/csrc/feature-fbank.h#L19">kaldifeat.FbankOptions</a> has a field <code class="docutils literal notranslate"><span class="pre">device</span></code>,
+which is an instance of <code class="docutils literal notranslate"><span class="pre">torch.device</span></code>. You can assign it either a string, e.g.,
+<code class="docutils literal notranslate"><span class="pre">&quot;cpu&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;cuda:0&quot;</span></code>, or an instance of <code class="docutils literal notranslate"><span class="pre">torch.device</span></code>, e.g., <code class="docutils literal notranslate"><span class="pre">torch.device(&quot;cpu&quot;)</span></code> or
+<code class="docutils literal notranslate"><span class="pre">torch.device(&quot;cuda&quot;,</span> <span class="pre">1)</span></code>.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>You can use this field to control whether the feature computer
+constructed from it performs computation on CPU or CUDA.</p>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>If you use a CUDA device, make sure that you have installed a CUDA version
+of <a class="reference external" href="https://pytorch.org/">PyTorch</a>.</p>
+</div>
+<section id="example-usage">
+<h2>Example usage<a class="headerlink" href="#example-usage" title="Permalink to this heading"></a></h2>
+<p>The following code from
+<a class="reference external" href="https://github.com/csukuangfj/kaldifeat/blob/master/kaldifeat/python/tests/test_fbank_options.py">https://github.com/csukuangfj/kaldifeat/blob/master/kaldifeat/python/tests/test_fbank_options.py</a>
+demonstrate the usage of <a class="reference external" href="https://github.com/csukuangfj/kaldifeat/blob/master/kaldifeat/csrc/feature-fbank.h#L19">kaldifeat.FbankOptions</a>:</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-number">Listing 3 </span><span class="caption-text">Example usage of <a class="reference external" href="https://github.com/csukuangfj/kaldifeat/blob/master/kaldifeat/csrc/feature-fbank.h#L19">kaldifeat.FbankOptions</a></span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c)  2021  Xiaomi Corporation (authors: Fangjun Kuang)</span>
+
+
+<span class="kn">import</span> <span class="nn">pickle</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">import</span> <span class="nn">kaldifeat</span>
+
+
+<span class="k">def</span> <span class="nf">test_default</span><span class="p">():</span>
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">kaldifeat</span><span class="o">.</span><span class="n">FbankOptions</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">samp_freq</span> <span class="o">==</span> <span class="mi">16000</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">frame_shift_ms</span> <span class="o">==</span> <span class="mf">10.0</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">frame_length_ms</span> <span class="o">==</span> <span class="mf">25.0</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">dither</span> <span class="o">==</span> <span class="mf">1.0</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">preemph_coeff</span> <span class="o">-</span> <span class="mf">0.97</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">remove_dc_offset</span> <span class="ow">is</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">window_type</span> <span class="o">==</span> <span class="s2">&quot;povey&quot;</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">round_to_power_of_two</span> <span class="ow">is</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">blackman_coeff</span> <span class="o">-</span> <span class="mf">0.42</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">snip_edges</span> <span class="ow">is</span> <span class="kc">True</span>
+
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">num_bins</span> <span class="o">==</span> <span class="mi">23</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">low_freq</span> <span class="o">==</span> <span class="mi">20</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">high_freq</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">vtln_low</span> <span class="o">==</span> <span class="mi">100</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">vtln_high</span> <span class="o">==</span> <span class="o">-</span><span class="mi">500</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">debug_mel</span> <span class="ow">is</span> <span class="kc">False</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">htk_mode</span> <span class="ow">is</span> <span class="kc">False</span>
+
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">use_energy</span> <span class="ow">is</span> <span class="kc">False</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">energy_floor</span> <span class="o">==</span> <span class="mf">0.0</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">raw_energy</span> <span class="ow">is</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">htk_compat</span> <span class="ow">is</span> <span class="kc">False</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">use_log_fbank</span> <span class="ow">is</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">use_power</span> <span class="ow">is</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;cpu&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">test_set_get</span><span class="p">():</span>
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">kaldifeat</span><span class="o">.</span><span class="n">FbankOptions</span><span class="p">()</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">use_energy</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">use_energy</span> <span class="ow">is</span> <span class="kc">True</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">energy_floor</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">energy_floor</span> <span class="o">==</span> <span class="mi">1</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">raw_energy</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">raw_energy</span> <span class="ow">is</span> <span class="kc">False</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">htk_compat</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">htk_compat</span> <span class="ow">is</span> <span class="kc">True</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">use_log_fbank</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">use_log_fbank</span> <span class="ow">is</span> <span class="kc">False</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">use_power</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">use_power</span> <span class="ow">is</span> <span class="kc">False</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="mi">1</span>
+
+
+<span class="k">def</span> <span class="nf">test_set_get_frame_opts</span><span class="p">():</span>
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">kaldifeat</span><span class="o">.</span><span class="n">FbankOptions</span><span class="p">()</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">samp_freq</span> <span class="o">=</span> <span class="mi">44100</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">samp_freq</span> <span class="o">==</span> <span class="mi">44100</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">frame_shift_ms</span> <span class="o">=</span> <span class="mf">20.5</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">frame_shift_ms</span> <span class="o">==</span> <span class="mf">20.5</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">frame_length_ms</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">frame_length_ms</span> <span class="o">==</span> <span class="mi">1</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">dither</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">dither</span> <span class="o">==</span> <span class="mf">0.5</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">preemph_coeff</span> <span class="o">=</span> <span class="mf">0.25</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">preemph_coeff</span> <span class="o">==</span> <span class="mf">0.25</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">remove_dc_offset</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">remove_dc_offset</span> <span class="ow">is</span> <span class="kc">False</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">window_type</span> <span class="o">=</span> <span class="s2">&quot;hanning&quot;</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">window_type</span> <span class="o">==</span> <span class="s2">&quot;hanning&quot;</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">round_to_power_of_two</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">round_to_power_of_two</span> <span class="ow">is</span> <span class="kc">False</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">blackman_coeff</span> <span class="o">=</span> <span class="mf">0.25</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">blackman_coeff</span> <span class="o">==</span> <span class="mf">0.25</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">snip_edges</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">snip_edges</span> <span class="ow">is</span> <span class="kc">False</span>
+
+
+<span class="k">def</span> <span class="nf">test_set_get_mel_opts</span><span class="p">():</span>
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">kaldifeat</span><span class="o">.</span><span class="n">FbankOptions</span><span class="p">()</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">num_bins</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">num_bins</span> <span class="o">==</span> <span class="mi">100</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">low_freq</span> <span class="o">=</span> <span class="mi">22</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">low_freq</span> <span class="o">==</span> <span class="mi">22</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">high_freq</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">high_freq</span> <span class="o">==</span> <span class="mi">1</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">vtln_low</span> <span class="o">=</span> <span class="mi">101</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">vtln_low</span> <span class="o">==</span> <span class="mi">101</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">vtln_high</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">vtln_high</span> <span class="o">==</span> <span class="o">-</span><span class="mi">100</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">debug_mel</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">debug_mel</span> <span class="ow">is</span> <span class="kc">True</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">htk_mode</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">htk_mode</span> <span class="ow">is</span> <span class="kc">True</span>
+
+
+<span class="k">def</span> <span class="nf">test_from_empty_dict</span><span class="p">():</span>
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">kaldifeat</span><span class="o">.</span><span class="n">FbankOptions</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({})</span>
+    <span class="n">opts2</span> <span class="o">=</span> <span class="n">kaldifeat</span><span class="o">.</span><span class="n">FbankOptions</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">opts2</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">test_from_dict_partial</span><span class="p">():</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;energy_floor&quot;</span><span class="p">:</span> <span class="mf">10.5</span><span class="p">,</span>
+        <span class="s2">&quot;htk_compat&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;mel_opts&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;num_bins&quot;</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span> <span class="s2">&quot;vtln_low&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+        <span class="s2">&quot;frame_opts&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;window_type&quot;</span><span class="p">:</span> <span class="s2">&quot;hanning&quot;</span><span class="p">},</span>
+    <span class="p">}</span>
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">kaldifeat</span><span class="o">.</span><span class="n">FbankOptions</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">energy_floor</span> <span class="o">==</span> <span class="mf">10.5</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">htk_compat</span> <span class="ow">is</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">num_bins</span> <span class="o">==</span> <span class="mi">80</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">vtln_low</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">window_type</span> <span class="o">==</span> <span class="s2">&quot;hanning&quot;</span>
+
+    <span class="n">mel_opts</span> <span class="o">=</span> <span class="n">kaldifeat</span><span class="o">.</span><span class="n">MelBanksOptions</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;mel_opts&quot;</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">mel_opts</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">test_from_dict_full_and_as_dict</span><span class="p">():</span>
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">kaldifeat</span><span class="o">.</span><span class="n">FbankOptions</span><span class="p">()</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">htk_compat</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">num_bins</span> <span class="o">=</span> <span class="mi">80</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">samp_freq</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="n">d</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;htk_compat&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;mel_opts&quot;</span><span class="p">][</span><span class="s2">&quot;num_bins&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">80</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;frame_opts&quot;</span><span class="p">][</span><span class="s2">&quot;samp_freq&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">10</span>
+
+    <span class="n">mel_opts</span> <span class="o">=</span> <span class="n">kaldifeat</span><span class="o">.</span><span class="n">MelBanksOptions</span><span class="p">()</span>
+    <span class="n">mel_opts</span><span class="o">.</span><span class="n">num_bins</span> <span class="o">=</span> <span class="mi">80</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;mel_opts&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">mel_opts</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+
+    <span class="n">frame_opts</span> <span class="o">=</span> <span class="n">kaldifeat</span><span class="o">.</span><span class="n">FrameExtractionOptions</span><span class="p">()</span>
+    <span class="n">frame_opts</span><span class="o">.</span><span class="n">samp_freq</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;frame_opts&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">frame_opts</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+
+    <span class="n">opts2</span> <span class="o">=</span> <span class="n">kaldifeat</span><span class="o">.</span><span class="n">FbankOptions</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">opts2</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+
+    <span class="n">d</span><span class="p">[</span><span class="s2">&quot;htk_compat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">d</span><span class="p">[</span><span class="s2">&quot;device&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">opts3</span> <span class="o">=</span> <span class="n">kaldifeat</span><span class="o">.</span><span class="n">FbankOptions</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">opts3</span><span class="o">.</span><span class="n">htk_compat</span> <span class="ow">is</span> <span class="kc">False</span>
+    <span class="k">assert</span> <span class="n">opts3</span><span class="o">.</span><span class="n">device</span> <span class="o">==</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">test_pickle</span><span class="p">():</span>
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">kaldifeat</span><span class="o">.</span><span class="n">FbankOptions</span><span class="p">()</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">use_energy</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">use_power</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">samp_freq</span> <span class="o">=</span> <span class="mi">44100</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">mel_opts</span><span class="o">.</span><span class="n">num_bins</span> <span class="o">=</span> <span class="mi">100</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+
+    <span class="n">opts2</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">opts2</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">test_default</span><span class="p">()</span>
+    <span class="n">test_set_get</span><span class="p">()</span>
+    <span class="n">test_set_get_frame_opts</span><span class="p">()</span>
+    <span class="n">test_set_get_mel_opts</span><span class="p">()</span>
+    <span class="n">test_from_empty_dict</span><span class="p">()</span>
+    <span class="n">test_from_dict_partial</span><span class="p">()</span>
+    <span class="n">test_from_dict_full_and_as_dict</span><span class="p">()</span>
+    <span class="n">test_pickle</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="fbank.html" class="btn btn-neutral float-right" title="kaldifeat.Fbank" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Fangjun Kuang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

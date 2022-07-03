@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation &mdash; kaldifeat 1.16 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage" href="usage/index.html" />
+    <link rel="prev" title="Introduction" href="intro.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> kaldifeat
+          </a>
+              <div class="version">
+                1.16
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#install-kaldifeat-from-source">Install kaldifeat from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-kaldifeat-from-pypi">Install kaldifeat from PyPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-kaldifeat-from-conda-only-for-linux">Install kaldifeat from conda (Only for Linux)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#faqs">FAQs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-install-a-cuda-version-of-kaldifeat">How to install a CUDA version of kaldifeat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-install-a-cpu-version-of-kaldifeat">How to install a CPU version of kaldifeat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-fix-caffe2-cannot-find-cudnn-library">How to fix <cite>Caffe2: Cannot find cuDNN library</cite></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage/index.html">Usage</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">kaldifeat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Installation</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/csukuangfj/kaldifeat/blob/master/kaldifeat/docs/source/installation.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
+<blockquote>
+<div><ul class="simple">
+<li><p><img alt="Supported operating systems" src="_images/os-green.svg" /></p></li>
+<li><p><img alt="Supported python versions" src="_images/python_ge_3.6-blue.svg" /></p></li>
+<li><p><img alt="Supported pytorch versions" src="_images/pytorch_ge_1.5.0-green.svg" /></p></li>
+<li><p><img alt="Supported cuda versions" src="_images/cuda_ge_10.1-orange.svg" /></p></li>
+</ul>
+</div></blockquote>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p><a class="reference external" href="https://github.com/csukuangfj/kaldifeat">kaldifeat</a> depends on <a class="reference external" href="https://pytorch.org/">PyTorch</a>. <a class="reference external" href="https://pytorch.org/">PyTorch</a> &gt;= 1.5.0 is known to work.</p>
+<p>Please first install <a class="reference external" href="https://pytorch.org/">PyTorch</a> before you install <a class="reference external" href="https://github.com/csukuangfj/kaldifeat">kaldifeat</a>.</p>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>To install a CPU version of <a class="reference external" href="https://github.com/csukuangfj/kaldifeat">kaldifeat</a>, please install a CPU version
+of <a class="reference external" href="https://pytorch.org/">PyTorch</a>.</p>
+<p>To install a CUDA version of <a class="reference external" href="https://github.com/csukuangfj/kaldifeat">kaldifeat</a>, please install a CUDA version
+of <a class="reference external" href="https://pytorch.org/">PyTorch</a>. CUDA &gt;= 10.1 is known to work.</p>
+</div>
+<section id="install-kaldifeat-from-source">
+<span id="from-source"></span><h2>Install kaldifeat from source<a class="headerlink" href="#install-kaldifeat-from-source" title="Permalink to this heading"></a></h2>
+<p>You have to install <code class="docutils literal notranslate"><span class="pre">cmake</span></code> and <a class="reference external" href="https://pytorch.org/">PyTorch</a> first.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cmake</span></code> 3.11 is known to work. Other CMake versions may also work.</p></li>
+<li><p><a class="reference external" href="https://pytorch.org/">PyTorch</a> &gt;= 1.5.0  is known to work. Other PyTorch versions may also work.</p></li>
+<li><p>Python &gt;= 3.6</p></li>
+</ul>
+</div></blockquote>
+<p>The commands to install <a class="reference external" href="https://github.com/csukuangfj/kaldifeat">kaldifeat</a> from source are:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/csukuangfj/kaldifeat
+<span class="nb">cd</span> kaldifeat
+python3 setup.py install
+</pre></div>
+</div>
+<p>To test that you have installed <a class="reference external" href="https://github.com/csukuangfj/kaldifeat">kaldifeat</a> successfully, please run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -c <span class="s2">&quot;import kaldifeat; print(kaldifeat.__version__)&quot;</span>
+</pre></div>
+</div>
+<p>It should print the version, e.g., <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+</section>
+<section id="install-kaldifeat-from-pypi">
+<span id="from-pypi"></span><h2>Install kaldifeat from PyPI<a class="headerlink" href="#install-kaldifeat-from-pypi" title="Permalink to this heading"></a></h2>
+<p>The command to install <a class="reference external" href="https://github.com/csukuangfj/kaldifeat">kaldifeat</a> from PyPI is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install --verbose kaldifeat
+</pre></div>
+</div>
+<p>To test that you have installed <a class="reference external" href="https://github.com/csukuangfj/kaldifeat">kaldifeat</a> successfully, please run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -c <span class="s2">&quot;import kaldifeat; print(kaldifeat.__version__)&quot;</span>
+</pre></div>
+</div>
+<p>It should print the version, e.g., <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+</section>
+<section id="install-kaldifeat-from-conda-only-for-linux">
+<h2>Install kaldifeat from conda (Only for Linux)<a class="headerlink" href="#install-kaldifeat-from-conda-only-for-linux" title="Permalink to this heading"></a></h2>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Installation using <code class="docutils literal notranslate"><span class="pre">conda</span></code> supports only Linux. For macOS and Windows,
+please use either <a class="reference internal" href="#from-source"><span class="std std-ref">Install kaldifeat from source</span></a> or <a class="reference internal" href="#from-pypi"><span class="std std-ref">Install kaldifeat from PyPI</span></a>.</p>
+</div>
+<p>The command to install <cite>kaldifeat</cite> using <code class="docutils literal notranslate"><span class="pre">conda</span></code> is</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install -c kaldifeat -c pytorch -c conda-forge kaldifeat <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 <span class="nv">cudatoolkit</span><span class="o">=</span><span class="m">11</span>.1 <span class="nv">pytorch</span><span class="o">=</span><span class="m">1</span>.8.1
+</pre></div>
+</div>
+<p>You can select the supported Python version, CUDA toolkit version and <a class="reference external" href="https://pytorch.org/">PyTorch</a> version as you wish.</p>
+<p>To install a CPU version of <cite>kaldifeat</cite>, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install -c kaldifeat -c pytorch cpuonly kaldifeat <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 <span class="nv">pytorch</span><span class="o">=</span><span class="m">1</span>.8.1
+</pre></div>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>If you encounter issues about missing GLIBC after installing <a class="reference external" href="https://github.com/csukuangfj/kaldifeat">kaldifeat</a>
+with <code class="docutils literal notranslate"><span class="pre">conda</span></code>, please consider <a class="reference internal" href="#from-source"><span class="std std-ref">Install kaldifeat from source</span></a> or <a class="reference internal" href="#from-pypi"><span class="std std-ref">Install kaldifeat from PyPI</span></a>.
+The reason is that the package was built using Ubuntu 18.04 and your system’s
+GLIBC is older.</p>
+</div>
+<p>To test that you have installed <a class="reference external" href="https://github.com/csukuangfj/kaldifeat">kaldifeat</a> successfully, please run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -c <span class="s2">&quot;import kaldifeat; print(kaldifeat.__version__)&quot;</span>
+</pre></div>
+</div>
+<p>It should print the version, e.g., <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+</section>
+<section id="faqs">
+<h2>FAQs<a class="headerlink" href="#faqs" title="Permalink to this heading"></a></h2>
+<section id="how-to-install-a-cuda-version-of-kaldifeat">
+<h3>How to install a CUDA version of kaldifeat<a class="headerlink" href="#how-to-install-a-cuda-version-of-kaldifeat" title="Permalink to this heading"></a></h3>
+<p>You need to first install a CUDA version of <a class="reference external" href="https://pytorch.org/">PyTorch</a> and then install <a class="reference external" href="https://github.com/csukuangfj/kaldifeat">kaldifeat</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can use a CUDA version of <a class="reference external" href="https://github.com/csukuangfj/kaldifeat">kaldifeat</a> on machines with no GPUs.</p>
+</div>
+</section>
+<section id="how-to-install-a-cpu-version-of-kaldifeat">
+<h3>How to install a CPU version of kaldifeat<a class="headerlink" href="#how-to-install-a-cpu-version-of-kaldifeat" title="Permalink to this heading"></a></h3>
+<p>You need to first install a CPU version of <a class="reference external" href="https://pytorch.org/">PyTorch</a> and then install <a class="reference external" href="https://github.com/csukuangfj/kaldifeat">kaldifeat</a>.</p>
+</section>
+<section id="how-to-fix-caffe2-cannot-find-cudnn-library">
+<h3>How to fix <cite>Caffe2: Cannot find cuDNN library</cite><a class="headerlink" href="#how-to-fix-caffe2-cannot-find-cudnn-library" title="Permalink to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Your</span> <span class="n">installed</span> <span class="n">Caffe2</span> <span class="n">version</span> <span class="n">uses</span> <span class="n">cuDNN</span> <span class="n">but</span> <span class="n">I</span> <span class="n">cannot</span> <span class="n">find</span> <span class="n">the</span> <span class="n">cuDNN</span>
+<span class="n">libraries</span><span class="o">.</span>  <span class="n">Please</span> <span class="nb">set</span> <span class="n">the</span> <span class="n">proper</span> <span class="n">cuDNN</span> <span class="n">prefixes</span> <span class="ow">and</span> <span class="o">/</span> <span class="ow">or</span> <span class="n">install</span> <span class="n">cuDNN</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>You will have such an error when you want to install a CUDA version of <a class="reference external" href="https://github.com/csukuangfj/kaldifeat">kaldifeat</a>
+by <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">kaldifeat</span></code> or from source.</p>
+<p>You need to first install cuDNN. Assume you have installed cuDNN to the
+path <code class="docutils literal notranslate"><span class="pre">/path/to/cudnn</span></code>. You can fix the error by using <code class="docutils literal notranslate"><span class="pre">one</span></code> of the following
+commands.</p>
+<ol class="arabic simple">
+<li><p>Fix for installation using <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span></code></p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">KALDIFEAT_CMAKE_ARGS</span><span class="o">=</span><span class="s2">&quot;-DCMAKE_BUILD_TYPE=Release -DCUDNN_LIBRARY_PATH=/path/to/cudnn/lib/libcudnn.so -DCUDNN_INCLUDE_PATH=/path/to/cudnn/include&quot;</span>
+pip install --verbose kaldifeat
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Fix for installation from source</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir /some/path
+git clone https://github.com/csukuangfj/kaldifeat.git
+<span class="nb">cd</span> kaldifeat
+<span class="nb">export</span> <span class="nv">KALDIFEAT_CMAKE_ARGS</span><span class="o">=</span><span class="s2">&quot;-DCMAKE_BUILD_TYPE=Release -DCUDNN_LIBRARY_PATH=/path/to/cudnn/lib/libcudnn.so -DCUDNN_INCLUDE_PATH=/path/to/cudnn/include&quot;</span>
+python setup.py install
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="intro.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="usage/index.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Fangjun Kuang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
