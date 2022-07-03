@@ -1,0 +1,46 @@
+compute-fbank-feats 
+
+Create Mel-filter bank (FBANK) feature files.
+Usage:  compute-fbank-feats [options...] <wav-rspecifier> <feats-wspecifier>
+
+Options:
+  --allow-downsample          : If true, allow the input waveform to have a higher frequency than the specified --sample-frequency (and we'll downsample). (bool, default = false)
+  --allow-upsample            : If true, allow the input waveform to have a lower frequency than the specified --sample-frequency (and we'll upsample). (bool, default = false)
+  --blackman-coeff            : Constant coefficient for generalized Blackman window. (float, default = 0.42)
+  --channel                   : Channel to extract (-1 -> expect mono, 0 -> left, 1 -> right) (int, default = -1)
+  --debug-mel                 : Print out debugging information for mel bin computation (bool, default = false)
+  --dither                    : Dithering constant (0.0 means no dither). If you turn this off, you should set the --energy-floor option, e.g. to 1.0 or 0.1 (float, default = 1)
+  --energy-floor              : Floor on energy (absolute, not relative) in FBANK computation. Only makes a difference if --use-energy=true; only necessary if --dither=0.0.  Suggested values: 0.1 or 1.0 (float, default = 0)
+  --frame-length              : Frame length in milliseconds (float, default = 25)
+  --frame-shift               : Frame shift in milliseconds (float, default = 10)
+  --high-freq                 : High cutoff frequency for mel bins (if <= 0, offset from Nyquist) (float, default = 0)
+  --htk-compat                : If true, put energy last.  Warning: not sufficient to get HTK compatible features (need to change other parameters). (bool, default = false)
+  --low-freq                  : Low cutoff frequency for mel bins (float, default = 20)
+  --max-feature-vectors       : Memory optimization. If larger than 0, periodically remove feature vectors so that only this number of the latest feature vectors is retained. (int, default = -1)
+  --min-duration              : Minimum duration of segments to process (in seconds). (float, default = 0)
+  --num-mel-bins              : Number of triangular mel-frequency bins (int, default = 23)
+  --output-format             : Format of the output files [kaldi, htk] (string, default = "kaldi")
+  --preemphasis-coefficient   : Coefficient for use in signal preemphasis (float, default = 0.97)
+  --raw-energy                : If true, compute energy before preemphasis and windowing (bool, default = true)
+  --remove-dc-offset          : Subtract mean from waveform on each frame (bool, default = true)
+  --round-to-power-of-two     : If true, round window size to power of two by zero-padding input to FFT. (bool, default = true)
+  --sample-frequency          : Waveform data sample frequency (must match the waveform file, if specified there) (float, default = 16000)
+  --snip-edges                : If true, end effects will be handled by outputting only frames that completely fit in the file, and the number of frames depends on the frame-length.  If false, the number of frames depends only on the frame-shift, and we reflect the data at the ends. (bool, default = true)
+  --subtract-mean             : Subtract mean of each feature file [CMS]; not recommended to do it this way.  (bool, default = false)
+  --use-energy                : Add an extra dimension with energy to the FBANK output. (bool, default = false)
+  --use-log-fbank             : If true, produce log-filterbank, else produce linear. (bool, default = true)
+  --use-power                 : If true, use power, else use magnitude. (bool, default = true)
+  --utt2spk                   : Utterance to speaker-id map (if doing VTLN and you have warps per speaker) (string, default = "")
+  --vtln-high                 : High inflection point in piecewise linear VTLN warping function (if negative, offset from high-mel-freq (float, default = -500)
+  --vtln-low                  : Low inflection point in piecewise linear VTLN warping function (float, default = 100)
+  --vtln-map                  : Map from utterance or speaker-id to vtln warp factor (rspecifier) (string, default = "")
+  --vtln-warp                 : Vtln warp factor (only applicable if vtln-map not specified) (float, default = 1)
+  --window-type               : Type of window ("hamming"|"hanning"|"povey"|"rectangular"|"sine"|"blackmann") (string, default = "povey")
+  --write-utt2dur             : Wspecifier to write duration of each utterance in seconds, e.g. 'ark,t:utt2dur'. (string, default = "")
+
+Standard options:
+  --config                    : Configuration file to read (this option may be repeated) (string, default = "")
+  --help                      : Print out usage message (bool, default = false)
+  --print-args                : Print the command line arguments (to stderr) (bool, default = true)
+  --verbose                   : Verbose level (higher->more logging) (int, default = 0)
+
