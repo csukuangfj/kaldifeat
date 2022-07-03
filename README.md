@@ -7,6 +7,8 @@
 <img src="/doc/source/images/cuda_ge_10.1-orange.svg">
 </div>
 
+[![Documentation Status](https://github.com/csukuangfj/kaldifeat/actions/workflows/build-doc.yml/badge.svg)](https://csukuangfj.github.io/kaldifeat/)
+
 **Documentation**: <https://csukuangfj.github.io/kaldifeat>
 
 <sub>
