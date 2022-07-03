@@ -7,6 +7,10 @@
 <img src="/doc/source/images/cuda_ge_10.1-orange.svg">
 </div>
 
+[![Documentation Status](https://github.com/csukuangfj/kaldifeat/actions/workflows/build-doc.yml/badge.svg)](https://csukuangfj.github.io/kaldifeat/)
+
+**Documentation**: <https://csukuangfj.github.io/kaldifeat>
+
 <sub>
 <table>
 <tr>
@@ -277,98 +281,6 @@ See <https://github.com/k2-fsa/sherpa/blob/master/sherpa/bin/pruned_stateless_em
 
 # Installation
 
-## From conda (Only for Linux)
-
-Supported versions of Python, PyTorch, and CUDA toolkit are listed below:
-
-[![Supported Python versions](/doc/source/images/python_ge_3.6-blue.svg)](/doc/source/images/python_ge_3.6-blue.svg)
-[![Supported PyTorch versions](/doc/source/images/pytorch_ge_1.5.0-green.svg)](/doc/source/images/pytorch_ge_1.5.0-green.svg)
-[![Supported CUDA versions](/doc/source/images/cuda_ge_10.1-orange.svg)](/doc/source/images/cuda_ge_10.1-orange.svg)
-
-```bash
-conda install -c kaldifeat -c pytorch -c conda-forge kaldifeat python=3.8 cudatoolkit=11.1 pytorch=1.8.1
-```
-
-You can select the supported Python version, CUDA toolkit version and PyTorch version as you wish.
-
-To install a CPU version, use
-
-```bash
-conda install -c kaldifeat -c pytorch cpuonly kaldifeat python=3.8 pytorch=1.8.1
-```
-
-
-**Note:** If you want to install `kaldifeat` on macOS or Windows, please
-use either `pip install -v kaldifeat` or compile `kaldifeat` from source.
-
-## From PyPi with pip (Support Linux/macOS/Windows)
-
-You need to install PyTorch and CMake first.
-CMake 3.11 is known to work. Other CMake versions may also work.
-PyTorch 1.6.0 and above are known to work. Other PyTorch versions may also work.
-
-```bash
-pip install -v kaldifeat
-```
-
-## From source (Support Linux/macOS/Windows)
-
-The following are the commands to compile `kaldifeat` from source.
-We assume that you have installed `CMake` and PyTorch.
-CMake 3.11 is known to work. Other CMake versions may also work.
-PyTorch 1.6.0 and above are known to work. Other PyTorch versions may also work.
-
-```bash
-mkdir /some/path
-git clone https://github.com/csukuangfj/kaldifeat.git
-cd kaldifeat
-python setup.py install
-```
-
-To test whether `kaldifeat` was installed successfully, you can run:
-```bash
-python3 -c "import kaldifeat; print(kaldifeat.__version__)"
-```
-
-## FAQs
-
-### How to install a CUDA version
-
-You need to first install a CUDA version of PyTorch and then install `kaldifeat`.
-
-**Note**: You can use a CUDA version of kaldifeat on machines with no GPUs.
-
-
-### How to install a CPU-only version
-
-You need to first install a CPU version of PyTorch and then install `kaldifeat`.
-
-### How to fix `Caffe2: Cannot find cuDNN library`
-
-```
-  Your installed Caffe2 version uses cuDNN but I cannot find the cuDNN
-  libraries.  Please set the proper cuDNN prefixes and / or install cuDNN.
-```
-
-This error happens when you want to install a CUDA version of kaldifeat
-by `pip install kaldifeat` or from source.
-
-You need to first install cuDNN. Assume you have installed cuDNN to the
-path `/path/to/cudnn`. You can fix the error by the following commands.
-
-(1) Fix for installation using `pip install`
-
-```bash
-export KALDIFEAT_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release -DCUDNN_LIBRARY_PATH=/path/to/cudnn/lib/libcudnn.so -DCUDNN_INCLUDE_PATH=/path/to/cudnn/include"
-pip install --verbose kaldifeat
-```
-
-(2) Fix for installation from source
-
-```bash
-mkdir /some/path
-git clone https://github.com/csukuangfj/kaldifeat.git
-cd kaldifeat
-export KALDIFEAT_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release -DCUDNN_LIBRARY_PATH=/path/to/cudnn/lib/libcudnn.so -DCUDNN_INCLUDE_PATH=/path/to/cudnn/include"
-python setup.py install
-```
+Refer to
+<https://csukuangfj.github.io/kaldifeat>
+for installation.
