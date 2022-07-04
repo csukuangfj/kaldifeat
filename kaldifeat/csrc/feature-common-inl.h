@@ -55,10 +55,17 @@ torch::Tensor OfflineFeatureTpl<F>::ComputeFeatures(const torch::Tensor &wave,
   int32_t padding = frame_opts.PaddedWindowSize() - strided_input.size(1);
 
   if (padding > 0) {
+#ifdef __ANDROID__
+    auto padding_value = torch::zeros(
+        {strided_input.size(0), padding},
+        torch::dtype(torch::kFloat).device(strided_input.device()));
+    strided_input = torch::cat({strided_input, padding_value}, 1);
+#else
     strided_input = torch::nn::functional::pad(
         strided_input, torch::nn::functional::PadFuncOptions({0, padding})
                            .mode(torch::kConstant)
                            .value(0));
+#endif
   }
 
   return computer_.Compute(log_energy_pre_window, vtln_warp, strided_input);
