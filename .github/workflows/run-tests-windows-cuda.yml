@@ -1,0 +1,173 @@
+# Copyright      2021  Xiaomi Corp.       (author: Fangjun Kuang)
+
+# See ../../LICENSE for clarification regarding multiple authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+name: Run tests windows cuda
+
+on:
+  push:
+    branches:
+      - master
+
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  generate_build_matrix:
+    # see https://github.com/pytorch/pytorch/pull/50633
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Generating build matrix
+        id: set-matrix
+        run: |
+          # outputting for debugging purposes
+          python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows --test-only-latest-torch
+          MATRIX=$(python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows --test-only-latest-torch)
+          echo "::set-output name=matrix::${MATRIX}"
+
+  run_tests_windows_cuda:
+    needs: generate_build_matrix
+    runs-on: windows-2019
+    strategy:
+      fail-fast: false
+      matrix:
+        ${{ fromJson(needs.generate_build_matrix.outputs.matrix) }}
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # see https://github.com/microsoft/setup-msbuild
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+
+      # See https://github.com/Jimver/cuda-toolkit/blob/master/src/links/windows-links.ts
+      # for available CUDA versions
+      - uses: Jimver/cuda-toolkit@v0.2.7
+        id: cuda-toolkit
+        with:
+          cuda: ${{ matrix.cuda }}
+
+      - name: Display CUDA version
+        shell: bash
+        run: |
+          echo "Installed cuda version is: ${{ steps.cuda-toolkit.outputs.cuda }}"
+          echo "Cuda install location: ${{steps.cuda-toolkit.outputs.CUDA_PATH}}"
+          nvcc --version
+
+      - name: Remove CUDA installation package
+        shell: bash
+        run: |
+          rm "C:/hostedtoolcache/windows/cuda_installer-windows/${{ matrix.cuda }}/x64/cuda_installer_${{ matrix.cuda }}.exe"
+
+      - name: Download cuDNN
+        shell: bash
+        run: |
+          GIT_LFS_SKIP_SMUDGE=1 git clone https://huggingface.co/csukuangfj/cudnn-for-windows
+          cd cudnn-for-windows
+          git lfs pull --include="cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive.zip"
+          unzip cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive.zip
+          rm cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive.zip
+          ls -lh *
+          ls -lh */*
+
+          echo "PWD: $PWD"
+
+      - name: Install PyTorch ${{ matrix.torch }}
+        shell: bash
+        run: |
+          version=${{ matrix.cuda }}
+          major=${version:0:2}
+          minor=${version:3:1}
+          v=${major}${minor}
+          if [ ${v} -eq 102 ]; then v=""; else v="+cu${v}"; fi
+
+          python3 -m pip install -qq --upgrade pip
+          python3 -m pip install -qq wheel twine numpy typing_extensions
+          python3 -m pip install -qq dataclasses soundfile numpy
+          python3 -m pip install -qq torch==${{ matrix.torch }}${v} -f https://download.pytorch.org/whl/torch_stable.html numpy
+
+          python3 -c "import torch; print('torch version:', torch.__version__)"
+
+          python3 -m torch.utils.collect_env
+
+      - name: Display CMake version
+        run: |
+          cmake --version
+          cmake --help
+
+      - name: Configure CMake
+        shell: bash
+        run: |
+          echo "PWD: $PWD"
+          ls -lh
+
+          mkdir build_release
+          cd build_release
+          cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCUDNN_INCLUDE_PATH=d:/a/kaldifeat/kaldifeat/cudnn-for-windows/cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/include -DCUDNN_LIBRARY_PATH=d:/a/kaldifeat/kaldifeat/cudnn-for-windows/cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/lib/cudnn.lib ..
+          ls -lh
+
+      - name: Build kaldifeat
+        shell: bash
+        run: |
+          cd build_release
+          cmake --build . --target _kaldifeat --config Release
+
+      - name: Display generated files
+        shell: bash
+        run: |
+          cd build_release
+          ls -lh lib/*/*
+
+      - name: Build wheel
+        shell: bash
+        run: |
+          echo $PWD
+          ls -lh ./*
+          export KALDIFEAT_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCUDNN_INCLUDE_PATH=d:/a/kaldifeat/kaldifeat/cudnn-for-windows/cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/include -DCUDNN_LIBRARY_PATH=d:/a/kaldifeat/kaldifeat/cudnn-for-windows/cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/lib/cudnn.lib"
+          python3 setup.py bdist_wheel
+          ls -lh dist/
+          pip install ./dist/*.whl
+          python3 -c "import kaldifeat; print(kaldifeat.__version__)"
+
+      - name: Upload Wheel
+        uses: actions/upload-artifact@v2
+        with:
+          name: python-${{ matrix.python-version }}-${{ matrix.os }}-cuda-${{ matrix.cuda }}
+          path: dist/*.whl
+
+      - name: Build tests
+        shell: bash
+        run: |
+          cd build_release
+          cmake --build . --target ALL_BUILD --config Release
+          ls -lh bin/*/*
+          ctest -C Release --verbose --output-on-failure

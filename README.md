@@ -1,11 +1,15 @@
 # kaldifeat
 
 <div align="center">
-<img src="/doc/source/images/os.svg">
+<img src="/doc/source/images/os-green.svg">
 <img src="/doc/source/images/python_ge_3.6-blue.svg">
 <img src="/doc/source/images/pytorch_ge_1.5.0-green.svg">
 <img src="/doc/source/images/cuda_ge_10.1-orange.svg">
 </div>
+
+[![Documentation Status](https://github.com/csukuangfj/kaldifeat/actions/workflows/build-doc.yml/badge.svg)](https://csukuangfj.github.io/kaldifeat/)
+
+**Documentation**: <https://csukuangfj.github.io/kaldifeat>
 
 <sub>
 <table>
@@ -268,67 +272,15 @@ See <https://github.com/k2-fsa/k2/blob/v2.0-pre/k2/torch/csrc/features.cu>.
 
 See <https://github.com/lhotse-speech/lhotse/blob/master/lhotse/features/kaldifeat.py>.
 
+## sherpa
+
+[sherpa](https://github.com/k2-fsa/sherpa) uses kaldifeat for streaming feature
+extraction.
+
+See <https://github.com/k2-fsa/sherpa/blob/master/sherpa/bin/pruned_stateless_emformer_rnnt2/decode.py>
+
 # Installation
 
-## From conda (Only for Linux + CUDA)
-
-Supported versions of Python, PyTorch, and CUDA toolkit are listed below:
-
-[![Supported Python versions](/doc/source/images/python-3.6_3.7_3.8-blue.svg)](/doc/source/images/python-3.6_3.7_3.8-blue.svg)
-[![Supported PyTorch versions](/doc/source/images/pytorch-1.6.0_1.7.0_1.7.1_1.8.0_1.8.1_1.9.0-green.svg)](/doc/source/images/pytorch-1.6.0_1.7.0_1.7.1_1.8.0_1.8.1_1.9.0-green.svg)
-[![Supported CUDA versions](/doc/source/images/cuda-10.1_10.2_11.0_11.1-orange.svg)](/doc/source/images/cuda-10.1_10.2_11.0_11.1-orange.svg)
-
-```bash
-conda install -c kaldifeat -c pytorch -c conda-forge kaldifeat python=3.8 cudatoolkit=11.1 pytorch=1.8.1
-```
-
-You can select the supported Python version, CUDA toolkit version and PyTorch version as you wish.
-
-**Note:** If you want a CPU only version or want to install `kaldifeat` on other operating systems,
-e.g., macOS, please use `pip install` or compile `kaldifeat` from source.
-
-
-## From PyPi with pip
-
-You need to install PyTorch and CMake first.
-CMake 3.11 is known to work. Other CMake versions may also work.
-PyTorch 1.6.0 and above are known to work. Other PyTorch versions may also work.
-
-```bash
-pip install -v kaldifeat
-```
-
-## From source
-
-The following are the commands to compile `kaldifeat` from source.
-We assume that you have installed `CMake` and PyTorch.
-CMake 3.11 is known to work. Other CMake versions may also work.
-PyTorch 1.6.0 and above are known to work. Other PyTorch versions may also work.
-
-```bash
-mkdir /some/path
-git clone https://github.com/csukuangfj/kaldifeat.git
-cd kaldifeat
-python setup.py install
-```
-
-To test whether `kaldifeat` was installed successfully, you can run:
-```bash
-python3 -c "import kaldifeat; print(kaldifeat.__version__)"
-```
-
-## FAQs
-
-### How to install a CUDA version
-
-There are two approaches:
-
-  - (1) Install using `conda`. It always installs a CUDA version of kaldifeat.
-  - (2) Install a CUDA version of PyTorch and then install kaldifeat from source
-    or use `pip install kaldifeat`.
-
-
-### How to install a CPU-only version
-
-You have to first install a CPU-only version of PyTorch and then install kaldifeat
-from source or use `pip install kaldifeat`.
+Refer to
+<https://csukuangfj.github.io/kaldifeat>
+for installation.

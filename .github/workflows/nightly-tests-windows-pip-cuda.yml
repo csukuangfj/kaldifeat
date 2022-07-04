@@ -1,0 +1,160 @@
+# Copyright      2021  Xiaomi Corp.       (author: Fangjun Kuang)
+
+# See ../../LICENSE for clarification regarding multiple authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+name: Nightly tests windows pip cuda
+
+on:
+  schedule:
+    # minute (0-59)
+    # hour (0-23)
+    # day of the month (1-31)
+    # month (1-12)
+    # day of the week (0-6)
+    # nightly build at 23:50 UTC time every day
+    - cron: "50 23 * * *"
+
+jobs:
+  enable_nightly_build:
+    runs-on: ubuntu-latest
+    outputs:
+      enabled: ${{ steps.set-enabled.outputs.enabled }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set enabled
+        id: set-enabled
+        run: |
+          enabled=$(python scripts/github_actions/run-nightly-build.py)
+          echo "enabled: $enabled"
+          echo "::set-output name=enabled::${enabled}"
+
+  generate_build_matrix:
+    needs: enable_nightly_build
+    if: needs.enable_nightly_build.outputs.enabled == 'true'
+    # see https://github.com/pytorch/pytorch/pull/50633
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Generating build matrix
+        id: set-matrix
+        run: |
+          # outputting for debugging purposes
+          python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows
+          MATRIX=$(python scripts/github_actions/generate_build_matrix.py --enable-cuda --for-windows)
+          echo "::set-output name=matrix::${MATRIX}"
+
+  run_nightly_tests_windows_pip_cuda:
+    needs: generate_build_matrix
+    runs-on: windows-2019
+    strategy:
+      fail-fast: false
+      matrix:
+        ${{ fromJson(needs.generate_build_matrix.outputs.matrix) }}
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # see https://github.com/microsoft/setup-msbuild
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+
+      # See https://github.com/Jimver/cuda-toolkit/blob/master/src/links/windows-links.ts
+      # for available CUDA versions
+      - uses: Jimver/cuda-toolkit@v0.2.7
+        id: cuda-toolkit
+        with:
+          cuda: ${{ matrix.cuda }}
+
+      - name: Display CUDA version
+        run: |
+          echo "Installed cuda version is: ${{ steps.cuda-toolkit.outputs.cuda }}"
+          echo "Cuda install location: ${{steps.cuda-toolkit.outputs.CUDA_PATH}}"
+          nvcc --version
+
+      - name: Remove CUDA installation package
+        shell: bash
+        run: |
+          rm "C:/hostedtoolcache/windows/cuda_installer-windows/${{ matrix.cuda }}/x64/cuda_installer_${{ matrix.cuda }}.exe"
+
+      - name: Download cuDNN
+        shell: bash
+        run: |
+          GIT_LFS_SKIP_SMUDGE=1 git clone https://huggingface.co/csukuangfj/cudnn-for-windows
+          cd cudnn-for-windows
+          git lfs pull --include="cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive.zip"
+          unzip cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive.zip
+          rm cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive.zip
+          ls -lh *
+          ls -lh */*
+
+          echo "PWD: $PWD"
+
+      - name: Install PyTorch ${{ matrix.torch }}
+        shell: bash
+        run: |
+          version=${{ matrix.cuda }}
+          major=${version:0:2}
+          minor=${version:3:1}
+          v=${major}${minor}
+          if [ ${v} -eq 102 ]; then v=""; else v="+cu${v}"; fi
+
+          python3 -m pip install -qq --upgrade pip
+          python3 -m pip install -qq wheel twine numpy typing_extensions
+          python3 -m pip install -qq dataclasses soundfile numpy
+          python3 -m pip install -qq torch==${{ matrix.torch }}${v} -f https://download.pytorch.org/whl/torch_stable.html numpy
+
+          python3 -c "import torch; print('torch version:', torch.__version__)"
+
+          python3 -m torch.utils.collect_env
+
+      - name: Install from PyPI
+        shell: bash
+        run: |
+          echo "PWD: $PWD"
+          export KALDIFEAT_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCUDNN_INCLUDE_PATH=d:/a/kaldifeat/kaldifeat/cudnn-for-windows/cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/include -DCUDNN_LIBRARY_PATH=d:/a/kaldifeat/kaldifeat/cudnn-for-windows/cudnn-windows-x86_64-8.4.1.50_cuda11.6-archive/lib/cudnn.lib"
+          export KALDIFEAT_MAKE_ARGS="-j 3"
+          pip install --verbose kaldifeat
+
+      - name: Run tests
+        shell: bash
+        run: |
+          cd kaldifeat/python/tests
+
+          python3 ./test_fbank.py
+          python3 ./test_fbank_options.py
+          python3 ./test_frame_extraction_options.py
+          python3 ./test_mel_bank_options.py
+          python3 ./test_mfcc.py
+          python3 ./test_mfcc_options.py
+          python3 ./test_plp.py
+          python3 ./test_plp_options.py
+          python3 ./test_spectrogram.py
+          python3 ./test_spectrogram_options.py

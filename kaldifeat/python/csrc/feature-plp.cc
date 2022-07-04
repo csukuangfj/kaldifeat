@@ -56,7 +56,7 @@ static void PybindPlp(py::module &m) {
       .def("dim", &PyClass::Dim)
       .def_property_readonly("options", &PyClass::GetOptions)
       .def("compute_features", &PyClass::ComputeFeatures, py::arg("wave"),
-           py::arg("vtln_warp"))
+           py::arg("vtln_warp"), py::call_guard<py::gil_scoped_release>())
       .def(py::pickle(
           [](const PyClass &self) -> py::dict {
             return AsDict(self.GetOptions());

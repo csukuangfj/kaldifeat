@@ -6,19 +6,11 @@
 kaldifeat
 =========
 
-`kaldifeat <https://github.com/csukuangfj/kaldifeat>`_ implements
-feature extraction algorithms **compatible** with kaldi using PyTorch, supporting CUDA
-as well as autograd.
-
-Currently, only fbank features are supported.
-It can produce the same feature output as ``compute-fbank-feats`` (from kaldi)
-when given the same options.
-
-
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Contents
 
+   intro
    installation
-   usage
+   usage/index

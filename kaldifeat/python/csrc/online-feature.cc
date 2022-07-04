@@ -22,9 +22,11 @@ void PybindOnlineFeatureTpl(py::module &m, const std::string &class_name,
       .def_property_readonly("num_frames_ready", &PyClass::NumFramesReady)
       .def("is_last_frame", &PyClass::IsLastFrame, py::arg("frame"))
       .def("get_frame", &PyClass::GetFrame, py::arg("frame"))
-      .def("get_frames", &PyClass::GetFrames, py::arg("frames"))
+      .def("get_frames", &PyClass::GetFrames, py::arg("frames"),
+           py::call_guard<py::gil_scoped_release>())
       .def("accept_waveform", &PyClass::AcceptWaveform,
-           py::arg("sampling_rate"), py::arg("waveform"))
+           py::arg("sampling_rate"), py::arg("waveform"),
+           py::call_guard<py::gil_scoped_release>())
       .def("input_finished", &PyClass::InputFinished);
 }
 

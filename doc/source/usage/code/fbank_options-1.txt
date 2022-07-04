@@ -1,0 +1,65 @@
+$ python3
+Python 3.8.0 (default, Oct 28 2019, 16:14:01)
+[GCC 8.3.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import kaldifeat
+>>> opts = kaldifeat.FbankOptions()
+>>> print(opts)
+frame_opts:
+samp_freq: 16000
+frame_shift_ms: 10
+frame_length_ms: 25
+dither: 1
+preemph_coeff: 0.97
+remove_dc_offset: 1
+window_type: povey
+round_to_power_of_two: 1
+blackman_coeff: 0.42
+snip_edges: 1
+max_feature_vectors: -1
+
+
+mel_opts:
+num_bins: 23
+low_freq: 20
+high_freq: 0
+vtln_low: 100
+vtln_high: -500
+debug_mel: 0
+htk_mode: 0
+
+use_energy: 0
+energy_floor: 0
+raw_energy: 1
+htk_compat: 0
+use_log_fbank: 1
+use_power: 1
+device: cpu
+
+>>> print(opts.dither)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: '_kaldifeat.FbankOptions' object has no attribute 'dither'
+>>>
+>>> print(opts.frame_opts.dither)
+1.0
+>>> opts.frame_opts.dither = 0 # disable dither
+>>> print(opts.frame_opts.dither)
+0.0
+>>> import torch
+>>> print(opts.device)
+cpu
+>>> opts.device = 'cuda:0'
+>>> print(opts.device)
+cuda:0
+>>> opts.device = torch.device('cuda', 1)
+>>> print(opts.device)
+cuda:1
+>>> opts.device = 'cpu'
+>>> print(opts.device)
+cpu
+>>> print(opts.mel_opts.num_bins)
+23
+>>> opts.mel_opts.num_bins = 80
+>>> print(opts.mel_opts.num_bins)
+80

@@ -6,7 +6,8 @@ project(kaldifeat)
 
 # remember to change the version in
 # scripts/conda/kaldifeat/meta.yaml
-set(kaldifeat_VERSION "1.14")
+# scripts/conda-cpu/kaldifeat/meta.yaml
+set(kaldifeat_VERSION "1.16")
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
@@ -49,6 +50,24 @@ include(torch)
 if(kaldifeat_BUILD_TESTS)
   include(googletest)
   enable_testing()
+endif()
+
+# TORCH_VERSION is defined in cmake/torch.cmake
+configure_file(
+  ${CMAKE_SOURCE_DIR}/kaldifeat/python/kaldifeat/torch_version.py.in
+  ${CMAKE_SOURCE_DIR}/kaldifeat/python/kaldifeat/torch_version.py @ONLY
+)
+
+if(WIN32)
+  # disable various warnings for MSVC
+  # 4624: destructor was implicitly defined as deleted because a base class destructor is inaccessible or deleted
+  set(disabled_warnings
+      /wd4624
+  )
+  message(STATUS "Disabled warnings: ${disabled_warnings}")
+  foreach(w IN LISTS disabled_warnings)
+    string(APPEND CMAKE_CXX_FLAGS " ${w} ")
+  endforeach()
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR})
