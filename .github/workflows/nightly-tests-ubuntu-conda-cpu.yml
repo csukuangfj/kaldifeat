@@ -17,6 +17,9 @@
 name: Nightly tests ubuntu conda cpu
 
 on:
+  push:
+    branches:
+      - test
   schedule:
     # minute (0-59)
     # hour (0-23)
@@ -38,7 +41,8 @@ jobs:
       - name: Set enabled
         id: set-enabled
         run: |
-          enabled=$(python scripts/github_actions/run-nightly-build.py)
+          # enabled=$(python scripts/github_actions/run-nightly-build.py)
+          enabled=true
           echo "enabled: $enabled"
           echo "::set-output name=enabled::${enabled}"
 
