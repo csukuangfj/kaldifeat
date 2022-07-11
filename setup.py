@@ -39,9 +39,10 @@ setuptools.setup(
     url="https://github.com/csukuangfj/kaldifeat",
     long_description=read_long_description(),
     long_description_content_type="text/markdown",
+    install_requires=["torch"],
+    setup_requires=["torch"],
     ext_modules=[cmake_extension("_kaldifeat")],
     cmdclass={"build_ext": BuildExtension, "bdist_wheel": bdist_wheel},
-    install_requires=["torch"],
     zip_safe=False,
     classifiers=[
         "Programming Language :: C++",
