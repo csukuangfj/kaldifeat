@@ -3,6 +3,7 @@ max-line-length = 80
 
 exclude =
   .git,
+  doc,
   build,
   build_release,
   cmake/cmake_extension.py,
