@@ -67,27 +67,39 @@ class BuildExtension(build_ext):
         if cmake_args == "":
             cmake_args = "-DCMAKE_BUILD_TYPE=Release"
 
+        extra_cmake_args = " -Dkaldifeat_BUILD_TESTS=OFF "
+        extra_cmake_args += f" -DCMAKE_INSTALL_PREFIX={Path(self.build_lib).resolve()}/kaldifeat "  # noqa
+
         if "PYTHON_EXECUTABLE" not in cmake_args:
             print(f"Setting PYTHON_EXECUTABLE to {sys.executable}")
             cmake_args += f" -DPYTHON_EXECUTABLE={sys.executable}"
+
+        cmake_args += extra_cmake_args
 
         if is_windows():
             build_cmd = f"""
                 cmake {cmake_args} -B {self.build_temp} -S {kaldifeat_dir}
                 cmake --build {self.build_temp} --target _kaldifeat --config Release -- -m
+                cmake --build {self.build_temp} --target install --config Release -- -m
             """
             print(f"build command is:\n{build_cmd}")
             ret = os.system(
                 f"cmake {cmake_args} -B {self.build_temp} -S {kaldifeat_dir}"
             )
             if ret != 0:
-                raise Exception("Failed to build kaldifeat")
+                raise Exception("Failed to configure kaldifeat")
 
             ret = os.system(
                 f"cmake --build {self.build_temp} --target _kaldifeat --config Release -- -m"
             )
             if ret != 0:
                 raise Exception("Failed to build kaldifeat")
+
+            ret = os.system(
+                f"cmake --build {self.build_temp} --target install --config Release -- -m"
+            )
+            if ret != 0:
+                raise Exception("Failed to install kaldifeat")
         else:
             if make_args == "" and system_make_args == "":
                 print("For fast compilation, run:")
@@ -101,7 +113,7 @@ class BuildExtension(build_ext):
                 cmake {cmake_args} {kaldifeat_dir}
 
 
-                make {make_args} _kaldifeat
+                make {make_args} _kaldifeat install
             """
             print(f"build command is:\n{build_cmd}")
 
@@ -112,27 +124,3 @@ class BuildExtension(build_ext):
                     "You can ask for help by creating an issue on GitHub.\n"
                     "\nClick:\n\thttps://github.com/csukuangfj/kaldifeat/issues/new\n"  # noqa
                 )
-
-        lib_so = glob.glob(f"{self.build_temp}/lib/*kaldifeat*.so")
-        lib_so += glob.glob(f"{self.build_temp}/lib/*kaldifeat*.dylib")  # macOS
-
-        # bin/Release/_kaldifeat.cp38-win_amd64.pyd
-        lib_so += glob.glob(
-            f"{self.build_temp}/**/*kaldifeat*.pyd", recursive=True
-        )  # windows
-
-        # lib/Release/*.lib
-        lib_so += glob.glob(
-            f"{self.build_temp}/**/*kaldifeat*.lib", recursive=True
-        )  # windows
-        for so in lib_so:
-            print(f"Copying {so} to {self.build_lib}/")
-            shutil.copy(f"{so}", f"{self.build_lib}/")
-
-        print(
-            f"Copying {kaldifeat_dir}/kaldifeat/python/kaldifeat/torch_version.py to {self.build_lib}/kaldifeat"  # noqa
-        )
-        shutil.copy(
-            f"{kaldifeat_dir}/kaldifeat/python/kaldifeat/torch_version.py",
-            f"{self.build_lib}/kaldifeat",
-        )

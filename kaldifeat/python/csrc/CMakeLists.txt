@@ -21,6 +21,10 @@ if(APPLE)
   target_link_libraries(_kaldifeat PRIVATE "-Wl,-rpath,${PYTHON_SITE_PACKAGE_DIR}")
 endif()
 
+if(NOT WIN32)
+  target_link_libraries(_kaldifeat PRIVATE "-Wl,-rpath,${kaldifeat_rpath_origin}/kaldifeat/${CMAKE_INSTALL_LIBDIR}")
+endif()
+
 target_link_libraries(_kaldifeat PRIVATE kaldifeat_core)
 if(UNIX AND NOT APPLE)
   target_link_libraries(_kaldifeat PUBLIC ${TORCH_DIR}/lib/libtorch_python.so)
@@ -29,3 +33,7 @@ elseif(WIN32)
   target_link_libraries(_kaldifeat PUBLIC ${TORCH_DIR}/lib/torch_python.lib)
   target_link_libraries(_kaldifeat PUBLIC ${PYTHON_LIBRARIES})
 endif()
+
+install(TARGETS _kaldifeat
+  DESTINATION ../
+)
