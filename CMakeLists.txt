@@ -16,8 +16,15 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(BUILD_RPATH_USE_ORIGIN TRUE)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-set(CMAKE_INSTALL_RPATH "$ORIGIN")
-set(CMAKE_BUILD_RPATH "$ORIGIN")
+
+if(NOT APPLE)
+  set(kaldifeat_rpath_origin "$ORIGIN")
+else()
+  set(kaldifeat_rpath_origin "@loader_path")
+endif()
+
+set(CMAKE_INSTALL_RPATH ${kaldifeat_rpath_origin})
+set(CMAKE_BUILD_RPATH ${kaldifeat_rpath_origin})
 
 set(BUILD_SHARED_LIBS ON)
 if(WIN32)
@@ -52,11 +59,6 @@ if(kaldifeat_BUILD_TESTS)
   enable_testing()
 endif()
 
-# TORCH_VERSION is defined in cmake/torch.cmake
-configure_file(
-  ${CMAKE_SOURCE_DIR}/kaldifeat/python/kaldifeat/torch_version.py.in
-  ${CMAKE_SOURCE_DIR}/kaldifeat/python/kaldifeat/torch_version.py @ONLY
-)
 
 if(WIN32)
   # disable various warnings for MSVC
@@ -71,4 +73,40 @@ if(WIN32)
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR})
+
+message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+
+include(GNUInstallDirs)
+
+message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
+
 add_subdirectory(kaldifeat)
+
+# TORCH_VERSION is defined in cmake/torch.cmake
+configure_file(
+  ${PROJECT_SOURCE_DIR}/kaldifeat/python/kaldifeat/torch_version.py.in
+  ${PROJECT_SOURCE_DIR}/kaldifeat/python/kaldifeat/torch_version.py @ONLY
+)
+
+configure_file(
+  ${PROJECT_SOURCE_DIR}/cmake/kaldifeatConfigVersion.cmake.in
+  ${PROJECT_BINARY_DIR}/kaldifeatConfigVersion.cmake
+  @ONLY
+)
+
+configure_file(
+  ${PROJECT_SOURCE_DIR}/cmake/kaldifeatConfig.cmake.in
+  ${PROJECT_BINARY_DIR}/kaldifeatConfig.cmake
+  @ONLY
+)
+
+install(FILES
+  ${PROJECT_BINARY_DIR}/kaldifeatConfigVersion.cmake
+  ${PROJECT_BINARY_DIR}/kaldifeatConfig.cmake
+  DESTINATION share/cmake/kaldifeat
+)
+
+install(FILES
+  ${PROJECT_SOURCE_DIR}/kaldifeat/python/kaldifeat/torch_version.py
+  DESTINATION ./
+)

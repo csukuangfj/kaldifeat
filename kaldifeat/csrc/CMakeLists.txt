@@ -53,5 +53,25 @@ if(kaldifeat_BUILD_TESTS)
   foreach(source IN LISTS test_srcs)
     kaldifeat_add_test(${source})
   endforeach()
-
 endif()
+
+file(MAKE_DIRECTORY
+  DESTINATION
+    ${PROJECT_BINARY_DIR}/include/kaldifeat/csrc
+)
+
+file(GLOB_RECURSE all_headers *.h)
+message(STATUS "All headers: ${all_headers}")
+
+file(COPY
+  ${all_headers}
+  DESTINATION
+    ${PROJECT_BINARY_DIR}/include/kaldifeat/csrc
+)
+
+install(TARGETS kaldifeat_core
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+install(FILES ${all_headers}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/kaldifeat/csrc
+)
