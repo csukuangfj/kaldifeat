@@ -16,10 +16,13 @@
 
 # refer to https://github.com/actions/starter-workflows/pull/47/files
 
-name: build_conda_ubuntu_cpu
+name: build_conda_macos_cpu
 
 on:
   push:
+    branches:
+    - master
+    - conda
     tags:
       - '*'
 
@@ -44,9 +47,9 @@ jobs:
           MATRIX=$(python scripts/github_actions/generate_build_matrix.py)
           echo "::set-output name=matrix::${MATRIX}"
 
-  build_conda_ubuntu_cpu:
+  build_conda_macos_cpu:
     needs: generate_build_matrix
-    runs-on: ubuntu-18.04
+    runs-on: macos-10.15
     strategy:
       fail-fast: false
       matrix:
@@ -57,6 +60,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      - name: Display clang version
+        run: |
+          clang --version
 
       - uses: conda-incubator/setup-miniconda@v2
         with:
@@ -83,7 +90,6 @@ jobs:
           which conda
           conda env list
           conda info
-          nproc
 
       - name: Build kaldifeat
         shell: bash -l {0}
@@ -99,10 +105,10 @@ jobs:
 
       - name: Display generated files
         run: |
-          ls -lh /usr/share/miniconda/envs/kaldifeat/conda-bld/linux-64
+          ls -lh /usr/local/miniconda/envs/kaldifeat/conda-bld/osx-64
 
       - name: Upload generated files
         uses: actions/upload-artifact@v2
         with:
           name: cpu-torch-${{ matrix.torch }}-python-${{ matrix.python-version }}-${{ matrix.os }}
-          path: /usr/share/miniconda/envs/kaldifeat/conda-bld/linux-64/*.tar.bz2
+          path: /usr/local/miniconda/envs/kaldifeat/conda-bld/osx-64/*.tar.bz2
