@@ -118,9 +118,15 @@ def generate_build_matrix(enable_cuda, for_windows, test_only_latest_torch):
             if not for_windows
             else ["11.3.1", "11.6.2"],
         },
+        "1.12.1": {
+            "python-version": ["3.7", "3.8", "3.9", "3.10"],
+            "cuda": ["10.2", "11.3", "11.6"]
+            if not for_windows
+            else ["11.3.1", "11.6.2"],
+        },
     }
     if test_only_latest_torch:
-        latest = "1.12.0"
+        latest = "1.12.1"
         matrix = {latest: matrix[latest]}
 
     ans = []
