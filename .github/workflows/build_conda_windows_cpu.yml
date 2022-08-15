@@ -16,10 +16,13 @@
 
 # refer to https://github.com/actions/starter-workflows/pull/47/files
 
-name: build_conda_macos_cpu
+name: build_conda_windows_cpu
 
 on:
   push:
+    branches:
+    - master
+    - conda
     tags:
       - '*'
 
@@ -44,9 +47,9 @@ jobs:
           MATRIX=$(python scripts/github_actions/generate_build_matrix.py)
           echo "::set-output name=matrix::${MATRIX}"
 
-  build_conda_macos_cpu:
+  build_conda_windows_cpu:
     needs: generate_build_matrix
-    runs-on: macos-10.15
+    runs-on: windows-2019
     strategy:
       fail-fast: false
       matrix:
@@ -58,21 +61,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Display clang version
-        run: |
-          clang --version
-
       - uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
           activate-environment: kaldifeat
-
-      - name: Display Python version
-        shell: bash -l {0}
-        run: |
-          python3 -c "import sys; print(sys.version)"
-          which python3
 
       - name: Install conda dependencies
         shell: bash -l {0}
@@ -81,12 +74,21 @@ jobs:
           conda install -y -q conda-build
           conda install -y -q -c pytorch pytorch=${{ matrix.torch }} cpuonly
 
+      - name: Display Python version
+        shell: bash -l {0}
+        run: |
+          python -c "import sys; print(sys.version)"
+          which python
+
       - name: Display conda info
         shell: bash -l {0}
         run: |
-          which conda
           conda env list
           conda info
+          which conda
+          python --version
+          which python
+          python -m torch.utils.collect_env
 
       - name: Build kaldifeat
         shell: bash -l {0}
@@ -102,10 +104,12 @@ jobs:
 
       - name: Display generated files
         run: |
-          ls -lh /usr/local/miniconda/envs/kaldifeat/conda-bld/osx-64
+          ls -lh /c/Miniconda/envs/kaldifeat/conda-bld
+          ls -lh /c/Miniconda/envs/kaldifeat/conda-bld/*/*
+          ls -lh /c/Miniconda/envs/kaldifeat/conda-bld/win-64/*
 
       - name: Upload generated files
         uses: actions/upload-artifact@v2
         with:
           name: cpu-torch-${{ matrix.torch }}-python-${{ matrix.python-version }}-${{ matrix.os }}
-          path: /usr/local/miniconda/envs/kaldifeat/conda-bld/osx-64/*.tar.bz2
+          path: c:/Miniconda/envs/kaldifeat/conda-bld/win-64/*.tar.bz2
