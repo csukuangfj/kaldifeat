@@ -25,7 +25,6 @@ requirements:
     - cmake=3.18
     - python
     - pytorch={{ environ.get('KALDIFEAT_TORCH_VERSION') }}
-    - gcc_linux-64=7 # [linux]
     - cpuonly
     - numpy
 
