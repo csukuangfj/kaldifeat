@@ -20,6 +20,9 @@ name: build_conda_ubuntu_cpu
 
 on:
   push:
+    branches:
+      - master
+      - conda
     tags:
       - '*'
 
