@@ -20,6 +20,8 @@ name: build_conda_windows_cpu
 
 on:
   push:
+    branches:
+      - conda
     tags:
       - '*'
 
