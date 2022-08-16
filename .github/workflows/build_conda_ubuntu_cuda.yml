@@ -128,5 +128,5 @@ jobs:
       - name: Upload generated files
         uses: actions/upload-artifact@v2
         with:
-          name: cuda-${{ matrix.cuda }}-torch-${{ matrix.torch }}-python-${{ matrix.python-version }}-${{ matrix.os }}
+          name: cuda-${{ matrix.cuda }}-torch-${{ matrix.torch }}-python-${{ matrix.python-version }}-ubuntu-18.04
           path: /usr/share/miniconda/envs/kaldifeat/conda-bld/linux-64/*.tar.bz2

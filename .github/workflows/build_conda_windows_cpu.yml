@@ -110,5 +110,5 @@ jobs:
       - name: Upload generated files
         uses: actions/upload-artifact@v2
         with:
-          name: cpu-torch-${{ matrix.torch }}-python-${{ matrix.python-version }}-${{ matrix.os }}
+          name: cpu-torch-${{ matrix.torch }}-python-${{ matrix.python-version }}-windows-2019
           path: c:/Miniconda/envs/kaldifeat/conda-bld/win-64/*.tar.bz2

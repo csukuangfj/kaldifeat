@@ -22,7 +22,6 @@ requirements:
     - python
     - pytorch={{ environ.get('KALDIFEAT_TORCH_VERSION') }}
     - cpuonly
-    - numpy
 
   run:
     - python
