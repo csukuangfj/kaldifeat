@@ -75,7 +75,7 @@ fi
 
 if [ -z $KALDIFEAT_CONDA_TOKEN ]; then
   echo "Auto upload to anaconda.org is disabled since KALDIFEAT_CONDA_TOKEN is not set"
-  conda build --no-test --no-anaconda-upload -c pytorch -c conda-forge ./scripts/conda-cpu/kaldifeat
+  conda build --no-test --no-anaconda-upload -c pytorch ./scripts/conda-cpu/kaldifeat
 else
-  conda build --no-test -c pytorch -c conda-forge --token $KALDIFEAT_CONDA_TOKEN ./scripts/conda-cpu/kaldifeat
+  conda build --no-test -c pytorch --token $KALDIFEAT_CONDA_TOKEN ./scripts/conda-cpu/kaldifeat
 fi
