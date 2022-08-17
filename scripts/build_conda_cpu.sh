@@ -43,7 +43,7 @@ cd $kaldifeat_dir
 export KALDIFEAT_ROOT_DIR=$kaldifeat_dir
 echo "KALDIFEAT_ROOT_DIR: $KALDIFEAT_ROOT_DIR"
 
-KALDIFEAT_PYTHON_VERSION=$(python3 -c "import sys; print(sys.version[:3])")
+KALDIFEAT_PYTHON_VERSION=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
 
 if [ -z $KALDIFEAT_TORCH_VERSION ]; then
   echo "env var KALDIFEAT_TORCH_VERSION is not set, defaults to 1.7.1"

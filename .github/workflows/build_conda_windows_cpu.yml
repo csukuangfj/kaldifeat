@@ -94,7 +94,7 @@ jobs:
         env:
           KALDIFEAT_PYTHON_VERSION: ${{ matrix.python-version}}
           KALDIFEAT_TORCH_VERSION: ${{ matrix.torch }}
-          # KALDIFEAT_CONDA_TOKEN: ${{ secrets.KALDIFEAT_CONDA_TOKEN}}
+          KALDIFEAT_CONDA_TOKEN: ${{ secrets.KALDIFEAT_CONDA_TOKEN}}
           KALDIFEAT_IS_GITHUB_ACTIONS: 1
           KALDIFEAT_IS_FOR_CONDA: 1
         run: |
@@ -102,6 +102,7 @@ jobs:
           ./scripts/build_conda_cpu.sh
 
       - name: Display generated files
+        shell: bash -l {0}
         run: |
           ls -lh /c/Miniconda/envs/kaldifeat/conda-bld
           ls -lh /c/Miniconda/envs/kaldifeat/conda-bld/*/*
