@@ -15,6 +15,10 @@ set(kaldifeat_srcs
 add_library(kaldifeat_core ${kaldifeat_srcs})
 target_link_libraries(kaldifeat_core PUBLIC ${TORCH_LIBRARIES})
 
+if(ANDROID)
+  target_link_libraries(kaldifeat_core PUBLIC log libc++_shared.so android)
+endif()
+
 target_compile_definitions(kaldifeat_core PUBLIC KALDIFEAT_TORCH_VERSION_MAJOR=${KALDIFEAT_TORCH_VERSION_MAJOR})
 target_compile_definitions(kaldifeat_core PUBLIC KALDIFEAT_TORCH_VERSION_MINOR=${KALDIFEAT_TORCH_VERSION_MINOR})
 

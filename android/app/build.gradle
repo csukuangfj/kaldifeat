@@ -1,0 +1,146 @@
+plugins {
+    id 'com.android.library'
+}
+
+apply plugin: 'maven-publish'
+
+android {
+    lintOptions {
+        abortOnError false
+    }
+
+    configurations {
+        extractForNativeBuild
+    }
+
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        externalNativeBuild {
+            cmake {
+                arguments "-Dkaldifeat_BUILD_TESTS=OFF"
+            }
+        }
+
+        ndkVersion '21.1.6352462'
+        ndk {
+            abiFilters ABI_FILTERS.split(",")
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "../../CMakeLists.txt"
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation 'org.pytorch:pytorch_android:1.11'
+    extractForNativeBuild 'org.pytorch:pytorch_android:1.11'
+}
+
+task extractAARForNativeBuild {
+    doLast {
+        configurations.extractForNativeBuild.files.each {
+            def file = it.absoluteFile
+            copy {
+                from zipTree(file)
+                into "$buildDir/$file.name"
+                include "headers/**"
+                include "jni/**"
+            }
+        }
+    }
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name.contains('externalNativeBuild')) {
+        task.dependsOn(extractAARForNativeBuild)
+    }
+}
+
+def getHeadersDir() {
+  def abi = ABI_FILTERS.split(",")[0]
+  return ".cxx/cmake/release/$abi/include"
+}
+
+afterEvaluate {
+
+  android.libraryVariants.all { variant ->
+    variant.outputs.each { output ->
+      File f = output.outputFile
+      if (f.name.endsWith(".aar")) {
+        output.assemble.finalizedBy addFolderToAarTask(
+            "addHeadersToAar" + variant.name,
+            f.path,
+            getHeadersDir(),
+            "headers")
+      }
+    }
+  }
+
+  publishing {
+        publications {
+            release(MavenPublication) {
+                groupId 'com.github.pkufool'
+                artifactId 'kaldifeat'
+                version = KALDIFEAT_VERSION
+                artifact("$buildDir/outputs/aar/app-release.aar")
+            }
+        }
+    }
+}
+
+
+tasks.whenTaskAdded { task ->
+  if (task.name.startsWith("bundle") && task.name.endsWith("Aar")) {
+    doLast {
+      addFolderToAar("addHeadersTo" + task.name, task.archivePath, getHeadersDir(), 'headers')
+    }
+  }
+}
+
+def addFolderToAarTask(taskName, aarPath, folderPath, folderPathInAar) {
+  return tasks.register(taskName) {
+    doLast {
+      addFolderToAar(taskName, aarPath, folderPath, folderPathInAar)
+    }
+  }
+}
+
+def addFolderToAar(taskName, aarPath, folderPath, folderPathInAar) {
+    def tmpDir = file("${buildDir}/${taskName}")
+    tmpDir.mkdir()
+    def tmpDirFolder = file("${tmpDir.path}/${folderPathInAar}")
+    tmpDirFolder.mkdir()
+    copy {
+      from zipTree(aarPath)
+      into tmpDir
+    }
+    copy {
+      from fileTree(folderPath)
+      into tmpDirFolder
+    }
+    ant.zip(destfile: aarPath) {
+      fileset(dir: tmpDir.path)
+    }
+    delete tmpDir
+}

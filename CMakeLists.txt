@@ -7,7 +7,7 @@ project(kaldifeat)
 # remember to change the version in
 # scripts/conda/kaldifeat/meta.yaml
 # scripts/conda-cpu/kaldifeat/meta.yaml
-set(kaldifeat_VERSION "1.18")
+set(kaldifeat_VERSION "1.19")
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
@@ -52,7 +52,35 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
   include(pybind11)
 endif()
 
-include(torch)
+if(ANDROID)
+  set(build_DIR ${CMAKE_SOURCE_DIR}/android/app/build)
+  # Pytorch
+  file(GLOB PYTORCH_INCLUDE_DIRS "${build_DIR}/pytorch_android*.aar/headers")
+  file(GLOB PYTORCH_LINK_DIRS "${build_DIR}/pytorch_android*.aar/jni/${ANDROID_ABI}")
+
+  find_library(PYTORCH_LIBRARIES pytorch_jni
+    PATHS ${PYTORCH_LINK_DIRS}
+    NO_CMAKE_FIND_ROOT_PATH
+  )
+
+  find_library(FBJNI_LIBRARIES fbjni
+    PATHS ${PYTORCH_LINK_DIRS}
+    NO_CMAKE_FIND_ROOT_PATH
+  )
+
+  list(APPEND TORCH_LIBRARIES ${PYTORCH_LIBRARIES})
+  list(APPEND TORCH_LIBRARIES ${FBJNI_LIBRARIES})
+
+  include_directories(
+    ${PYTORCH_INCLUDE_DIRS}
+    ${PYTORCH_INCLUDE_DIRS}/torch/csrc/api/include
+  )
+  # You SHOULD change this according to your pytorch version
+  set(KALDIFEAT_TORCH_VERSION_MAJOR 1)
+  set(KALDIFEAT_TORCH_VERSION_MINOR 11)
+else()
+  include(torch)
+endif()
 
 if(kaldifeat_BUILD_TESTS)
   include(googletest)
