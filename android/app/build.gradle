@@ -72,7 +72,8 @@ task extractAARForNativeBuild {
 }
 
 tasks.whenTaskAdded { task ->
-    if (task.name.contains('externalNativeBuild')) {
+    if (task.name.equals('externalNativeBuildDebug') ||
+        task.name.equals('externalNativeBuildRelease')) {
         task.dependsOn(extractAARForNativeBuild)
     }
 }
@@ -83,7 +84,6 @@ def getHeadersDir() {
 }
 
 afterEvaluate {
-
   android.libraryVariants.all { variant ->
     variant.outputs.each { output ->
       File f = output.outputFile
@@ -100,10 +100,10 @@ afterEvaluate {
   publishing {
         publications {
             release(MavenPublication) {
+                from components.release
                 groupId 'com.github.pkufool'
                 artifactId 'kaldifeat'
                 version = KALDIFEAT_VERSION
-                artifact("$buildDir/outputs/aar/app-release.aar")
             }
         }
     }
