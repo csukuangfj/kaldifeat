@@ -20,9 +20,6 @@ name: build_conda_macos_cpu
 
 on:
   push:
-    branches:
-      - master
-      - conda
     tags:
       - '*'
 

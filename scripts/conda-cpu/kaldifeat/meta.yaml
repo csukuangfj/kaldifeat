@@ -19,10 +19,9 @@ requirements:
 
   host:
     - anaconda-client
-    - cmake=3.18
+    - cmake
     - python
     - pytorch={{ environ.get('KALDIFEAT_TORCH_VERSION') }}
-    - gcc_linux-64=7 # [linux]
     - cpuonly
 
   run:

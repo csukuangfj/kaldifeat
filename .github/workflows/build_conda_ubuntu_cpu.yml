@@ -20,6 +20,9 @@ name: build_conda_ubuntu_cpu
 
 on:
   push:
+    branches:
+      - master
+      - conda
     tags:
       - '*'
 
@@ -41,7 +44,7 @@ jobs:
         run: |
           # outputting for debugging purposes
           python scripts/github_actions/generate_build_matrix.py
-          MATRIX=$(python scripts/github_actions/generate_build_matrix.py)
+          MATRIX=$(python scripts/github_actions/generate_build_matrix.py --test-only-latest-torch)
           echo "::set-output name=matrix::${MATRIX}"
 
   build_conda_ubuntu_cpu:
