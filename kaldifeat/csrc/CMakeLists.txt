@@ -18,6 +18,16 @@ target_link_libraries(kaldifeat_core PUBLIC ${TORCH_LIBRARIES})
 target_compile_definitions(kaldifeat_core PUBLIC KALDIFEAT_TORCH_VERSION_MAJOR=${KALDIFEAT_TORCH_VERSION_MAJOR})
 target_compile_definitions(kaldifeat_core PUBLIC KALDIFEAT_TORCH_VERSION_MINOR=${KALDIFEAT_TORCH_VERSION_MINOR})
 
+if(APPLE)
+  execute_process(
+    COMMAND "${PYTHON_EXECUTABLE}" -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    OUTPUT_VARIABLE PYTHON_SITE_PACKAGE_DIR
+  )
+  message(STATUS "PYTHON_SITE_PACKAGE_DIR: ${PYTHON_SITE_PACKAGE_DIR}")
+  target_link_libraries(kaldifeat_core PUBLIC "-L ${PYTHON_SITE_PACKAGE_DIR}/../..")
+endif()
+
 add_executable(test_kaldifeat test_kaldifeat.cc)
 target_link_libraries(test_kaldifeat PRIVATE kaldifeat_core)
 

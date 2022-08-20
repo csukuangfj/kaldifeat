@@ -16,7 +16,7 @@
 
 # refer to https://github.com/actions/starter-workflows/pull/47/files
 
-name: build_conda_ubuntu_cuda
+name: build_conda_windows_cpu
 
 on:
   push:
@@ -40,13 +40,13 @@ jobs:
         id: set-matrix
         run: |
           # outputting for debugging purposes
-          python scripts/github_actions/generate_build_matrix.py --enable-cuda
-          MATRIX=$(python scripts/github_actions/generate_build_matrix.py --enable-cuda)
+          python scripts/github_actions/generate_build_matrix.py
+          MATRIX=$(python scripts/github_actions/generate_build_matrix.py)
           echo "::set-output name=matrix::${MATRIX}"
 
-  build_conda_ubuntu_cuda:
+  build_conda_windows_cpu:
     needs: generate_build_matrix
-    runs-on: ubuntu-18.04
+    runs-on: windows-2019
     strategy:
       fail-fast: false
       matrix:
@@ -58,60 +58,38 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install CUDA Toolkit ${{ matrix.cuda }}
-        shell: bash -l {0}
-        env:
-          cuda: ${{ matrix.cuda }}
-        run: |
-          source ./scripts/github_actions/install_cuda.sh
-          echo "CUDA_HOME=${CUDA_HOME}" >> $GITHUB_ENV
-          echo "${CUDA_HOME}/bin" >> $GITHUB_PATH
-          echo "LD_LIBRARY_PATH=${CUDA_HOME}/lib:${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}" >> $GITHUB_ENV
-
-      - name: Display NVCC version
-        shell: bash -l {0}
-        run: |
-          which nvcc
-          nvcc --version
-
       - uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
           activate-environment: kaldifeat
 
-      - name: Display Python version
-        shell: bash -l {0}
-        run: |
-          python3 -c "import sys; print(sys.version)"
-          which python3
-
       - name: Install conda dependencies
         shell: bash -l {0}
         run: |
           conda install -y -q anaconda-client
           conda install -y -q conda-build
-          conda install -y -q -c pytorch -c conda-forge pytorch=${{ matrix.torch }} cudatoolkit=${{ matrix.cuda }}
+          conda install -y -q -c pytorch pytorch=${{ matrix.torch }} cpuonly
+
+      - name: Display Python version
+        shell: bash -l {0}
+        run: |
+          python -c "import sys; print(sys.version)"
+          which python
 
       - name: Display conda info
         shell: bash -l {0}
         run: |
-          which conda
           conda env list
           conda info
-          nproc
-
-      - name: Download cudnn 8.0
-        shell: bash -l {0}
-        env:
-          cuda: ${{ matrix.cuda }}
-        run: |
-          ./scripts/github_actions/install_cudnn.sh
+          which conda
+          python --version
+          which python
+          python -m torch.utils.collect_env
 
       - name: Build kaldifeat
         shell: bash -l {0}
         env:
-          KALDIFEAT_CUDA_VERSION: ${{ matrix.cuda }}
           KALDIFEAT_PYTHON_VERSION: ${{ matrix.python-version}}
           KALDIFEAT_TORCH_VERSION: ${{ matrix.torch }}
           KALDIFEAT_CONDA_TOKEN: ${{ secrets.KALDIFEAT_CONDA_TOKEN}}
@@ -119,14 +97,17 @@ jobs:
           KALDIFEAT_IS_FOR_CONDA: 1
         run: |
           export KALDIFEAT_BUILD_TYPE=$KALDIFEAT_BUILD_TYPE
-          ./scripts/build_conda.sh
+          ./scripts/build_conda_cpu.sh
 
       - name: Display generated files
+        shell: bash -l {0}
         run: |
-          ls -lh /usr/share/miniconda/envs/kaldifeat/conda-bld/linux-64
+          ls -lh /c/Miniconda/envs/kaldifeat/conda-bld
+          ls -lh /c/Miniconda/envs/kaldifeat/conda-bld/*/*
+          ls -lh /c/Miniconda/envs/kaldifeat/conda-bld/win-64/*
 
       - name: Upload generated files
         uses: actions/upload-artifact@v2
         with:
-          name: cuda-${{ matrix.cuda }}-torch-${{ matrix.torch }}-python-${{ matrix.python-version }}-ubuntu-18.04
-          path: /usr/share/miniconda/envs/kaldifeat/conda-bld/linux-64/*.tar.bz2
+          name: cpu-torch-${{ matrix.torch }}-python-${{ matrix.python-version }}-windows-2019
+          path: c:/Miniconda/envs/kaldifeat/conda-bld/win-64/*.tar.bz2

@@ -76,8 +76,6 @@ include_directories(${CMAKE_SOURCE_DIR})
 
 message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 
-include(GNUInstallDirs)
-
 message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 
 add_subdirectory(kaldifeat)

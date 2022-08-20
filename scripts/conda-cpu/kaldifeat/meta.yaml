@@ -8,13 +8,9 @@ source:
 build:
   number: 0
   string: cpu_py{{ environ.get('KALDIFEAT_PYTHON_VERSION') }}_torch{{ environ.get('KALDIFEAT_TORCH_VERSION') }}
-  script_env:
-    - KALDIFEAT_IS_GITHUB_ACTIONS
-    - KALDIFEAT_TORCH_VERSION
-    - KALDIFEAT_PYTHON_VERSION
-    - KALDIFEAT_BUILD_TYPE
-    - KALDIFEAT_BUILD_VERSION
-    - KALDIFEAT_IS_FOR_CONDA
+  script: conda install -y -q -c pytorch pytorch={{ environ.get('KALDIFEAT_TORCH_VERSION') }} cpuonly & {{ PYTHON }} setup.py install --single-version-externally-managed --record=record.txt
+  features:
+    - cpuonly # [not osx]
 
 requirements:
   build:
@@ -22,17 +18,15 @@ requirements:
     - {{ compiler('cxx') }} # [win]
 
   host:
-    - cmake=3.18
+    - anaconda-client
+    - cmake
     - python
     - pytorch={{ environ.get('KALDIFEAT_TORCH_VERSION') }}
-    - gcc_linux-64=7 # [linux]
     - cpuonly
-    - numpy
 
   run:
     - python
     - pytorch={{ environ.get('KALDIFEAT_TORCH_VERSION') }}
-    - numpy
 
 about:
   home: https://github.com/csukuangfj/kaldifeat

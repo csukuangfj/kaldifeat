@@ -43,7 +43,7 @@ cd $kaldifeat_dir
 export KALDIFEAT_ROOT_DIR=$kaldifeat_dir
 echo "KALDIFEAT_ROOT_DIR: $KALDIFEAT_ROOT_DIR"
 
-KALDIFEAT_PYTHON_VERSION=$(python3 -c "import sys; print(sys.version[:3])")
+KALDIFEAT_PYTHON_VERSION=$(python -c "import sys; print('.'.join(sys.version.split('.')[:2]))")
 
 if [ -z $KALDIFEAT_TORCH_VERSION ]; then
   echo "env var KALDIFEAT_TORCH_VERSION is not set, defaults to 1.7.1"
@@ -75,7 +75,7 @@ fi
 
 if [ -z $KALDIFEAT_CONDA_TOKEN ]; then
   echo "Auto upload to anaconda.org is disabled since KALDIFEAT_CONDA_TOKEN is not set"
-  conda build --no-test --no-anaconda-upload -c pytorch -c conda-forge ./scripts/conda-cpu/kaldifeat
+  conda build --no-test --no-anaconda-upload -c pytorch ./scripts/conda-cpu/kaldifeat
 else
-  conda build --no-test -c pytorch -c conda-forge --token $KALDIFEAT_CONDA_TOKEN ./scripts/conda-cpu/kaldifeat
+  conda build --no-test -c pytorch --token $KALDIFEAT_CONDA_TOKEN ./scripts/conda-cpu/kaldifeat
 fi
