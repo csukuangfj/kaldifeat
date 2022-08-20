@@ -41,7 +41,7 @@ jobs:
         run: |
           # outputting for debugging purposes
           python scripts/github_actions/generate_build_matrix.py
-          MATRIX=$(python scripts/github_actions/generate_build_matrix.py --test-only-latest-torch)
+          MATRIX=$(python scripts/github_actions/generate_build_matrix.py)
           echo "::set-output name=matrix::${MATRIX}"
 
   build_conda_windows_cpu:
