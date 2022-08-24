@@ -32,6 +32,6 @@ echo "gcc version: $($CC --version)"
 echo "nvcc version: $(nvcc --version)"
 
 export KALDIFEAT_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=${KALDIFEAT_BUILD_TYPE}"
-export KALDIFEAT_MAKE_ARGS="-j"
+export KALDIFEAT_MAKE_ARGS="-j2"
 
 python3 setup.py install --single-version-externally-managed --record=record.txt

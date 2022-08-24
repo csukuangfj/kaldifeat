@@ -126,7 +126,7 @@ def generate_build_matrix(enable_cuda, for_windows, test_only_latest_torch):
         },
     }
     if test_only_latest_torch:
-        latest = "1.12.0"
+        latest = "1.12.1"
         matrix = {latest: matrix[latest]}
 
     ans = []
