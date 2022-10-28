@@ -106,6 +106,8 @@ class BuildExtension(build_ext):
                 print(
                     'export KALDIFEAT_MAKE_ARGS="-j"; python setup.py install'
                 )
+                make_args = " -j4 "
+                print("Setting make_args to '-j4'")
 
             build_cmd = f"""
                 cd {self.build_temp}
