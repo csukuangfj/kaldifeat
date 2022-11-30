@@ -1,2 +1,4 @@
 add_subdirectory(csrc)
-add_subdirectory(python)
+if(kaldifeat_BUILD_PYMODULE)
+  add_subdirectory(python)
+endif()

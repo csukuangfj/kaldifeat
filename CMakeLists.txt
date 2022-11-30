@@ -42,13 +42,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 message(STATUS "C++ Standard version: ${CMAKE_CXX_STANDARD}")
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 
 option(kaldifeat_BUILD_TESTS "Whether to build tests or not" ON)
+option(kaldifeat_BUILD_PYMODULE "Whether to build python module or not" ON)
 
-if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+if(kaldifeat_BUILD_PYMODULE)
   include(pybind11)
 endif()
 
@@ -72,7 +73,7 @@ if(WIN32)
   endforeach()
 endif()
 
-include_directories(${CMAKE_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 
