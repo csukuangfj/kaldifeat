@@ -7,7 +7,7 @@ project(kaldifeat)
 # remember to change the version in
 # scripts/conda/kaldifeat/meta.yaml
 # scripts/conda-cpu/kaldifeat/meta.yaml
-set(kaldifeat_VERSION "1.20")
+set(kaldifeat_VERSION "1.21")
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
