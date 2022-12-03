@@ -70,26 +70,7 @@ static void PybindFrameExtractionOptions(py::module &m) {
       .def_readwrite("allow_upsample", &PyClass::allow_upsample)
 #endif
       .def("__str__",
-           [](const PyClass &self) -> std::string {
-             std::ostringstream os;
-             os << "FrameExtractionOptions(";
-             os << "samp_freq=" << self.samp_freq << ", ";
-             os << "frame_shift_ms=" << self.frame_shift_ms << ", ";
-             os << "frame_length_ms=" << self.frame_length_ms << ", ";
-             os << "dither=" << self.dither << ", ";
-             os << "preemph_coeff=" << self.preemph_coeff << ", ";
-             os << "remove_dc_offset="
-                << (self.remove_dc_offset ? "True" : "False") << ", ";
-             os << "window_type=" << '"' << self.window_type << '"' << ", ";
-             os << "round_to_power_of_two="
-                << (self.round_to_power_of_two ? "True" : "False") << ", ";
-             os << "blackman_coeff=" << self.blackman_coeff << ", ";
-             os << "snip_edges=" << (self.snip_edges ? "True" : "False")
-                << ", ";
-             os << "max_feature_vectors=" << self.max_feature_vectors << ")";
-
-             return os.str();
-           })
+           [](const PyClass &self) -> std::string { return self.ToString(); })
       .def(py::pickle(
           [](const PyClass &self) -> py::dict { return AsDict(self); },
           [](py::dict dict) -> PyClass {
