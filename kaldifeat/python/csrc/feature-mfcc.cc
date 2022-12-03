@@ -16,6 +16,35 @@ void PybindMfccOptions(py::module &m) {
   using PyClass = MfccOptions;
   py::class_<PyClass>(m, "MfccOptions")
       .def(py::init<>())
+      .def(py::init([](const MelBanksOptions &mel_opts,
+                       const FrameExtractionOptions &frame_opts =
+                           FrameExtractionOptions(),
+                       int32_t num_ceps = 13, bool use_energy = true,
+                       float energy_floor = 0.0, bool raw_energy = true,
+                       float cepstral_lifter = 22.0, bool htk_compat = false,
+                       py::object device =
+                           py::str("cpu")) -> std::unique_ptr<MfccOptions> {
+             auto opts = std::make_unique<MfccOptions>();
+             opts->frame_opts = frame_opts;
+             opts->mel_opts = mel_opts;
+             opts->num_ceps = num_ceps;
+             opts->use_energy = use_energy;
+             opts->energy_floor = energy_floor;
+             opts->raw_energy = raw_energy;
+             opts->cepstral_lifter = cepstral_lifter;
+             opts->htk_compat = htk_compat;
+
+             std::string s = static_cast<py::str>(device);
+             opts->device = torch::Device(s);
+
+             return opts;
+           }),
+           py::arg("mel_opts"),
+           py::arg("frame_opts") = FrameExtractionOptions(),
+           py::arg("num_ceps") = 13, py::arg("use_energy") = true,
+           py::arg("energy_floor") = 0.0f, py::arg("raw_energy") = true,
+           py::arg("cepstral_lifter") = 22.0, py::arg("htk_compat") = false,
+           py::arg("device") = py::str("cpu"))
       .def_readwrite("frame_opts", &PyClass::frame_opts)
       .def_readwrite("mel_opts", &PyClass::mel_opts)
       .def_readwrite("num_ceps", &PyClass::num_ceps)

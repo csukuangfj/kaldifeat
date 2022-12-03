@@ -16,14 +16,14 @@ static void PybindFbankOptions(py::module &m) {
   using PyClass = FbankOptions;
   py::class_<PyClass>(m, "FbankOptions")
       .def(py::init<>())
-      .def(py::init([](const FrameExtractionOptions &frame_opts =
+      .def(py::init([](const MelBanksOptions &mel_opts,
+                       const FrameExtractionOptions &frame_opts =
                            FrameExtractionOptions(),
                        bool use_energy = false, float energy_floor = 0.0f,
                        bool raw_energy = true, bool htk_compat = false,
                        bool use_log_fbank = true, bool use_power = true,
-                       py::object device = py::str("cpu"),
-                       const MelBanksOptions &mel_opts)
-                        -> std::unique_ptr<FbankOptions> {
+                       py::object device =
+                           py::str("cpu")) -> std::unique_ptr<FbankOptions> {
              auto opts = std::make_unique<FbankOptions>();
              opts->frame_opts = frame_opts;
              opts->mel_opts = mel_opts;
@@ -39,11 +39,12 @@ static void PybindFbankOptions(py::module &m) {
 
              return opts;
            }),
+           py::arg("mel_opts"),
            py::arg("frame_opts") = FrameExtractionOptions(),
            py::arg("use_energy") = false, py::arg("energy_floor") = 0.0f,
            py::arg("raw_energy") = true, py::arg("htk_compat") = false,
            py::arg("use_log_fbank") = true, py::arg("use_power") = true,
-           py::arg("device") = py::str("cpu"), py::arg("mel_opts"))
+           py::arg("device") = py::str("cpu"))
       .def_readwrite("frame_opts", &PyClass::frame_opts)
       .def_readwrite("mel_opts", &PyClass::mel_opts)
       .def_readwrite("use_energy", &PyClass::use_energy)
