@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kaldifeat.FbankOptions &mdash; kaldifeat 1.21 documentation</title>
+  <title>kaldifeat.FbankOptions &mdash; kaldifeat 1.22 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
             <a href="../index.html" class="icon icon-home"> kaldifeat
           </a>
               <div class="version">
-                1.21
+                1.22
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -250,6 +250,7 @@ demonstrate the usage of <a class="reference external" href="https://github.com/
 
 <span class="k">def</span> <span class="nf">test_default</span><span class="p">():</span>
     <span class="n">opts</span> <span class="o">=</span> <span class="n">kaldifeat</span><span class="o">.</span><span class="n">FbankOptions</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">samp_freq</span> <span class="o">==</span> <span class="mi">16000</span>
     <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">frame_shift_ms</span> <span class="o">==</span> <span class="mf">10.0</span>
     <span class="k">assert</span> <span class="n">opts</span><span class="o">.</span><span class="n">frame_opts</span><span class="o">.</span><span class="n">frame_length_ms</span> <span class="o">==</span> <span class="mf">25.0</span>
