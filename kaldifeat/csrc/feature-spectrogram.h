@@ -36,13 +36,12 @@ struct SpectrogramOptions {
 
   std::string ToString() const {
     std::ostringstream os;
-    os << "frame_opts: \n";
-    os << frame_opts << "\n";
-
-    os << "energy_floor: " << energy_floor << "\n";
-    os << "raw_energy: " << raw_energy << "\n";
-    // os << "return_raw_fft: " << return_raw_fft << "\n";
-    os << "device: " << device << "\n";
+    os << "SpectrogramOptions(";
+    os << "frame_opts=" << frame_opts.ToString() << ", ";
+    os << "energy_floor=" << energy_floor << ", ";
+    os << "raw_energy=" << (raw_energy ? "True" : "False") << ", ";
+    os << "return_raw_fft=" << (return_raw_fft ? "True" : "False") << ", ";
+    os << "device=\"" << device << "\")";
     return os.str();
   }
 };
