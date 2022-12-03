@@ -16,6 +16,35 @@ static void PybindFbankOptions(py::module &m) {
   using PyClass = FbankOptions;
   py::class_<PyClass>(m, "FbankOptions")
       .def(py::init<>())
+      .def(py::init([](const MelBanksOptions &mel_opts,
+                       const FrameExtractionOptions &frame_opts =
+                           FrameExtractionOptions(),
+                       bool use_energy = false, float energy_floor = 0.0f,
+                       bool raw_energy = true, bool htk_compat = false,
+                       bool use_log_fbank = true, bool use_power = true,
+                       py::object device =
+                           py::str("cpu")) -> std::unique_ptr<FbankOptions> {
+             auto opts = std::make_unique<FbankOptions>();
+             opts->frame_opts = frame_opts;
+             opts->mel_opts = mel_opts;
+             opts->use_energy = use_energy;
+             opts->energy_floor = energy_floor;
+             opts->raw_energy = raw_energy;
+             opts->htk_compat = htk_compat;
+             opts->use_log_fbank = use_log_fbank;
+             opts->use_power = use_power;
+
+             std::string s = static_cast<py::str>(device);
+             opts->device = torch::Device(s);
+
+             return opts;
+           }),
+           py::arg("mel_opts"),
+           py::arg("frame_opts") = FrameExtractionOptions(),
+           py::arg("use_energy") = false, py::arg("energy_floor") = 0.0f,
+           py::arg("raw_energy") = true, py::arg("htk_compat") = false,
+           py::arg("use_log_fbank") = true, py::arg("use_power") = true,
+           py::arg("device") = py::str("cpu"))
       .def_readwrite("frame_opts", &PyClass::frame_opts)
       .def_readwrite("mel_opts", &PyClass::mel_opts)
       .def_readwrite("use_energy", &PyClass::use_energy)

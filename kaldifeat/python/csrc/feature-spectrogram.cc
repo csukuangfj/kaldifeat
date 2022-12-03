@@ -15,7 +15,27 @@ namespace kaldifeat {
 static void PybindSpectrogramOptions(py::module &m) {
   using PyClass = SpectrogramOptions;
   py::class_<PyClass>(m, "SpectrogramOptions")
-      .def(py::init<>())
+      .def(py::init([](const FrameExtractionOptions &frame_opts =
+                           FrameExtractionOptions(),
+                       float energy_floor = 0.0, bool raw_energy = true,
+                       bool return_raw_fft = false,
+                       py::object device = py::str(
+                           "cpu")) -> std::unique_ptr<SpectrogramOptions> {
+             auto opts = std::make_unique<SpectrogramOptions>();
+             opts->frame_opts = frame_opts;
+             opts->energy_floor = energy_floor;
+             opts->raw_energy = raw_energy;
+             opts->return_raw_fft = return_raw_fft;
+
+             std::string s = static_cast<py::str>(device);
+             opts->device = torch::Device(s);
+
+             return opts;
+           }),
+           py::arg("frame_opts") = FrameExtractionOptions(),
+           py::arg("energy_floor") = 0.0, py::arg("raw_energy") = true,
+           py::arg("return_raw_fft") = false,
+           py::arg("device") = py::str("cpu"))
       .def_readwrite("frame_opts", &PyClass::frame_opts)
       .def_readwrite("energy_floor", &PyClass::energy_floor)
       .def_readwrite("raw_energy", &PyClass::raw_energy)

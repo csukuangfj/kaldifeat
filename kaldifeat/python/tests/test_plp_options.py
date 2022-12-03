@@ -12,6 +12,7 @@ import kaldifeat
 
 def test_default():
     opts = kaldifeat.PlpOptions()
+    print(opts)
     assert opts.frame_opts.samp_freq == 16000
     assert opts.frame_opts.frame_shift_ms == 10.0
     assert opts.frame_opts.frame_length_ms == 25.0

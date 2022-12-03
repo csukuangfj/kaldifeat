@@ -12,6 +12,7 @@ import kaldifeat
 
 def test_default():
     opts = kaldifeat.SpectrogramOptions()
+    print(opts)
 
     assert opts.frame_opts.samp_freq == 16000
     assert opts.frame_opts.frame_shift_ms == 10.0
@@ -30,7 +31,8 @@ def test_default():
 
 
 def test_set_get():
-    opts = kaldifeat.SpectrogramOptions()
+    opts = kaldifeat.SpectrogramOptions(energy_floor=10)
+    assert opts.energy_floor == 10
 
     opts.energy_floor = 1
     assert opts.energy_floor == 1
@@ -138,6 +140,30 @@ def test_pickle():
     assert str(opts) == str(opts2)
 
 
+def test_device():
+    opts = kaldifeat.SpectrogramOptions(device="cpu")
+    assert opts.device == torch.device("cpu")
+
+    opts = kaldifeat.SpectrogramOptions(device="cuda")
+    assert opts.device == torch.device("cuda")
+
+    opts = kaldifeat.SpectrogramOptions(device="cuda:1")
+    assert opts.device == torch.device("cuda:1")
+    print(opts)
+
+    opts = kaldifeat.SpectrogramOptions(device=torch.device("cpu"))
+    assert opts.device == torch.device("cpu")
+
+    opts = kaldifeat.SpectrogramOptions(device=torch.device("cuda"))
+    assert opts.device == torch.device("cuda")
+
+    opts = kaldifeat.SpectrogramOptions(device=torch.device("cuda:3"))
+    assert opts.device == torch.device("cuda:3")
+
+    opts = kaldifeat.SpectrogramOptions(device=torch.device("cuda", 2))
+    assert opts.device == torch.device("cuda", 2)
+
+
 def main():
     test_default()
     test_set_get()
@@ -146,6 +172,7 @@ def main():
     test_from_dict_partial()
     test_from_dict_full_and_as_dict()
     test_pickle()
+    test_device()
 
 
 if __name__ == "__main__":

@@ -9,6 +9,7 @@ import kaldifeat
 
 def test_default():
     opts = kaldifeat.FrameExtractionOptions()
+    print(opts)
     assert opts.samp_freq == 16000
     assert opts.frame_shift_ms == 10.0
     assert opts.frame_length_ms == 25.0
@@ -22,7 +23,9 @@ def test_default():
 
 
 def test_set_get():
-    opts = kaldifeat.FrameExtractionOptions()
+    opts = kaldifeat.FrameExtractionOptions(samp_freq=22150)
+    assert opts.samp_freq == 22150
+
     opts.samp_freq = 44100
     assert opts.samp_freq == 44100
 

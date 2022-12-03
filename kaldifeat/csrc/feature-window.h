@@ -62,21 +62,20 @@ struct FrameExtractionOptions {
   }
   std::string ToString() const {
     std::ostringstream os;
-#define KALDIFEAT_PRINT(x) os << #x << ": " << x << "\n"
-    KALDIFEAT_PRINT(samp_freq);
-    KALDIFEAT_PRINT(frame_shift_ms);
-    KALDIFEAT_PRINT(frame_length_ms);
-    KALDIFEAT_PRINT(dither);
-    KALDIFEAT_PRINT(preemph_coeff);
-    KALDIFEAT_PRINT(remove_dc_offset);
-    KALDIFEAT_PRINT(window_type);
-    KALDIFEAT_PRINT(round_to_power_of_two);
-    KALDIFEAT_PRINT(blackman_coeff);
-    KALDIFEAT_PRINT(snip_edges);
-    // KALDIFEAT_PRINT(allow_downsample);
-    // KALDIFEAT_PRINT(allow_upsample);
-    KALDIFEAT_PRINT(max_feature_vectors);
-#undef KALDIFEAT_PRINT
+    os << "FrameExtractionOptions(";
+    os << "samp_freq=" << samp_freq << ", ";
+    os << "frame_shift_ms=" << frame_shift_ms << ", ";
+    os << "frame_length_ms=" << frame_length_ms << ", ";
+    os << "dither=" << dither << ", ";
+    os << "preemph_coeff=" << preemph_coeff << ", ";
+    os << "remove_dc_offset=" << (remove_dc_offset ? "True" : "False") << ", ";
+    os << "window_type=" << '"' << window_type << '"' << ", ";
+    os << "round_to_power_of_two=" << (round_to_power_of_two ? "True" : "False")
+       << ", ";
+    os << "blackman_coeff=" << blackman_coeff << ", ";
+    os << "snip_edges=" << (snip_edges ? "True" : "False") << ", ";
+    os << "max_feature_vectors=" << max_feature_vectors << ")";
+
     return os.str();
   }
 };

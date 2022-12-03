@@ -44,20 +44,18 @@ struct FbankOptions {
 
   std::string ToString() const {
     std::ostringstream os;
-    os << "frame_opts: \n";
-    os << frame_opts << "\n";
-    os << "\n";
+    os << "FbankOptions(";
 
-    os << "mel_opts: \n";
-    os << mel_opts << "\n";
+    os << "frame_opts=" << frame_opts.ToString() << ", ";
+    os << "mel_opts=" << mel_opts.ToString() << ", ";
 
-    os << "use_energy: " << use_energy << "\n";
-    os << "energy_floor: " << energy_floor << "\n";
-    os << "raw_energy: " << raw_energy << "\n";
-    os << "htk_compat: " << htk_compat << "\n";
-    os << "use_log_fbank: " << use_log_fbank << "\n";
-    os << "use_power: " << use_power << "\n";
-    os << "device: " << device << "\n";
+    os << "use_energy=" << (use_energy ? "True" : "False") << ", ";
+    os << "energy_floor=" << energy_floor << ", ";
+    os << "raw_energy=" << (raw_energy ? "True" : "False") << ", ";
+    os << "htk_compat=" << (htk_compat ? "True" : "False") << ", ";
+    os << "use_log_fbank=" << (use_log_fbank ? "True" : "False") << ", ";
+    os << "use_power=" << (use_power ? "True" : "False") << ", ";
+    os << "device=\"" << device << "\")";
     return os.str();
   }
 };
