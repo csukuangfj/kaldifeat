@@ -36,13 +36,14 @@ struct MelBanksOptions {
 
   std::string ToString() const {
     std::ostringstream os;
-    os << "num_bins: " << num_bins << "\n";
-    os << "low_freq: " << low_freq << "\n";
-    os << "high_freq: " << high_freq << "\n";
-    os << "vtln_low: " << vtln_low << "\n";
-    os << "vtln_high: " << vtln_high << "\n";
-    os << "debug_mel: " << debug_mel << "\n";
-    os << "htk_mode: " << htk_mode << "\n";
+    os << "MelBanksOptions(";
+    os << "num_bins=" << num_bins << ", ";
+    os << "low_freq=" << low_freq << ", ";
+    os << "high_freq=" << high_freq << ", ";
+    os << "vtln_low=" << vtln_low << ", ";
+    os << "vtln_high=" << vtln_high << ", ";
+    os << "debug_mel=" << (debug_mel ? "True" : "False") << ", ";
+    os << "htk_mode=" << (htk_mode ? "True" : "False") << ")";
     return os.str();
   }
 };

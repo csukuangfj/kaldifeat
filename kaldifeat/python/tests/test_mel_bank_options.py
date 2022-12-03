@@ -9,6 +9,7 @@ import kaldifeat
 
 def test_default():
     opts = kaldifeat.MelBanksOptions()
+    print(opts)
     assert opts.num_bins == 25
     assert opts.low_freq == 20
     assert opts.high_freq == 0
@@ -19,9 +20,11 @@ def test_default():
 
 
 def test_set_get():
-    opts = kaldifeat.MelBanksOptions()
-    opts.num_bins = 100
+    opts = kaldifeat.MelBanksOptions(num_bins=100)
     assert opts.num_bins == 100
+
+    opts.num_bins = 200
+    assert opts.num_bins == 200
 
     opts.low_freq = 22
     assert opts.low_freq == 22
