@@ -52,7 +52,10 @@ option(kaldifeat_BUILD_PYMODULE "Whether to build python module or not" ON)
 if(kaldifeat_BUILD_PYMODULE)
   include(pybind11)
 endif()
-
+# to prevent cmake from trying to link with system installed mkl since we not directly use it
+# mkl libraries should be linked with pytorch already
+# ref: https://github.com/pytorch/pytorch/blob/master/cmake/public/mkl.cmake
+set(CMAKE_DISABLE_FIND_PACKAGE_MKL TRUE)
 include(torch)
 
 if(kaldifeat_BUILD_TESTS)
