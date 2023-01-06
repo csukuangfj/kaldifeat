@@ -11,6 +11,9 @@
 
 **Documentation**: <https://csukuangfj.github.io/kaldifeat>
 
+**Note**: If you are looking for a version that does not depend on PyTorch,
+please see <https://github.com/csukuangfj/kaldi-native-fbank>
+
 <sub>
 <table>
 <tr>
