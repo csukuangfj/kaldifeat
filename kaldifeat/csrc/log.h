@@ -5,6 +5,7 @@
 #ifndef KALDIFEAT_CSRC_LOG_H_
 #define KALDIFEAT_CSRC_LOG_H_
 
+#include <cstdint>
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
