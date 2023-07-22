@@ -32,7 +32,7 @@ jobs:
 
   build-manylinux-wheels:
     needs: generate_build_matrix
-    name: ${{ matrix.torch }} ${{ matrix.python-version }}
+    name: ${{ matrix.torch }} ${{ matrix.python-version }} cuda${{ matrix.cuda }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
