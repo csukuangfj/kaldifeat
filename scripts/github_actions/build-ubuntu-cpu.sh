@@ -39,6 +39,10 @@ export PATH=$PYTHON_INSTALL_DIR/bin:$PATH
 export LD_LIBRARY_PATH=$PYTHON_INSTALL_DIR/lib:$LD_LIBRARY_PATH
 ls -lh $PYTHON_INSTALL_DIR/lib/
 
+nvcc --version || true
+rm -rf /usr/local/cuda*
+nvcc --version || true
+
 python3 --version
 which python3
 
@@ -63,6 +67,7 @@ cd /var/www
 export CMAKE_CUDA_COMPILER_LAUNCHER=
 export KALDIFEAT_CMAKE_ARGS=" -DPYTHON_EXECUTABLE=$PYTHON_INSTALL_DIR/bin/python3 "
 export KALDIFEAT_MAKE_ARGS=" -j "
+
 
 python3 setup.py bdist_wheel
 
