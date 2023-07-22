@@ -165,7 +165,15 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
             for p in python_versions:
                 if for_windows or for_macos:
                     p = "cp" + "".join(p.split("."))
-                ans.append({"torch": torch, "python-version": p})
+                    ans.append({"torch": torch, "python-version": p})
+                else:
+                    ans.append(
+                        {
+                            "torch": torch,
+                            "python-version": p,
+                            "image": f"pytorch/manylinux-builder:cuda10.2",
+                        }
+                    )
 
     print(json.dumps({"include": ans}))
 

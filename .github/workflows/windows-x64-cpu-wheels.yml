@@ -2,10 +2,9 @@ name: build-wheels-cpu-win64
 
 on:
   push:
-    branches:
-      - wheels
     tags:
       - '*'
+  workflow_dispatch:
 
 concurrency:
   group: build-wheels-cpu-win64-${{ github.ref }}
