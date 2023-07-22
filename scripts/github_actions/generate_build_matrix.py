@@ -163,7 +163,7 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
                     ans.append({"torch": torch, "python-version": p, "cuda": c})
         else:
             for p in python_versions:
-                if for_windows:
+                if for_windows or for_macos:
                     p = "cp" + "".join(p.split("."))
                 ans.append({"torch": torch, "python-version": p})
 
