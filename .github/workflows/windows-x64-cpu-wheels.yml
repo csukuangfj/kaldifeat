@@ -43,6 +43,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: display
+        shell: bash
+        run: |
+          function retry() {
+            $* || (sleep 1 && $*) || (sleep 2 && $*) || (sleep 4 && $*) || (sleep 8 && $*)
+          }
+
+          retry ls -lh
+
       # see https://cibuildwheel.readthedocs.io/en/stable/changelog/
       # for a list of versions
       - name: Build wheels
@@ -56,6 +65,11 @@ jobs:
       - name: Display wheels
         shell: bash
         run: |
+
+          function retry() {
+            $* || (sleep 1 && $*) || (sleep 2 && $*) || (sleep 4 && $*) || (sleep 8 && $*)
+          }
+
           ls -lh ./wheelhouse/
 
           ls -lh ./wheelhouse/*.whl
@@ -76,7 +90,8 @@ jobs:
           git config --global user.email "csukuangfj@gmail.com"
           git config --global user.name "Fangjun Kuang"
 
-          GIT_LFS_SKIP_SMUDGE=1 git clone https://huggingface.co/csukuangfj/kaldifeat huggingface
+          export GIT_LFS_SKIP_SMUDGE=1
+          git clone https://huggingface.co/csukuangfj/kaldifeat huggingface
 
           cd huggingface
           git pull
@@ -85,9 +100,11 @@ jobs:
           git status
           git lfs track "*.whl"
 
-          git add .
+          function retry() {
+            $* || (sleep 1 && $*) || (sleep 2 && $*) || (sleep 4 && $*) || (sleep 8 && $*)
+          }
 
-          git commit -m "upload windows-cpu wheel for torch ${{ matrix.torch }} python ${{ matrix.python-version }}"
-          git push https://csukuangfj:$HF_TOKEN@huggingface.co/csukuangfj/kaldifeat main
+          retry git pull && cp -v ../wheelhouse/*.whl ./windows-cpu && git status && git add . &&  git commit -m "upload windows-cpu wheel for torch ${{ matrix.torch }} python ${{ matrix.python-version }}" && git push https://csukuangfj:$HF_TOKEN@huggingface.co/csukuangfj/kaldifeat main
+
           cd ..
           rm -rf huggingface
