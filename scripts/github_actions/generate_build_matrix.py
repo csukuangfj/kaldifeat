@@ -22,6 +22,13 @@ def get_args():
     )
 
     parser.add_argument(
+        "--for-macos",
+        action="store_true",
+        default=False,
+        help="True for macOS",
+    )
+
+    parser.add_argument(
         "--test-only-latest-torch",
         action="store_true",
         default=False,
@@ -31,7 +38,7 @@ def get_args():
     return parser.parse_args()
 
 
-def generate_build_matrix(enable_cuda, for_windows, test_only_latest_torch):
+def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_torch):
     matrix = {
         # 1.5.x is removed because there are compilation errors.
         #  See
@@ -48,9 +55,7 @@ def generate_build_matrix(enable_cuda, for_windows, test_only_latest_torch):
         #  },
         "1.6.0": {
             "python-version": ["3.6", "3.7", "3.8"],
-            "cuda": ["10.1", "10.2"]
-            if not for_windows
-            else ["10.1.243", "10.2.89"],
+            "cuda": ["10.1", "10.2"] if not for_windows else ["10.1.243", "10.2.89"],
         },
         "1.7.0": {
             "python-version": ["3.6", "3.7", "3.8"],
@@ -78,15 +83,11 @@ def generate_build_matrix(enable_cuda, for_windows, test_only_latest_torch):
         },
         "1.9.0": {
             "python-version": ["3.6", "3.7", "3.8", "3.9"],
-            "cuda": ["10.2", "11.1"]
-            if not for_windows
-            else ["10.2.89", "11.1.1"],
+            "cuda": ["10.2", "11.1"] if not for_windows else ["10.2.89", "11.1.1"],
         },
         "1.9.1": {
             "python-version": ["3.6", "3.7", "3.8", "3.9"],
-            "cuda": ["10.2", "11.1"]
-            if not for_windows
-            else ["10.2.89", "11.1.1"],
+            "cuda": ["10.2", "11.1"] if not for_windows else ["10.2.89", "11.1.1"],
         },
         "1.10.0": {
             "python-version": ["3.6", "3.7", "3.8", "3.9"],
@@ -128,6 +129,10 @@ def generate_build_matrix(enable_cuda, for_windows, test_only_latest_torch):
             "python-version": ["3.7", "3.8", "3.9", "3.10", "3.11"],
             "cuda": ["11.6", "11.7"],  # default 11.7
         },
+        "1.13.1": {
+            "python-version": ["3.7", "3.8", "3.9", "3.10", "3.11"],
+            "cuda": ["11.6", "11.7"],  # default 11.7
+        },
         "2.0.0": {
             "python-version": ["3.8", "3.9", "3.10", "3.11"],
             "cuda": ["11.7", "11.8"],  # default 11.7
@@ -140,6 +145,13 @@ def generate_build_matrix(enable_cuda, for_windows, test_only_latest_torch):
     if test_only_latest_torch:
         latest = "2.0.1"
         matrix = {latest: matrix[latest]}
+
+    if for_windows or for_macos:
+        if "1.13.0" in matrix:
+            matrix["1.13.0"]["python-version"].remove("3.11")
+
+        if "1.13.1" in matrix:
+            matrix["1.13.1"]["python-version"].remove("3.11")
 
     ans = []
     for torch, python_cuda in matrix.items():
@@ -163,6 +175,7 @@ def main():
     generate_build_matrix(
         enable_cuda=args.enable_cuda,
         for_windows=args.for_windows,
+        for_macos=args.for_macos,
         test_only_latest_torch=args.test_only_latest_torch,
     )
 
