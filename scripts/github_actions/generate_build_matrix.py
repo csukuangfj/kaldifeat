@@ -128,9 +128,17 @@ def generate_build_matrix(enable_cuda, for_windows, test_only_latest_torch):
             "python-version": ["3.7", "3.8", "3.9", "3.10", "3.11"],
             "cuda": ["11.6", "11.7"],  # default 11.7
         },
+        "2.0.0": {
+            "python-version": ["3.8", "3.9", "3.10", "3.11"],
+            "cuda": ["11.7", "11.8"],  # default 11.7
+        },
+        "2.0.1": {
+            "python-version": ["3.8", "3.9", "3.10", "3.11"],
+            "cuda": ["11.7", "11.8"],  # default 11.7
+        },
     }
     if test_only_latest_torch:
-        latest = "1.13.0"
+        latest = "2.0.1"
         matrix = {latest: matrix[latest]}
 
     ans = []
@@ -143,6 +151,8 @@ def generate_build_matrix(enable_cuda, for_windows, test_only_latest_torch):
                     ans.append({"torch": torch, "python-version": p, "cuda": c})
         else:
             for p in python_versions:
+                if for_windows:
+                    p = "cp" + "".join(p.split("."))
                 ans.append({"torch": torch, "python-version": p})
 
     print(json.dumps({"include": ans}))
