@@ -79,6 +79,9 @@ jobs:
               which nvcc
               nvcc --version
 
+              cp /var/www/scripts/github_actions/install_torch.sh .
+              chmod +x install_torch.sh
+
               /var/www/scripts/github_actions/build-ubuntu-cuda.sh
 
       - name: Display wheels
