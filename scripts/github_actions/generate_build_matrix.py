@@ -160,11 +160,19 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
         if enable_cuda:
             for p in python_versions:
                 for c in cuda_versions:
-                    ans.append({"torch": torch, "python-version": p, "cuda": c})
+                    if c == "10.1":
+                        # no docker image for cuda 10.1
+                        continue
+                    ans.append(
+                        {
+                            "torch": torch,
+                            "python-version": p,
+                            "cuda": c,
+                            "image": f"pytorch/manylinux-builder:cuda{c}",
+                        }
+                    )
         else:
             for p in python_versions:
-                if p != "3.6":
-                    continue
                 if for_windows or for_macos:
                     p = "cp" + "".join(p.split("."))
                     ans.append({"torch": torch, "python-version": p})
