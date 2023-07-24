@@ -1,6 +1,6 @@
 dataclasses
 recommonmark
-sphinx
+sphinx<7.0
 sphinx-autodoc-typehints
 sphinx_rtd_theme
 sphinxcontrib-bibtex
