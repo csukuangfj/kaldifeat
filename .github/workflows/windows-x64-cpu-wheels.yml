@@ -2,6 +2,8 @@ name: build-wheels-cpu-win64
 
 on:
   push:
+    branches:
+      - wheels
     tags:
       - '*'
   workflow_dispatch:
@@ -82,20 +84,20 @@ jobs:
       # https://huggingface.co/docs/hub/spaces-github-actions
       - name: Publish to huggingface
         if: github.repository_owner == 'csukuangfj'
-        shell: bash
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: |
-          git config --global user.email "csukuangfj@gmail.com"
-          git config --global user.name "Fangjun Kuang"
+        uses: nick-fields/retry@v2
+        with:
+          max_attempts: 10
+          timeout_seconds: 10
+          shell: bash
+          command: |
+            git config --global user.email "csukuangfj@gmail.com"
+            git config --global user.name "Fangjun Kuang"
 
-          export GIT_LFS_SKIP_SMUDGE=1
-          git clone https://huggingface.co/csukuangfj/kaldifeat huggingface
-          cur_path=$PWD
-
-          function push_to_huggingface() {
-            cd $cur_path
             rm -rf huggingface
+            export GIT_LFS_SKIP_SMUDGE=1
+
             git clone https://huggingface.co/csukuangfj/kaldifeat huggingface
             cd huggingface
             git pull
@@ -107,12 +109,3 @@ jobs:
             git add .
             git commit -m "upload windows-cpu wheel for torch ${{ matrix.torch }} python ${{ matrix.python-version }}"
             git push https://csukuangfj:$HF_TOKEN@huggingface.co/csukuangfj/kaldifeat main
-
-            cd ..
-            rm -rf huggingface
-          }
-          function retry() {
-            $* || (sleep 1 && $*) || (sleep 2 && $*) || (sleep 4 && $*) || (sleep 8 && $*)
-          }
-
-          retry push_to_huggingface
