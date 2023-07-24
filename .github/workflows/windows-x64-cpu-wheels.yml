@@ -2,8 +2,6 @@ name: build-wheels-cpu-win64
 
 on:
   push:
-    branches:
-      - wheels
     tags:
       - '*'
   workflow_dispatch:
@@ -88,8 +86,8 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         uses: nick-fields/retry@v2
         with:
-          max_attempts: 10
-          timeout_seconds: 10
+          max_attempts: 20
+          timeout_seconds: 200
           shell: bash
           command: |
             git config --global user.email "csukuangfj@gmail.com"
