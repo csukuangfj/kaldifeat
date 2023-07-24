@@ -105,10 +105,10 @@ jobs:
             git config --global user.email "csukuangfj@gmail.com"
             git config --global user.name "Fangjun Kuang"
 
-            export GIT_LFS_SKIP_SMUDGE=1
-            git clone https://huggingface.co/csukuangfj/kaldifeat huggingface
-
             rm -rf huggingface
+
+            export GIT_LFS_SKIP_SMUDGE=1
+
             git clone https://huggingface.co/csukuangfj/kaldifeat huggingface
             cd huggingface
             git pull
