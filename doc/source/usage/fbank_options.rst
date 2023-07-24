@@ -10,7 +10,6 @@ The following code shows how to construct an instance of `kaldifeat.FbankOptions
 .. literalinclude:: ./code/fbank_options-1.txt
    :caption: Usage of `kaldifeat.FbankOptions`_
    :emphasize-lines: 6,8,22,37
-   :language: python
 
 Note that we reuse the same option name with `compute-fbank-feats`_ from `Kaldi`_:
 
