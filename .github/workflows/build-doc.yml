@@ -23,7 +23,6 @@ on:
     branches:
     - master
     - doc
-    - fix-ci
 
 jobs:
   build-doc:
