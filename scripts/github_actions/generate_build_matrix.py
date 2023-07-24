@@ -131,15 +131,21 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
         },
         "1.13.1": {
             "python-version": ["3.7", "3.8", "3.9", "3.10", "3.11"],
-            "cuda": ["11.6", "11.7"],  # default 11.7
+            "cuda": ["11.6", "11.7"]  # default 11.7
+            if not for_windows
+            else ["11.6.2", "11.7.1"],
         },
         "2.0.0": {
             "python-version": ["3.8", "3.9", "3.10", "3.11"],
-            "cuda": ["11.7", "11.8"],  # default 11.7
+            "cuda": ["11.7", "11.8"]  # default 11.7
+            if not for_windows
+            else ["11.7.1", "11.8.0"],
         },
         "2.0.1": {
             "python-version": ["3.8", "3.9", "3.10", "3.11"],
-            "cuda": ["11.7", "11.8"],  # default 11.7
+            "cuda": ["11.7", "11.8"]  # default 11.7
+            if not for_windows
+            else ["11.7.1", "11.8.0"],
         },
     }
     if test_only_latest_torch:
