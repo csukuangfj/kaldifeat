@@ -1,0 +1,118 @@
+name: build-wheels-cpu-macos
+
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+
+concurrency:
+  group: build-wheels-cpu-macos-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate_build_matrix:
+    # see https://github.com/pytorch/pytorch/pull/50633
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Generating build matrix
+        id: set-matrix
+        run: |
+          # outputting for debugging purposes
+          python ./scripts/github_actions/generate_build_matrix.py --for-macos
+          MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --for-macos)
+          echo "::set-output name=matrix::${MATRIX}"
+
+  build_wheels_macos_cpu:
+    needs: generate_build_matrix
+    name: ${{ matrix.torch }} ${{ matrix.python-version }}
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ${{ fromJson(needs.generate_build_matrix.outputs.matrix) }}
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: display
+        shell: bash
+        run: |
+          function retry() {
+            $* || (sleep 1 && $*) || (sleep 2 && $*) || (sleep 4 && $*) || (sleep 8 && $*)
+          }
+
+          retry ls -lh
+
+      # see https://cibuildwheel.readthedocs.io/en/stable/changelog/
+      # for a list of versions
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.11.4
+        env:
+          CIBW_BEFORE_BUILD: pip install torch==${{ matrix.torch}} cmake numpy
+          CIBW_BUILD: ${{ matrix.python-version }}-*
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
+          CIBW_BUILD_VERBOSITY: 3
+
+      - name: Display wheels
+        shell: bash
+        run: |
+
+          function retry() {
+            $* || (sleep 1 && $*) || (sleep 2 && $*) || (sleep 4 && $*) || (sleep 8 && $*)
+          }
+
+          ls -lh ./wheelhouse/
+
+          ls -lh ./wheelhouse/*.whl
+
+      - name: Upload Wheel
+        uses: actions/upload-artifact@v2
+        with:
+          name: torch-${{ matrix.torch }}-python-${{ matrix.python-version }}-macos-latest-cpu
+          path: wheelhouse/*.whl
+
+      # https://huggingface.co/docs/hub/spaces-github-actions
+      - name: Publish to huggingface
+        if: github.repository_owner == 'csukuangfj'
+        shell: bash
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git config --global user.email "csukuangfj@gmail.com"
+          git config --global user.name "Fangjun Kuang"
+
+          export GIT_LFS_SKIP_SMUDGE=1
+          git clone https://huggingface.co/csukuangfj/kaldifeat huggingface
+          cur_path=$PWD
+
+          function push_to_huggingface() {
+            cd $cur_path
+            rm -rf huggingface
+            git clone https://huggingface.co/csukuangfj/kaldifeat huggingface
+            cd huggingface
+            git pull
+
+            mkdir -p macos
+            cp -v ../wheelhouse/*.whl ./macos
+            git status
+            git lfs track "*.whl"
+            git add .
+            git commit -m "upload macos-cpu wheel for torch ${{ matrix.torch }} python ${{ matrix.python-version }}"
+            git push https://csukuangfj:$HF_TOKEN@huggingface.co/csukuangfj/kaldifeat main
+
+            cd ..
+            rm -rf huggingface
+          }
+          function retry() {
+            $* || (sleep 1 && $*) || (sleep 2 && $*) || (sleep 4 && $*) || (sleep 8 && $*)
+          }
+
+          retry push_to_huggingface

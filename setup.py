@@ -7,21 +7,15 @@ import re
 import setuptools
 
 from cmake.cmake_extension import BuildExtension, bdist_wheel, cmake_extension
+import get_version
+
+get_package_version = get_version.get_package_version
 
 
 def read_long_description():
     with open("README.md", encoding="utf8") as f:
         readme = f.read()
     return readme
-
-
-def get_package_version():
-    with open("CMakeLists.txt") as f:
-        content = f.read()
-
-    match = re.search(r"set\(kaldifeat_VERSION (.*)\)", content)
-    latest_version = match.group(1).strip('"')
-    return latest_version
 
 
 package_name = "kaldifeat"
