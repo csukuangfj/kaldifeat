@@ -15,20 +15,13 @@ if [ -z $TORCH_VERSION ]; then
   exit 1
 fi
 
-echo "Installing ${PYTHON_VERSION}.1"
-
 yum -y install openssl-devel bzip2-devel libffi-devel xz-devel wget redhat-lsb-core
 
+echo "Installing ${PYTHON_VERSION}.3"
 
-if [[ $PYTHON_VERSION == 3.6 ]]; then
-  curl -O https://www.python.org/ftp/python/${PYTHON_VERSION}.1/Python-${PYTHON_VERSION}.1.tgz
-  tar xf Python-${PYTHON_VERSION}.1.tgz
-  pushd Python-${PYTHON_VERSION}.1
-else
-  curl -O https://www.python.org/ftp/python/${PYTHON_VERSION}.9/Python-${PYTHON_VERSION}.1.tgz
-  tar xf Python-${PYTHON_VERSION}.9.tgz
-  pushd Python-${PYTHON_VERSION}.9
-fi
+curl -O https://www.python.org/ftp/python/${PYTHON_VERSION}.3/Python-${PYTHON_VERSION}.3.tgz
+tar xf Python-${PYTHON_VERSION}.3.tgz
+pushd Python-${PYTHON_VERSION}.3
 
 PYTHON_INSTALL_DIR=$PWD/py-${PYTHON_VERSION}
 
@@ -37,8 +30,8 @@ if [[ $PYTHON_VERSION =~ 3.1. ]]; then
   sed -i 's/PKG_CONFIG openssl /PKG_CONFIG openssl11 /g' configure
 fi
 
-./configure --enable-shared --prefix=$PYTHON_INSTALL_DIR
-make install
+./configure --enable-shared --prefix=$PYTHON_INSTALL_DIR >/dev/null 2>&1
+make install >/dev/null 2>&1
 
 popd
 
