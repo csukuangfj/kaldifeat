@@ -12,5 +12,5 @@ kaldifeat
    :caption: Contents
 
    intro
-   installation
+   installation/index
    usage/index
