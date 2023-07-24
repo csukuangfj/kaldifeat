@@ -159,12 +159,16 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
         if "1.13.1" in matrix:
             matrix["1.13.1"]["python-version"].remove("3.11")
 
+    excluded_python_versions = ["3.6"]
+
     ans = []
     for torch, python_cuda in matrix.items():
         python_versions = python_cuda["python-version"]
         cuda_versions = python_cuda["cuda"]
         if enable_cuda:
             for p in python_versions:
+                if p in excluded_python_versions:
+                    continue
                 for c in cuda_versions:
                     if c == "10.1":
                         # no docker image for cuda 10.1
@@ -179,6 +183,9 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
                     )
         else:
             for p in python_versions:
+                if p in excluded_python_versions:
+                    continue
+
                 if for_windows or for_macos:
                     p = "cp" + "".join(p.split("."))
                     ans.append({"torch": torch, "python-version": p})
