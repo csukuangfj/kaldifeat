@@ -16,7 +16,7 @@ Suppose you want to install the following wheel:
 
 .. code-block:: bash
 
-   https://huggingface.co/csukuangfj/kaldifeat/resolve/main/macos/kaldifeat-1.24.dev20230724+cpu.torch2.0.1-cp311-cp311-macosx_10_9_x86_64.whl
+   https://huggingface.co/csukuangfj/kaldifeat/resolve/main/ubuntu-cpu/kaldifeat-1.24.dev20230724+cpu.torch2.0.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 
 you can use one of the following methods:
 
@@ -28,8 +28,8 @@ you can use one of the following methods:
 
    # method 2
    pip install torch==2.0.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
-   wget https://huggingface.co/csukuangfj/kaldifeat/resolve/main/macos/kaldifeat-1.24.dev20230724+cpu.torch2.0.1-cp311-cp311-macosx_10_9_x86_64.whl
-   pip install ./kaldifeat-1.24.dev20230724+cpu.torch2.0.1-cp311-cp311-macosx_10_9_x86_64.whl
+   wget https://huggingface.co/csukuangfj/kaldifeat/resolve/main/ubuntu-cpu/kaldifeat-1.24.dev20230724+cpu.torch2.0.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+   pip install ./kaldifeat-1.24.dev20230724+cpu.torch2.0.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 
 
 Windows (CPU)
