@@ -20,6 +20,7 @@ on:
   push:
     tags:
       - '*'
+  workflow_dispatch:
 
 jobs:
   pypi:
@@ -39,6 +40,7 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           python3 -m pip install wheel twine setuptools
+          python3 -m pip install torch==1.10.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 
       - name: Build
         shell: bash

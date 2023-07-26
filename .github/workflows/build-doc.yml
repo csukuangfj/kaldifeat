@@ -23,6 +23,7 @@ on:
     branches:
     - master
     - doc
+  workflow_dispatch:
 
 jobs:
   build-doc:
@@ -45,6 +46,17 @@ jobs:
 
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
+
+      - name: Update wheels
+        shell: bash
+        run: |
+            export GIT_LFS_SKIP_SMUDGE=1
+            git clone https://huggingface.co/csukuangfj/kaldifeat huggingface
+            cd huggingface
+
+            export KALDIFEAT_DIR=$PWD
+            ls -lh $KALDIFEAT_DIR
+            ./run.sh
 
       - name: Build doc
         shell: bash
