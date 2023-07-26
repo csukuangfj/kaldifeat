@@ -42,15 +42,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: display
-        shell: bash
-        run: |
-          function retry() {
-            $* || (sleep 1 && $*) || (sleep 2 && $*) || (sleep 4 && $*) || (sleep 8 && $*)
-          }
-
-          retry ls -lh
-
       # see https://github.com/pytorch/test-infra/blob/9e3d392690719fac85bad0c9b67f530e48375ca1/tools/scripts/generate_binary_build_matrix.py
       # https://github.com/pytorch/builder/tree/main/manywheel
       # https://github.com/pytorch/builder/pull/476
@@ -74,14 +65,7 @@ jobs:
       - name: Display wheels
         shell: bash
         run: |
-
-          function retry() {
-            $* || (sleep 1 && $*) || (sleep 2 && $*) || (sleep 4 && $*) || (sleep 8 && $*)
-          }
-
           ls -lh ./wheelhouse/
-
-          ls -lh ./wheelhouse/*.whl
 
       - name: Upload Wheel
         uses: actions/upload-artifact@v2

@@ -78,10 +78,15 @@ file(COPY
   DESTINATION
     ${PROJECT_BINARY_DIR}/include/kaldifeat/csrc
 )
-
+if(BUILD_SHARED_LIBS AND WIN32)
+  install(TARGETS kaldifeat_core
+    DESTINATION ../
+  )
+endif()
 install(TARGETS kaldifeat_core
   DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
+
 install(FILES ${all_headers}
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/kaldifeat/csrc
 )
