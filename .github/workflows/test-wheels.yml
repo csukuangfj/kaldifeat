@@ -33,13 +33,13 @@ jobs:
         run: python -c "import sys; print(sys.version)"
 
       - name: Install torch
-        if: startsWith(matrix.os, "macos")
+        if: startsWith(matrix.os, 'macos')
         shell: bash
         run: |
           pip install torch==${{ github.event.inputs.torch_version }}
 
       - name: Install torch
-        if: startsWith(matrix.os, "ubuntu") || startsWith(matrix.os, "windows")
+        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'windows')
         shell: bash
         run: |
           pip install torch==${{ github.event.inputs.torch_version }}+cpu -f https://download.pytorch.org/whl/torch_stable.html
