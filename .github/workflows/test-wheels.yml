@@ -10,7 +10,7 @@ on:
         required: true
 
 jobs:
-  Test pre-compiled wheels:
+  Test_pre_compiled_wheels:
     name: ${{ matrix.os }} ${{ github.event.inputs.torch_version }} {{ github.event.inputs.kaldifeat_version }} ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:
