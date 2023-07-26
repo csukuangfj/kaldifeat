@@ -11,7 +11,7 @@ on:
 
 jobs:
   Test_pre_compiled_wheels:
-    name: ${{ matrix.os }} ${{ github.event.inputs.torch_version }} {{ github.event.inputs.kaldifeat_version }} ${{ matrix.python-version }}
+    name: ${{ matrix.os }} ${{ github.event.inputs.torch_version }} ${{ github.event.inputs.kaldifeat_version }} ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -31,6 +31,11 @@ jobs:
 
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          pip install numpy
 
       - name: Install torch
         if: startsWith(matrix.os, 'macos')
