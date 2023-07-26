@@ -82,11 +82,10 @@ if(BUILD_SHARED_LIBS AND WIN32)
   install(TARGETS kaldifeat_core
     DESTINATION ../
   )
-else()
-  install(TARGETS kaldifeat_core
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  )
 endif()
+install(TARGETS kaldifeat_core
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
 
 install(FILES ${all_headers}
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/kaldifeat/csrc
