@@ -42,15 +42,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: display
-        shell: bash
-        run: |
-          function retry() {
-            $* || (sleep 1 && $*) || (sleep 2 && $*) || (sleep 4 && $*) || (sleep 8 && $*)
-          }
-
-          retry ls -lh
-
       # see https://cibuildwheel.readthedocs.io/en/stable/changelog/
       # for a list of versions
       - name: Build wheels
@@ -64,14 +55,7 @@ jobs:
       - name: Display wheels
         shell: bash
         run: |
-
-          function retry() {
-            $* || (sleep 1 && $*) || (sleep 2 && $*) || (sleep 4 && $*) || (sleep 8 && $*)
-          }
-
           ls -lh ./wheelhouse/
-
-          ls -lh ./wheelhouse/*.whl
 
       - name: Upload Wheel
         uses: actions/upload-artifact@v2
