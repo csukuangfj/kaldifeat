@@ -1,0 +1,64 @@
+name: Test pre-compiled wheels
+on:
+  workflow_dispatch:
+    inputs:
+      torch_version:
+        description: "torch version, e.g., 2.0.1"
+        required: true
+      kaldifeat_version:
+        description: "kaldifeat version, e.g., 1.25.0.dev20230726"
+        required: true
+
+jobs:
+  Test pre-compiled wheels:
+    name: ${{ matrix.os }} ${{ github.event.inputs.torch_version }} {{ github.event.inputs.kaldifeat_version }} ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.8", "3.9", "3.10"]
+    steps:
+      # refer to https://github.com/actions/checkout
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+
+      - name: Install torch
+        if: startsWith(matrix.os, "macos")
+        shell: bash
+        run: |
+          pip install torch==${{ github.event.inputs.torch_version }}
+
+      - name: Install torch
+        if: startsWith(matrix.os, "ubuntu") || startsWith(matrix.os, "windows")
+        shell: bash
+        run: |
+          pip install torch==${{ github.event.inputs.torch_version }}+cpu -f https://download.pytorch.org/whl/torch_stable.html
+
+      - name: Install kaldifeat
+        shell: bash
+        run: |
+          pip install kaldifeat==${{ github.event.inputs.kaldifeat_version }}+cpu.torch${{ github.event.inputs.torch_version }} -f https://csukuangfj.github.io/kaldifeat/cpu.html
+
+      - name: Run tests
+        shell: bash
+        run: |
+          cd kaldifeat/python/tests
+
+          python3 -c "import kaldifeat; print(kaldifeat.__file__)"
+          python3 -c "import kaldifeat; print(kaldifeat.__version__)"
+
+          python3 ./test_fbank_options.py
+          python3 ./test_fbank.py
+
+          python3 ./test_mfcc_options.py
+          python3 ./test_mfcc.py
