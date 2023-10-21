@@ -18,7 +18,7 @@ fi
 if [ -z $CUDA_VERSION ]; then
   echo "Please set the environment variable CUDA_VERSION"
   echo "Example: export CUDA_VERSION=10.2"
-  # valid values: 10.2, 11.1, 11.3, 11.6, 11.7, 11.8
+  # valid values: 10.2, 11.1, 11.3, 11.6, 11.7, 11.8, 12.1
   exit 1
 fi
 
@@ -43,6 +43,8 @@ make install >/dev/null 2>&1
 
 popd
 
+rm -rf Python-${PYTHON_VERSION}.3
+
 export PATH=$PYTHON_INSTALL_DIR/bin:$PATH
 export LD_LIBRARY_PATH=$PYTHON_INSTALL_DIR/lib:$LD_LIBRARY_PATH
 ls -lh $PYTHON_INSTALL_DIR/lib/
@@ -63,8 +65,8 @@ python3 -m pip install bs4 requests tqdm auditwheel
 echo "Installing torch"
 ./install_torch.sh
 
-rm -rf ~/.cache/pip
-yum clean all
+rm -rf ~/.cache/pip >/dev/null 2>&1
+yum clean all >/dev/null 2>&1
 
 cd /var/www
 

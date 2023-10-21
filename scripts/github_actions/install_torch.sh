@@ -13,9 +13,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+set -x
 
 torch=$TORCH_VERSION
 cuda=$CUDA_VERSION
+echo "torch: $torch, cuda: $cuda"
 case ${torch} in
   1.5.*)
     case ${cuda} in
