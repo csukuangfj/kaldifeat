@@ -9,6 +9,7 @@ import setuptools
 from cmake.cmake_extension import BuildExtension, bdist_wheel, cmake_extension
 import get_version
 
+
 get_package_version = get_version.get_package_version
 
 
