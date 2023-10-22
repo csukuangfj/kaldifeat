@@ -2,6 +2,8 @@ name: build-wheels-cpu-macos
 
 on:
   push:
+    branches:
+      - fix-wheel
     tags:
       - '*'
   workflow_dispatch:
