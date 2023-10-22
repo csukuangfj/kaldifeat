@@ -43,7 +43,8 @@ make install >/dev/null 2>&1
 
 popd
 
-rm -rf Python-${PYTHON_VERSION}.3
+echo "pwd: $PWD"
+# rm -rf Python-${PYTHON_VERSION}.3
 
 export PATH=$PYTHON_INSTALL_DIR/bin:$PATH
 export LD_LIBRARY_PATH=$PYTHON_INSTALL_DIR/lib:$LD_LIBRARY_PATH
