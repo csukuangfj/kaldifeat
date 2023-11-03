@@ -33,7 +33,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Generating build matrix
@@ -46,14 +46,14 @@ jobs:
 
   run_tests_windows_cuda:
     needs: generate_build_matrix
-    runs-on: windows-2019
+    runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
         ${{ fromJson(needs.generate_build_matrix.outputs.matrix) }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 

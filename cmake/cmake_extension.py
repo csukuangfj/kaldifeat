@@ -8,7 +8,13 @@ import sys
 from pathlib import Path
 
 import setuptools
+import torch
 from setuptools.command.build_ext import build_ext
+
+
+def get_pytorch_version():
+    # if it is 1.7.1+cuda101, then strip +cuda101
+    return torch.__version__.split("+")[0]
 
 
 def is_for_pypi():
@@ -39,7 +45,6 @@ try:
                 # -linux_x86_64.whl
                 self.root_is_pure = False
 
-
 except ImportError:
     bdist_wheel = None
 
@@ -69,6 +74,12 @@ class BuildExtension(build_ext):
 
         extra_cmake_args = " -Dkaldifeat_BUILD_TESTS=OFF "
         extra_cmake_args += f" -DCMAKE_INSTALL_PREFIX={Path(self.build_lib).resolve()}/kaldifeat "  # noqa
+
+        major, minor = get_pytorch_version().split(".")[:2]
+        major = int(major)
+        minor = int(minor)
+        if major > 2 or (major == 2 and minor >= 1):
+            extra_cmake_args += f" -DCMAKE_CXX_STANDARD=17 "
 
         if "PYTHON_EXECUTABLE" not in cmake_args:
             print(f"Setting PYTHON_EXECUTABLE to {sys.executable}")
@@ -103,9 +114,7 @@ class BuildExtension(build_ext):
         else:
             if make_args == "" and system_make_args == "":
                 print("For fast compilation, run:")
-                print(
-                    'export KALDIFEAT_MAKE_ARGS="-j"; python setup.py install'
-                )
+                print('export KALDIFEAT_MAKE_ARGS="-j"; python setup.py install')
                 make_args = " -j4 "
                 print("Setting make_args to '-j4'")
 

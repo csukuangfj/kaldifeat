@@ -32,10 +32,11 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-set(CMAKE_CXX_STANDARD 14 CACHE STRING "The C++ version to be used.")
-set(CMAKE_CXX_EXTENSIONS OFF)
-
+if (NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14 CACHE STRING "The C++ version to be used.")
+endif()
 message(STATUS "C++ Standard version: ${CMAKE_CXX_STANDARD}")
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
@@ -43,6 +44,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 option(BUILD_SHARED_LIBS "Whether to build shared libraries" ON)
 option(kaldifeat_BUILD_TESTS "Whether to build tests or not" ON)
 option(kaldifeat_BUILD_PYMODULE "Whether to build python module or not" ON)
+
 
 message(STATUS "BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS}")
 

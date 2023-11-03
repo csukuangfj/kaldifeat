@@ -2,6 +2,8 @@ name: build-wheels-cpu-ubuntu
 
 on:
   push:
+    branches:
+      - fix-wheel
     tags:
       - '*'
   workflow_dispatch:
@@ -17,7 +19,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Generating build matrix
@@ -38,7 +40,7 @@ jobs:
         ${{ fromJson(needs.generate_build_matrix.outputs.matrix) }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 

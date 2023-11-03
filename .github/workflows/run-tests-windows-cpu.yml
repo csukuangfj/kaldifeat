@@ -32,7 +32,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Generating build matrix
@@ -46,14 +46,14 @@ jobs:
   run_tests_windows_cpu:
     # see https://github.com/actions/virtual-environments/blob/win19/20210525.0/images/win/Windows2019-Readme.md
     needs: generate_build_matrix
-    runs-on: windows-2019
+    runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
         ${{ fromJson(needs.generate_build_matrix.outputs.matrix) }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
