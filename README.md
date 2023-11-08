@@ -24,6 +24,21 @@ please see <https://github.com/csukuangfj/kaldi-native-fbank>
 </tr>
 
 <tr>
+<td>Fbank for <a href="https://github.com/openai/whisper">Whisper</a></td>
+<td><code>kaldifeat.WhisperFbankOptions</code></td>
+<td><code>kaldifeat.WhisperFbank</code></td>
+<td>
+<pre lang="python">
+opts = kaldifeat.WhisperFbankOptions()
+opts.device = torch.device('cuda', 0)
+fbank = kaldifeat.WhisperFbank(opts)
+features = fbank(wave)
+</pre>
+See <a href="https://github.com/csukuangfj/kaldifeat/pull/82">#82</a>
+</td>
+</tr>
+
+<tr>
 <td>FBANK</td>
 <td><code>kaldifeat.FbankOptions</code></td>
 <td><code>kaldifeat.Fbank</code></td>
