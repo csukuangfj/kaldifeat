@@ -19,6 +19,7 @@
 #ifndef KALDIFEAT_CSRC_WHISPER_FBANK_H_
 #define KALDIFEAT_CSRC_WHISPER_FBANK_H_
 
+#include <string>
 #include <vector>
 
 #include "kaldifeat/csrc/feature-common.h"
