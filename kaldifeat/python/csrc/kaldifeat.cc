@@ -12,6 +12,7 @@
 #include "kaldifeat/python/csrc/feature-window.h"
 #include "kaldifeat/python/csrc/mel-computations.h"
 #include "kaldifeat/python/csrc/online-feature.h"
+#include "kaldifeat/python/csrc/whisper-fbank.h"
 #include "torch/torch.h"
 
 namespace kaldifeat {
@@ -22,6 +23,7 @@ PYBIND11_MODULE(_kaldifeat, m) {
   PybindFeatureWindow(m);
   PybindMelComputations(m);
   PybindFeatureFbank(m);
+  PybindWhisperFbank(m);
   PybindFeatureMfcc(m);
   PybindFeaturePlp(m);
   PybindFeatureSpectrogram(m);

@@ -196,6 +196,15 @@ MelBanks::MelBanks(const MelBanksOptions &opts,
   }
 }
 
+MelBanks::MelBanks(const float *weights, int32_t num_rows, int32_t num_cols,
+                   torch::Device device)
+    : debug_(false), htk_mode_(false) {
+  bins_mat_ = torch::from_blob(const_cast<float *>(weights),
+                               {num_rows, num_cols}, torch::kFloat)
+                  .t()
+                  .to(device);
+}
+
 torch::Tensor MelBanks::Compute(const torch::Tensor &spectrum) const {
   return torch::mm(spectrum, bins_mat_);
 }

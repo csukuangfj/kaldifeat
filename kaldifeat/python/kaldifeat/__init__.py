@@ -17,6 +17,7 @@ from _kaldifeat import (
     MfccOptions,
     PlpOptions,
     SpectrogramOptions,
+    WhisperFbankOptions,
     num_frames,
 )
 
@@ -26,6 +27,7 @@ from .offline_feature import OfflineFeature
 from .online_feature import OnlineFeature
 from .plp import OnlinePlp, Plp
 from .spectrogram import Spectrogram
+from .whisper_fbank import WhisperFbank
 
 cmake_prefix_path = _Path(__file__).parent / "share" / "cmake"
 del _Path
