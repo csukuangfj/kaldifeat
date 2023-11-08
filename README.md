@@ -34,6 +34,7 @@ opts.device = torch.device('cuda', 0)
 fbank = kaldifeat.WhisperFbank(opts)
 features = fbank(wave)
 </pre>
+See <a href="https://github.com/csukuangfj/kaldifeat/pull/82">#82</a>
 </td>
 </tr>
 
