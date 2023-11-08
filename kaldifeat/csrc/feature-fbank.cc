@@ -65,7 +65,7 @@ torch::Tensor FbankComputer::Compute(torch::Tensor signal_raw_log_energy,
   // note spectrum is in magnitude, not power, because of `abs()`
 #if defined(KALDIFEAT_HAS_FFT_NAMESPACE)
   // signal_frame shape: [x, 512]
-  // spectrum shape [x, 257
+  // spectrum shape [x, 257]
   torch::Tensor spectrum = torch::fft::rfft(signal_frame).abs();
 #else
   // signal_frame shape [x, 512]

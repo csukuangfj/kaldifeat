@@ -123,6 +123,31 @@ py::dict AsDict(const FbankOptions &opts) {
   return dict;
 }
 
+WhisperFbankOptions WhisperFbankOptionsFromDict(py::dict dict) {
+  WhisperFbankOptions opts;
+
+  if (dict.contains("frame_opts")) {
+    opts.frame_opts = FrameExtractionOptionsFromDict(dict["frame_opts"]);
+  }
+
+  if (dict.contains("device")) {
+    opts.device = torch::Device(std::string(py::str(dict["device"])));
+  }
+
+  return opts;
+}
+
+py::dict AsDict(const WhisperFbankOptions &opts) {
+  py::dict dict;
+
+  dict["frame_opts"] = AsDict(opts.frame_opts);
+
+  auto torch_device = py::module_::import("torch").attr("device");
+  dict["device"] = torch_device(opts.device.str());
+
+  return dict;
+}
+
 MfccOptions MfccOptionsFromDict(py::dict dict) {
   MfccOptions opts;
 

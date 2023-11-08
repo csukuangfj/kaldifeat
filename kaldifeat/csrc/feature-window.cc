@@ -29,6 +29,13 @@ FeatureWindowFunction::FeatureWindowFunction(const FrameExtractionOptions &opts,
   float *window_data = window.data_ptr<float>();
 
   double a = M_2PI / (frame_length - 1);
+
+  if (opts.window_type == "hann") {
+    // see https://pytorch.org/docs/stable/generated/torch.hann_window.html
+    // We assume periodic is true
+    a = M_2PI / frame_length;
+  }
+
   for (int32_t i = 0; i < frame_length; i++) {
     double i_fl = static_cast<double>(i);
     if (opts.window_type == "hanning") {
@@ -39,6 +46,8 @@ FeatureWindowFunction::FeatureWindowFunction(const FrameExtractionOptions &opts,
       window_data[i] = sin(0.5 * a * i_fl);
     } else if (opts.window_type == "hamming") {
       window_data[i] = 0.54 - 0.46 * cos(a * i_fl);
+    } else if (opts.window_type == "hann") {
+      window_data[i] = 0.50 - 0.50 * cos(a * i_fl);
     } else if (opts.window_type ==
                "povey") {  // like hamming but goes to zero at edges.
       window_data[i] = pow(0.5 - 0.5 * cos(a * i_fl), 0.85);

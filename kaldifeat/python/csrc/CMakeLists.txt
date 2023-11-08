@@ -9,6 +9,7 @@ pybind11_add_module(_kaldifeat
   mel-computations.cc
   online-feature.cc
   utils.cc
+  whisper-fbank.cc
 )
 
 if(APPLE)

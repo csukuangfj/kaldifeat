@@ -10,6 +10,7 @@ set(kaldifeat_srcs
   matrix-functions.cc
   mel-computations.cc
   online-feature.cc
+  whisper-fbank.cc
 )
 
 add_library(kaldifeat_core ${kaldifeat_srcs})

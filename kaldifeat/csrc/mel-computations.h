@@ -76,6 +76,17 @@ class MelBanks {
            const FrameExtractionOptions &frame_opts, float vtln_warp_factor,
            torch::Device device);
 
+  // Initialize with a 2-d weights matrix
+  //
+  // Note: This constructor is for Whisper. It does not initialize
+  // center_freqs_.
+  //
+  // @param weights Pointer to the start address of the matrix
+  // @param num_rows It equals to number of mel bins
+  // @param num_cols It equals to (number of fft bins)/2+1
+  MelBanks(const float *weights, int32_t num_rows, int32_t num_cols,
+           torch::Device device);
+
   // CAUTION: we save a transposed version of bins_mat_, so return size(1) here
   int32_t NumBins() const { return static_cast<int32_t>(bins_mat_.size(1)); }
 
@@ -89,7 +100,8 @@ class MelBanks {
 
  private:
   // A 2-D matrix. Its shape is NOT [num_bins, num_fft_bins]
-  // Its shape is [num_fft_bins, num_bins].
+  // Its shape is [num_fft_bins, num_bins] for non-whisper.
+  // For whisper, its shape is [num_fft_bins/2+1, num_bins]
   torch::Tensor bins_mat_;
 
   // center frequencies of bins, numbered from 0 ... num_bins-1.

@@ -11,6 +11,7 @@
 #include "kaldifeat/csrc/feature-spectrogram.h"
 #include "kaldifeat/csrc/feature-window.h"
 #include "kaldifeat/csrc/mel-computations.h"
+#include "kaldifeat/csrc/whisper-fbank.h"
 #include "kaldifeat/python/csrc/kaldifeat.h"
 
 /*
@@ -35,6 +36,9 @@ py::dict AsDict(const MelBanksOptions &opts);
 
 FbankOptions FbankOptionsFromDict(py::dict dict);
 py::dict AsDict(const FbankOptions &opts);
+
+WhisperFbankOptions WhisperFbankOptionsFromDict(py::dict dict);
+py::dict AsDict(const WhisperFbankOptions &opts);
 
 MfccOptions MfccOptionsFromDict(py::dict dict);
 py::dict AsDict(const MfccOptions &opts);
