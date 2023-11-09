@@ -19,6 +19,7 @@
 #ifndef KALDIFEAT_CSRC_WHISPER_FBANK_H_
 #define KALDIFEAT_CSRC_WHISPER_FBANK_H_
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -30,12 +31,15 @@ namespace kaldifeat {
 
 struct WhisperFbankOptions {
   FrameExtractionOptions frame_opts;
+  // for large v3, please use 128
+  int32_t num_mels = 80;
 
   torch::Device device{"cpu"};
   std::string ToString() const {
     std::ostringstream os;
     os << "WhisperFbankOptions(";
     os << "frame_opts=" << frame_opts.ToString() << ", ";
+    os << "num_mels=" << num_mels << ", ";
     os << "device=\"" << device << "\")";
     return os.str();
   }
@@ -64,7 +68,7 @@ class WhisperFbankComputer {
 
  private:
   WhisperFbankOptions opts_;
-  MelBanks mel_banks_;
+  std::unique_ptr<MelBanks> mel_banks_;
 };
 
 using WhisperFbank = OfflineFeatureTpl<WhisperFbankComputer>;

@@ -23,7 +23,7 @@ PYBIND11_MODULE(_kaldifeat, m) {
   PybindFeatureWindow(m);
   PybindMelComputations(m);
   PybindFeatureFbank(m);
-  PybindWhisperFbank(m);
+  PybindWhisperFbank(&m);
   PybindFeatureMfcc(m);
   PybindFeaturePlp(m);
   PybindFeatureSpectrogram(m);

@@ -23,6 +23,7 @@
 
 #include "kaldifeat/csrc/mel-computations.h"
 #include "kaldifeat/csrc/whisper-mel-bank.h"
+#include "kaldifeat/csrc/whisper-v3-mel-bank.h"
 
 #ifndef M_2PI
 #define M_2PI 6.283185307179586476925286766559005
@@ -31,9 +32,18 @@
 namespace kaldifeat {
 
 WhisperFbankComputer::WhisperFbankComputer(const WhisperFbankOptions &opts)
-    : opts_(opts),
-      mel_banks_(kWhisperMelArray, kWhisperMelRows, kWhisperMelCols,
-                 opts.device) {
+    : opts_(opts) {
+  if (opts.num_mels == 80) {
+    mel_banks_ = std::make_unique<MelBanks>(kWhisperMelArray, kWhisperMelRows,
+                                            kWhisperMelCols, opts.device);
+  } else if (opts.num_mels == 128) {
+    mel_banks_ = std::make_unique<MelBanks>(
+        kWhisperV3MelArray, kWhisperV3MelRows, kWhisperV3MelCols, opts.device);
+  } else {
+    KALDIFEAT_ERR << "Unsupported num_mels: " << opts.num_mels
+                  << ". Support only 80 and 128";
+  }
+
   opts_.frame_opts.samp_freq = 16000;
   opts_.frame_opts.frame_shift_ms = 10;
   opts_.frame_opts.frame_length_ms = 25;
@@ -67,7 +77,7 @@ torch::Tensor WhisperFbankComputer::Compute(
   torch::Tensor power = (real.square() + imag.square());
 #endif
 
-  torch::Tensor mel_energies = mel_banks_.Compute(power);
+  torch::Tensor mel_energies = mel_banks_->Compute(power);
   torch::Tensor log_spec = torch::clamp_min(mel_energies, 1e-10).log10();
   log_spec = torch::maximum(log_spec, log_spec.max() - 8.0);
   torch::Tensor mel = (log_spec + 4.0) / 4.0;

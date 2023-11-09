@@ -12,16 +12,18 @@
 
 namespace kaldifeat {
 
-static void PybindWhisperFbankOptions(py::module &m) {
+static void PybindWhisperFbankOptions(py::module *m) {
   using PyClass = WhisperFbankOptions;
-  py::class_<PyClass>(m, "WhisperFbankOptions")
+  py::class_<PyClass>(*m, "WhisperFbankOptions")
       .def(py::init<>())
       .def(py::init([](const FrameExtractionOptions &frame_opts =
                            FrameExtractionOptions(),
+                       int32_t num_mels = 80,
                        py::object device = py::str(
                            "cpu")) -> std::unique_ptr<WhisperFbankOptions> {
              auto opts = std::make_unique<WhisperFbankOptions>();
              opts->frame_opts = frame_opts;
+             opts->num_mels = num_mels;
 
              std::string s = static_cast<py::str>(device);
              opts->device = torch::Device(s);
@@ -29,8 +31,9 @@ static void PybindWhisperFbankOptions(py::module &m) {
              return opts;
            }),
            py::arg("frame_opts") = FrameExtractionOptions(),
-           py::arg("device") = py::str("cpu"))
+           py::arg("num_mels") = 80, py::arg("device") = py::str("cpu"))
       .def_readwrite("frame_opts", &PyClass::frame_opts)
+      .def_readwrite("num_mels", &PyClass::num_mels)
       .def_property(
           "device",
           [](const PyClass &self) -> py::object {
@@ -56,9 +59,9 @@ static void PybindWhisperFbankOptions(py::module &m) {
           }));
 }
 
-static void PybindWhisperFbankImpl(py::module &m) {
+static void PybindWhisperFbankImpl(py::module *m) {
   using PyClass = WhisperFbank;
-  py::class_<PyClass>(m, "WhisperFbank")
+  py::class_<PyClass>(*m, "WhisperFbank")
       .def(py::init<const WhisperFbankOptions &>(), py::arg("opts"))
       .def("dim", &PyClass::Dim)
       .def_property_readonly("options", &PyClass::GetOptions)
@@ -73,7 +76,7 @@ static void PybindWhisperFbankImpl(py::module &m) {
           }));
 }
 
-void PybindWhisperFbank(py::module &m) {
+void PybindWhisperFbank(py::module *m) {
   PybindWhisperFbankOptions(m);
   PybindWhisperFbankImpl(m);
 }
