@@ -9,7 +9,7 @@
 
 namespace kaldifeat {
 
-void PybindWhisperFbank(py::module &m);
+void PybindWhisperFbank(py::module *m);
 
 }  // namespace kaldifeat
 

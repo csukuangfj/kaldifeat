@@ -39,6 +39,21 @@ See <a href="https://github.com/csukuangfj/kaldifeat/pull/82">#82</a>
 </tr>
 
 <tr>
+<td>Fbank for <a href="https://github.com/openai/whisper">Whisper v3</a></td>
+<td><code>kaldifeat.WhisperFbankOptions</code></td>
+<td><code>kaldifeat.WhisperFbank</code></td>
+<td>
+<pre lang="python">
+opts = kaldifeat.WhisperFbankOptions()
+opts.num_mels = 128
+opts.device = torch.device('cuda', 0)
+fbank = kaldifeat.WhisperFbank(opts)
+features = fbank(wave)
+</pre>
+</td>
+</tr>
+
+<tr>
 <td>FBANK</td>
 <td><code>kaldifeat.FbankOptions</code></td>
 <td><code>kaldifeat.Fbank</code></td>
