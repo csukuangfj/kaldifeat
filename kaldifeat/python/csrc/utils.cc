@@ -130,7 +130,7 @@ WhisperFbankOptions WhisperFbankOptionsFromDict(py::dict dict) {
     opts.frame_opts = FrameExtractionOptionsFromDict(dict["frame_opts"]);
   }
 
-  AS_DICT(num_mels);
+  FROM_DICT(int_, num_mels);
 
   if (dict.contains("device")) {
     opts.device = torch::Device(std::string(py::str(dict["device"])));
@@ -143,6 +143,8 @@ py::dict AsDict(const WhisperFbankOptions &opts) {
   py::dict dict;
 
   dict["frame_opts"] = AsDict(opts.frame_opts);
+
+  AS_DICT(num_mels);
 
   auto torch_device = py::module_::import("torch").attr("device");
   dict["device"] = torch_device(opts.device.str());
