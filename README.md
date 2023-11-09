@@ -39,7 +39,7 @@ See <a href="https://github.com/csukuangfj/kaldifeat/pull/82">#82</a>
 </tr>
 
 <tr>
-<td>Fbank for <a href="https://github.com/openai/whisper">Whisper v3</a></td>
+<td>Fbank for <a href="https://github.com/openai/whisper">Whisper-V3</a></td>
 <td><code>kaldifeat.WhisperFbankOptions</code></td>
 <td><code>kaldifeat.WhisperFbank</code></td>
 <td>
