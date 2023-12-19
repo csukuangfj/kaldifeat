@@ -51,7 +51,7 @@ class WhisperFbankComputer {
   // are ignored
   explicit WhisperFbankComputer(const WhisperFbankOptions &opts = {});
 
-  int32_t Dim() const { return 80; }
+  int32_t Dim() const { return opts_.num_mels; }
 
   const FrameExtractionOptions &GetFrameOptions() const {
     return opts_.frame_opts;
