@@ -75,7 +75,7 @@ jobs:
         run: |
           mkdir build_release
           cd build_release
-          cmake ..
+          cmake -DCMAKE_CXX_STANDARD=17 ..
           make VERBOSE=1 -j3
 
       - name: Run tests

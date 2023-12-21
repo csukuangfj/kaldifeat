@@ -76,6 +76,7 @@ class BuildExtension(build_ext):
         extra_cmake_args += f" -DCMAKE_INSTALL_PREFIX={Path(self.build_lib).resolve()}/kaldifeat "  # noqa
 
         major, minor = get_pytorch_version().split(".")[:2]
+        print("major, minor", major, minor)
         major = int(major)
         minor = int(minor)
         if major > 2 or (major == 2 and minor >= 1):

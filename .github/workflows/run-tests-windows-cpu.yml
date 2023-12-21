@@ -90,7 +90,7 @@ jobs:
       - name: Build kaldifeat
         run: |
           cd build_release
-          cmake --build . --target _kaldifeat --config Release
+          cmake --build -DCMAKE_CXX_STANDARD=17 . --target _kaldifeat --config Release
 
       - name: Display generated files
         shell: bash
@@ -116,6 +116,6 @@ jobs:
         shell: bash
         run: |
           cd build_release
-          cmake --build . --target ALL_BUILD --config Release
+          cmake -DCMAKE_CXX_STANDARD=17 --build . --target ALL_BUILD --config Release
           ls -lh bin/*/*
           ctest -C Release --verbose --output-on-failure

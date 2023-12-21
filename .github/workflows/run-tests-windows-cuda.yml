@@ -168,6 +168,6 @@ jobs:
         shell: bash
         run: |
           cd build_release
-          cmake --build . --target ALL_BUILD --config Release
+          cmake -DCMAKE_CXX_STANDARD=17 --build . --target ALL_BUILD --config Release
           ls -lh bin/*/*
           ctest -C Release --verbose --output-on-failure
