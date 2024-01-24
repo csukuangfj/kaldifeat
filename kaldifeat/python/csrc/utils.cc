@@ -152,6 +152,69 @@ py::dict AsDict(const WhisperFbankOptions &opts) {
   return dict;
 }
 
+
+PitchOptions PitchOptionsFromDict(py::dict dict) {
+  PitchOptions opts;
+
+  FROM_DICT(float_, samp_freq);
+  FROM_DICT(float_, frame_shift_ms);
+  FROM_DICT(float_, frame_length_ms);
+  FROM_DICT(float_, preemph_coeff);
+  FROM_DICT(float_, min_f0);
+  FROM_DICT(float_, max_f0);
+  FROM_DICT(float_, soft_min_f0);
+  FROM_DICT(float_, penalty_factor);
+  FROM_DICT(float_, lowpass_cutoff);
+  FROM_DICT(float_, resample_freq);
+  FROM_DICT(float_, delta_pitch);
+  FROM_DICT(float_, nccf_ballast);
+  FROM_DICT(int_, lowpass_filter_width);
+  FROM_DICT(int_, upsample_filter_width);
+  FROM_DICT(int_, max_frames_latency);
+  FROM_DICT(int_, frames_per_chunk);
+  FROM_DICT(bool_, simulate_first_pass_online);
+  FROM_DICT(int_, recompute_frame);
+  FROM_DICT(bool_, nccf_ballast_online);
+  FROM_DICT(bool_, snip_edges);
+
+  if (dict.contains("device")) {
+    opts.device = torch::Device(std::string(py::str(dict["device"])));
+  }
+
+  return opts;
+}
+
+py::dict AsDict(const PitchOptions &opts) {
+  py::dict dict;
+
+  AS_DICT(samp_freq);
+  AS_DICT(frame_shift_ms);
+  AS_DICT(frame_length_ms);
+  AS_DICT(preemph_coeff);
+  AS_DICT(min_f0);
+  AS_DICT(max_f0);
+  AS_DICT(soft_min_f0);
+  AS_DICT(penalty_factor);
+  AS_DICT(lowpass_cutoff);
+  AS_DICT(resample_freq);
+  AS_DICT(delta_pitch);
+  AS_DICT(nccf_ballast);
+  AS_DICT(lowpass_filter_width);
+  AS_DICT(upsample_filter_width);
+  AS_DICT(max_frames_latency);
+  AS_DICT(frames_per_chunk);
+  AS_DICT(simulate_first_pass_online);
+  AS_DICT(recompute_frame);
+  AS_DICT(nccf_ballast_online);
+  AS_DICT(snip_edges);
+
+  auto torch_device = py::module_::import("torch").attr("device");
+  dict["device"] = torch_device(opts.device.str());
+
+  return dict;
+}
+
+
 MfccOptions MfccOptionsFromDict(py::dict dict) {
   MfccOptions opts;
 

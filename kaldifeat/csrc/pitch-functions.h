@@ -20,7 +20,8 @@
 
 #include <string>
 
-#include "torch/script.h"
+#include "kaldifeat/csrc/feature-common.h"
+#include "kaldifeat/csrc/feature-window.h"
 
 namespace kaldifeat {
 
@@ -144,10 +145,49 @@ struct PitchExtractionOptions {
     os << "nccf_ballast_online: " << nccf_ballast_online << "\n";
     os << "snip_edges: " << snip_edges << "\n";
     os << "device: " << device << "\n";
+    return os.str();
   }
 };
 
-// TODO(fangjun): Implement it
+
+std::ostream &operator<<(std::ostream &os, const PitchExtractionOptions &opts);
+
+class PitchComputer {
+ public:
+  using Options = PitchExtractionOptions;
+
+  explicit PitchComputer(const PitchExtractionOptions &opts);
+  ~PitchComputer();
+
+  PitchComputer &operator=(const PitchComputer &) = delete;
+  PitchComputer(const PitchComputer &) = delete;
+
+  int32_t Dim() const {
+    return 2;
+  }
+
+  // // if true, compute log_energy_pre_window but after dithering and dc removal
+  // bool NeedRawLogEnergy() const { return opts_.use_energy && opts_.raw_energy; }
+
+  // if true, compute log_energy_pre_window but after dithering and dc removal
+  bool NeedRawLogEnergy() const;
+
+  // const FrameExtractionOptions &GetFrameOptions() const {
+  //   return opts_.frame_opts;
+  // }
+
+  const FrameExtractionOptions &GetFrameOptions();
+
+  const PitchExtractionOptions &GetOptions() const { return opts_; }
+
+  torch::Tensor Compute(torch::Tensor signal_raw_log_energy, float vtln_warp,
+                        const torch::Tensor &signal_frame);
+
+ private:
+  PitchExtractionOptions opts_;
+};
+
+using Pitch = OfflineFeatureTpl<PitchComputer>;
 
 }  // namespace kaldifeat
 
