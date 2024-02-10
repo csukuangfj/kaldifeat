@@ -3,7 +3,7 @@ name: build-wheels-cuda-ubuntu
 on:
   push:
     branches:
-      - fix-wheel
+      - fix-wheel-2
     tags:
       - '*'
   workflow_dispatch:
@@ -28,6 +28,9 @@ jobs:
           # outputting for debugging purposes
           python ./scripts/github_actions/generate_build_matrix.py --enable-cuda
           MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --enable-cuda)
+
+          # python ./scripts/github_actions/generate_build_matrix.py --enable-cuda --test-only-latest-torch
+          # MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --enable-cuda --test-only-latest-torch)
           echo "::set-output name=matrix::${MATRIX}"
 
   build-manylinux-wheels:
@@ -43,6 +46,15 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Free space
+        shell: bash
+        run: |
+          df -h
+          rm -rf /opt/hostedtoolcache
+          df -h
+          echo "pwd: $PWD"
+          echo "github.workspace ${{ github.workspace }}"
 
       # see https://github.com/pytorch/test-infra/blob/9e3d392690719fac85bad0c9b67f530e48375ca1/tools/scripts/generate_binary_build_matrix.py
       # https://github.com/pytorch/builder/tree/main/manywheel
