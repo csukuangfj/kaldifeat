@@ -53,10 +53,10 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
         #      "python-version": ["3.6", "3.7", "3.8"],
         #      "cuda": ["10.1", "10.2"],
         #  },
-        "1.6.0": {
-            "python-version": ["3.6", "3.7", "3.8"],
-            "cuda": ["10.1", "10.2"] if not for_windows else ["10.1.243", "10.2.89"],
-        },
+        #  "1.6.0": {
+        #      "python-version": ["3.6", "3.7", "3.8"],
+        #      "cuda": ["10.1", "10.2"] if not for_windows else ["10.1.243", "10.2.89"],
+        #  },
         "1.7.0": {
             "python-version": ["3.6", "3.7", "3.8"],
             "cuda": ["10.1", "10.2", "11.0"]
