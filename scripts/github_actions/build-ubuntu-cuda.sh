@@ -26,10 +26,10 @@ fi
 yum -y install openssl-devel bzip2-devel libffi-devel xz-devel wget redhat-lsb-core
 
 
-echo "Installing ${PYTHON_VERSION}.3"
-curl -O https://www.python.org/ftp/python/${PYTHON_VERSION}.3/Python-${PYTHON_VERSION}.3.tgz
-tar xf Python-${PYTHON_VERSION}.3.tgz
-pushd Python-${PYTHON_VERSION}.3
+echo "Installing ${PYTHON_VERSION}.2"
+curl -O https://www.python.org/ftp/python/${PYTHON_VERSION}.2/Python-${PYTHON_VERSION}.2.tgz
+tar xf Python-${PYTHON_VERSION}.2.tgz
+pushd Python-${PYTHON_VERSION}.2
 
 PYTHON_INSTALL_DIR=$PWD/py-${PYTHON_VERSION}
 
@@ -44,7 +44,7 @@ make install >/dev/null 2>&1
 popd
 
 echo "pwd: $PWD"
-# rm -rf Python-${PYTHON_VERSION}.3
+# rm -rf Python-${PYTHON_VERSION}.2
 
 export PATH=$PYTHON_INSTALL_DIR/bin:$PATH
 export LD_LIBRARY_PATH=$PYTHON_INSTALL_DIR/lib:$LD_LIBRARY_PATH
