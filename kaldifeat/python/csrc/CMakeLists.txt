@@ -5,6 +5,7 @@ pybind11_add_module(_kaldifeat
   feature-plp.cc
   feature-spectrogram.cc
   feature-window.cc
+  pitch-functions.cc
   kaldifeat.cc
   mel-computations.cc
   online-feature.cc
