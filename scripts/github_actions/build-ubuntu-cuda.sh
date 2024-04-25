@@ -72,6 +72,18 @@ python3 -m pip install bs4 requests tqdm auditwheel
 echo "Installing torch"
 ./install_torch.sh
 
+# -- Autodetected CUDA architecture(s): 5.0;8.0;8.6;8.9;9.0;9.0a
+# CMake Error at /Python-3.8.2/py-3.8/lib/python3.8/site-packages/torch/share/cmake/Caffe2/Modules_CUDA_fix/upstream/FindCUDA/select_compute_arch.cmake:227 (message):
+#   Unknown CUDA Architecture Name 9.0a in CUDA_SELECT_NVCC_ARCH_FLAGS
+# Call Stack (most recent call first):
+#   /Python-3.8.2/py-3.8/lib/python3.8/site-packages/torch/share/cmake/Caffe2/public/utils.cmake:401 (cuda_select_nvcc_arch_flags)
+#   /Python-3.8.2/py-3.8/lib/python3.8/site-packages/torch/share/cmake/Caffe2/public/cuda.cmake:342 (torch_cuda_get_nvcc_gencode_flag)
+#   /Python-3.8.2/py-3.8/lib/python3.8/site-packages/torch/share/cmake/Caffe2/Caffe2Config.cmake:87 (include)
+#   /Python-3.8.2/py-3.8/lib/python3.8/site-packages/torch/share/cmake/Torch/TorchConfig.cmake:68 (find_package)
+#   cmake/torch.cmake:14 (find_package)
+#   CMakeLists.txt:62 (include)
+sed -i.bak /9.0a/d /Python-*/py-3.*/lib/python3.*/site-packages/torch/share/cmake/Caffe2/Modules_CUDA_fix/upstream/FindCUDA/select_compute_arch.cmake
+
 rm -rf ~/.cache/pip >/dev/null 2>&1
 yum clean all >/dev/null 2>&1
 
