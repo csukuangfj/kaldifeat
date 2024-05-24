@@ -10,6 +10,7 @@
 #include "kaldifeat/csrc/feature-plp.h"
 #include "kaldifeat/csrc/feature-spectrogram.h"
 #include "kaldifeat/csrc/feature-window.h"
+#include "kaldifeat/csrc/pitch-functions.h"
 #include "kaldifeat/csrc/mel-computations.h"
 #include "kaldifeat/csrc/whisper-fbank.h"
 #include "kaldifeat/python/csrc/kaldifeat.h"
@@ -26,7 +27,11 @@
  * all fields use their default values.
  */
 
+
 namespace kaldifeat {
+
+using PitchOptions = kaldifeat::PitchExtractionOptions;
+
 
 FrameExtractionOptions FrameExtractionOptionsFromDict(py::dict dict);
 py::dict AsDict(const FrameExtractionOptions &opts);
@@ -39,6 +44,9 @@ py::dict AsDict(const FbankOptions &opts);
 
 WhisperFbankOptions WhisperFbankOptionsFromDict(py::dict dict);
 py::dict AsDict(const WhisperFbankOptions &opts);
+
+PitchOptions PitchOptionsFromDict(py::dict dict);
+py::dict AsDict(const PitchOptions &opts);
 
 MfccOptions MfccOptionsFromDict(py::dict dict);
 py::dict AsDict(const MfccOptions &opts);

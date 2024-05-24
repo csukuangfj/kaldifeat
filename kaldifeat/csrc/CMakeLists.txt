@@ -7,6 +7,7 @@ set(kaldifeat_srcs
   feature-plp.cc
   feature-spectrogram.cc
   feature-window.cc
+  pitch-functions.cc
   matrix-functions.cc
   mel-computations.cc
   online-feature.cc
