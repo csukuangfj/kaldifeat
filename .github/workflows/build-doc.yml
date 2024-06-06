@@ -54,6 +54,7 @@ jobs:
             ls -lh $KALDIFEAT_DIR
 
             export GIT_LFS_SKIP_SMUDGE=1
+            export GIT_CLONE_PROTECTION_ACTIVE=false
             git clone https://huggingface.co/csukuangfj/kaldifeat huggingface
             cd huggingface
 
@@ -68,6 +69,8 @@ jobs:
           make html
           cp source/cpu.html build/html/
           cp source/cuda.html build/html/
+          cp source/cpu-cn.html build/html/
+          cp source/cuda-cn.html build/html/
           touch build/html/.nojekyll
 
       - name: Deploy
