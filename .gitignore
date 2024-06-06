@@ -6,3 +6,5 @@ __pycache__/
 test-1hour.wav
 path.sh
 torch_version.py
+cpu*.html
+cuda*.html
