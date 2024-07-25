@@ -28,7 +28,7 @@ you can use one of the following methods:
 .. code-block:: bash
 
    # method 1
-   pip install torch==2.2.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+   pip install torch==2.2.0+cpu -f https://download.pytorch.org/whl/torch/
    pip install kaldifeat==1.25.4.dev20240210+cpu.torch2.2.0 -f https://csukuangfj.github.io/kaldifeat/cpu.html
 
    # For users from China
@@ -36,7 +36,7 @@ you can use one of the following methods:
    # pip install kaldifeat==1.25.4.dev20240210+cpu.torch2.2.0 -f https://csukuangfj.github.io/kaldifeat/cpu-cn.html
 
    # method 2
-   pip install torch==2.2.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+   pip install torch==2.2.0+cpu -f https://download.pytorch.org/whl/torch/
    wget https://huggingface.co/csukuangfj/kaldifeat/resolve/main/ubuntu-cpu/kaldifeat-1.25.4.dev20240210+cpu.torch2.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 
    # For users from China
@@ -59,7 +59,7 @@ you can use one of the following methods:
 .. code-block:: bash
 
    # method 1
-   pip install torch==2.2.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+   pip install torch==2.2.0+cpu -f https://download.pytorch.org/whl/torch/ https://download.pytorch.org/whl/torch/
    pip install kaldifeat==1.25.4.dev20240210+cpu.torch2.2.0 -f https://csukuangfj.github.io/kaldifeat/cpu.html
 
    # For users from China
@@ -67,7 +67,7 @@ you can use one of the following methods:
    # pip install kaldifeat==1.25.4.dev20240210+cpu.torch2.2.0 -f https://csukuangfj.github.io/kaldifeat/cpu-cn.html
 
    # method 2
-   pip install torch==2.2.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+   pip install torch==2.2.0+cpu -f https://download.pytorch.org/whl/torch/ https://download.pytorch.org/whl/torch/
    wget https://huggingface.co/csukuangfj/kaldifeat/resolve/main/windows-cpu/kaldifeat-1.25.4.dev20240210+cpu.torch2.2.0-cp312-cp312-win_amd64.whl
 
    # For users from China
@@ -98,7 +98,7 @@ you can use one of the following methods:
    # pip install kaldifeat==1.25.4.dev20240210+cpu.torch2.2.0 -f https://csukuangfj.github.io/kaldifeat/cpu-cn.html
 
    # method 2
-   pip install torch==2.2.0 -f https://download.pytorch.org/whl/torch_stable.html
+   pip install torch==2.2.0 -f https://download.pytorch.org/whl/torch/
    wget https://huggingface.co/csukuangfj/kaldifeat/resolve/main/macos/kaldifeat-1.25.4.dev20240210+cpu.torch2.2.0-cp312-cp312-macosx_12_0_universal2.whl
 
    # For users from China
@@ -121,7 +121,7 @@ you can use one of the following methods:
 .. code-block:: bash
 
    # method 1
-   pip install torch==2.2.0+cu121 -f https://download.pytorch.org/whl/torch_stable.html
+   pip install torch==2.2.0+cu121 -f https://download.pytorch.org/whl/torch/
    pip install kaldifeat==1.25.4.dev20240210+cuda12.1.torch2.2.0 -f https://csukuangfj.github.io/kaldifeat/cuda.html
 
    # For users from China
@@ -129,7 +129,7 @@ you can use one of the following methods:
    # pip install kaldifeat==1.25.4.dev20240210+cuda12.1.torch2.2.0 -f https://csukuangfj.github.io/kaldifeat/cuda-cn.html
 
    # method 2
-   pip install torch==2.2.0+cu121 -f https://download.pytorch.org/whl/torch_stable.html
+   pip install torch==2.2.0+cu121 -f https://download.pytorch.org/whl/torch/
    wget https://huggingface.co/csukuangfj/kaldifeat/resolve/main/ubuntu-cuda/kaldifeat-1.25.4.dev20240210+cuda12.1.torch2.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 
    # For users from China
