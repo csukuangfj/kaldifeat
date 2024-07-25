@@ -21,29 +21,29 @@ Suppose you want to install the following wheel:
 
 .. code-block:: bash
 
-   https://huggingface.co/csukuangfj/kaldifeat/resolve/main/ubuntu-cpu/kaldifeat-1.25.4.dev20240210+cpu.torch2.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+   https://huggingface.co/csukuangfj/kaldifeat/resolve/main/ubuntu-cpu/kaldifeat-1.25.4.dev20240725+cpu.torch2.4.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 
 you can use one of the following methods:
 
 .. code-block:: bash
 
    # method 1
-   pip install torch==2.2.0+cpu -f https://download.pytorch.org/whl/torch/
-   pip install kaldifeat==1.25.4.dev20240210+cpu.torch2.2.0 -f https://csukuangfj.github.io/kaldifeat/cpu.html
+   pip install torch==2.4.0+cpu -f https://download.pytorch.org/whl/torch/
+   pip install kaldifeat==1.25.4.dev20240725+cpu.torch2.4.0 -f https://csukuangfj.github.io/kaldifeat/cpu.html
 
    # For users from China
    # 中国国内用户，如果访问不了 huggingface, 请使用
-   # pip install kaldifeat==1.25.4.dev20240210+cpu.torch2.2.0 -f https://csukuangfj.github.io/kaldifeat/cpu-cn.html
+   # pip install kaldifeat==1.25.4.dev20240725+cpu.torch2.4.0 -f https://csukuangfj.github.io/kaldifeat/cpu-cn.html
 
    # method 2
-   pip install torch==2.2.0+cpu -f https://download.pytorch.org/whl/torch/
-   wget https://huggingface.co/csukuangfj/kaldifeat/resolve/main/ubuntu-cpu/kaldifeat-1.25.4.dev20240210+cpu.torch2.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+   pip install torch==2.4.0+cpu -f https://download.pytorch.org/whl/torch/
+   wget https://huggingface.co/csukuangfj/kaldifeat/resolve/main/ubuntu-cpu/kaldifeat-1.25.4.dev20240725+cpu.torch2.4.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 
    # For users from China
    # 中国国内用户，如果访问不了 huggingface, 请使用
-   # wget https://hf-mirror.com/csukuangfj/kaldifeat/resolve/main/ubuntu-cpu/kaldifeat-1.25.4.dev20240210+cpu.torch2.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+   # wget https://hf-mirror.com/csukuangfj/kaldifeat/resolve/main/ubuntu-cpu/kaldifeat-1.25.4.dev20240725+cpu.torch2.4.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 
-   pip install ./kaldifeat-1.25.4.dev20240210+cpu.torch2.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+   pip install ./kaldifeat-1.25.4.dev20240725+cpu.torch2.4.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 
 Windows (CPU)
 --------------
@@ -52,29 +52,29 @@ Suppose you want to install the following wheel:
 
 .. code-block:: bash
 
-   https://huggingface.co/csukuangfj/kaldifeat/resolve/main/windows-cpu/kaldifeat-1.25.4.dev20240210+cpu.torch2.2.0-cp312-cp312-win_amd64.whl
+   https://huggingface.co/csukuangfj/kaldifeat/resolve/main/windows-cpu/kaldifeat-1.25.4.dev20240725+cpu.torch2.4.0-cp312-cp312-win_amd64.whl
 
 you can use one of the following methods:
 
 .. code-block:: bash
 
    # method 1
-   pip install torch==2.2.0+cpu -f https://download.pytorch.org/whl/torch/ https://download.pytorch.org/whl/torch/
-   pip install kaldifeat==1.25.4.dev20240210+cpu.torch2.2.0 -f https://csukuangfj.github.io/kaldifeat/cpu.html
+   pip install torch==2.4.0+cpu -f https://download.pytorch.org/whl/torch/
+   pip install kaldifeat==1.25.4.dev20240725+cpu.torch2.4.0 -f https://csukuangfj.github.io/kaldifeat/cpu.html
 
    # For users from China
    # 中国国内用户，如果访问不了 huggingface, 请使用
-   # pip install kaldifeat==1.25.4.dev20240210+cpu.torch2.2.0 -f https://csukuangfj.github.io/kaldifeat/cpu-cn.html
+   # pip install kaldifeat==1.25.4.dev20240725+cpu.torch2.4.0 -f https://csukuangfj.github.io/kaldifeat/cpu-cn.html
 
    # method 2
-   pip install torch==2.2.0+cpu -f https://download.pytorch.org/whl/torch/ https://download.pytorch.org/whl/torch/
-   wget https://huggingface.co/csukuangfj/kaldifeat/resolve/main/windows-cpu/kaldifeat-1.25.4.dev20240210+cpu.torch2.2.0-cp312-cp312-win_amd64.whl
+   pip install torch==2.4.0+cpu -f https://download.pytorch.org/whl/torch/
+   wget https://huggingface.co/csukuangfj/kaldifeat/resolve/main/windows-cpu/kaldifeat-1.25.4.dev20240725+cpu.torch2.4.0-cp312-cp312-win_amd64.whl
 
    # For users from China
    # 中国国内用户，如果访问不了 huggingface, 请使用
-   # wget https://hf-mirror.com/csukuangfj/kaldifeat/resolve/main/windows-cpu/kaldifeat-1.25.4.dev20240210+cpu.torch2.2.0-cp312-cp312-win_amd64.whl
+   # wget https://hf-mirror.com/csukuangfj/kaldifeat/resolve/main/windows-cpu/kaldifeat-1.25.4.dev20240725+cpu.torch2.4.0-cp312-cp312-win_amd64.whl
 
-   pip install ./kaldifeat-1.25.4.dev20240210+cpu.torch2.2.0-cp312-cp312-win_amd64.whl
+   pip install ./kaldifeat-1.25.4.dev20240725+cpu.torch2.4.0-cp312-cp312-win_amd64.whl
 
 macOS (CPU)
 -----------
@@ -83,29 +83,29 @@ Suppose you want to install the following wheel:
 
 .. code-block:: bash
 
-   https://huggingface.co/csukuangfj/kaldifeat/resolve/main/macos/kaldifeat-1.25.4.dev20240210+cpu.torch2.2.0-cp312-cp312-macosx_12_0_universal2.whl
+   https://huggingface.co/csukuangfj/kaldifeat/resolve/main/macos/kaldifeat-1.25.4.dev20240725+cpu.torch2.4.0-cp311-cp311-macosx_11_0_arm64.whl
 
 you can use one of the following methods:
 
 .. code-block:: bash
 
    # method 1
-   pip install torch==2.2.0
-   pip install kaldifeat==1.25.4.dev20240210+cpu.torch2.2.0 -f https://csukuangfj.github.io/kaldifeat/cpu.html
+   pip install torch==2.4.0
+   pip install kaldifeat==1.25.4.dev20240725+cpu.torch2.4.0 -f https://csukuangfj.github.io/kaldifeat/cpu.html
 
    # For users from China
    # 中国国内用户，如果访问不了 huggingface, 请使用
-   # pip install kaldifeat==1.25.4.dev20240210+cpu.torch2.2.0 -f https://csukuangfj.github.io/kaldifeat/cpu-cn.html
+   # pip install kaldifeat==1.25.4.dev20240725+cpu.torch2.4.0 -f https://csukuangfj.github.io/kaldifeat/cpu-cn.html
 
    # method 2
-   pip install torch==2.2.0 -f https://download.pytorch.org/whl/torch/
-   wget https://huggingface.co/csukuangfj/kaldifeat/resolve/main/macos/kaldifeat-1.25.4.dev20240210+cpu.torch2.2.0-cp312-cp312-macosx_12_0_universal2.whl
+   pip install torch==2.4.0 -f https://download.pytorch.org/whl/torch/
+   wget https://huggingface.co/csukuangfj/kaldifeat/resolve/main/macos/kaldifeat-1.25.4.dev20240725+cpu.torch2.4.0-cp311-cp311-macosx_11_0_arm64.whl
 
    # For users from China
    # 中国国内用户，如果访问不了 huggingface, 请使用
-   # wget https://hf-mirror.com/csukuangfj/kaldifeat/resolve/main/macos/kaldifeat-1.25.4.dev20240210+cpu.torch2.2.0-cp312-cp312-macosx_12_0_universal2.whl
+   # wget https://hf-mirror.com/csukuangfj/kaldifeat/resolve/main/macos/kaldifeat-1.25.4.dev20240725+cpu.torch2.4.0-cp311-cp311-macosx_11_0_arm64.whl
 
-   pip install ./kaldifeat-1.25.4.dev20240210+cpu.torch2.2.0-cp312-cp312-macosx_12_0_universal2.whl
+   pip install ./kaldifeat-1.25.4.dev20240725+cpu.torch2.4.0-cp311-cp311-macosx_11_0_arm64.whl
 
 Linux (CUDA)
 ------------
@@ -114,26 +114,26 @@ Suppose you want to install the following wheel:
 
 .. code-block:: bash
 
-   https://huggingface.co/csukuangfj/kaldifeat/resolve/main/ubuntu-cuda/kaldifeat-1.25.4.dev20240210+cuda12.1.torch2.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+   https://huggingface.co/csukuangfj/kaldifeat/resolve/main/ubuntu-cuda/kaldifeat-1.25.4.dev20240725+cuda12.4.torch2.4.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 
 you can use one of the following methods:
 
 .. code-block:: bash
 
    # method 1
-   pip install torch==2.2.0+cu121 -f https://download.pytorch.org/whl/torch/
-   pip install kaldifeat==1.25.4.dev20240210+cuda12.1.torch2.2.0 -f https://csukuangfj.github.io/kaldifeat/cuda.html
+   pip install torch==2.4.0+cu124 -f https://download.pytorch.org/whl/torch/
+   pip install kaldifeat==1.25.4.dev20240725+cuda12.4.torch2.4.0 -f https://csukuangfj.github.io/kaldifeat/cuda.html
 
    # For users from China
    # 中国国内用户，如果访问不了 huggingface, 请使用
-   # pip install kaldifeat==1.25.4.dev20240210+cuda12.1.torch2.2.0 -f https://csukuangfj.github.io/kaldifeat/cuda-cn.html
+   # pip install kaldifeat==1.25.4.dev20240725+cuda12.4.torch2.4.0 -f https://csukuangfj.github.io/kaldifeat/cuda-cn.html
 
    # method 2
-   pip install torch==2.2.0+cu121 -f https://download.pytorch.org/whl/torch/
-   wget https://huggingface.co/csukuangfj/kaldifeat/resolve/main/ubuntu-cuda/kaldifeat-1.25.4.dev20240210+cuda12.1.torch2.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+   pip install torch==2.4.0+cu124 -f https://download.pytorch.org/whl/torch/
+   wget https://huggingface.co/csukuangfj/kaldifeat/resolve/main/ubuntu-cuda/kaldifeat-1.25.4.dev20240725+cuda12.4.torch2.4.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 
    # For users from China
    # 中国国内用户，如果访问不了 huggingface, 请使用
-   # wget https://hf-mirror.com/csukuangfj/kaldifeat/resolve/main/ubuntu-cuda/kaldifeat-1.25.4.dev20240210+cuda12.1.torch2.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+   # wget https://hf-mirror.com/csukuangfj/kaldifeat/resolve/main/ubuntu-cuda/kaldifeat-1.25.4.dev20240725+cuda12.4.torch2.4.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 
-   pip install ./kaldifeat-1.25.4.dev20240210+cuda12.1.torch2.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+   pip install ./kaldifeat-1.25.4.dev20240725+cuda12.4.torch2.4.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
