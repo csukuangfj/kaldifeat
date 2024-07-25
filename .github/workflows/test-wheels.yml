@@ -47,7 +47,7 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'windows')
         shell: bash
         run: |
-          pip install torch==${{ github.event.inputs.torch_version }}+cpu -f https://download.pytorch.org/whl/torch_stable.html
+          pip install torch==${{ github.event.inputs.torch_version }}+cpu -f https://download.pytorch.org/whl/torch_stable.html || pip install torch==${{ github.event.inputs.torch_version }}+cpu -f https://download.pytorch.org/whl/torch/
 
       - name: Install kaldifeat
         shell: bash

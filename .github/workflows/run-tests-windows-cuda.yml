@@ -113,7 +113,7 @@ jobs:
           python3 -m pip install -qq --upgrade pip
           python3 -m pip install -qq wheel twine numpy typing_extensions
           python3 -m pip install -qq dataclasses soundfile numpy
-          python3 -m pip install -qq torch==${{ matrix.torch }}${v} -f https://download.pytorch.org/whl/torch_stable.html numpy
+          python3 -m pip install -qq torch==${{ matrix.torch }}${v} -f https://download.pytorch.org/whl/torch_stable.html numpy || python3 -m pip install -qq torch==${{ matrix.torch }}${v} -f https://download.pytorch.org/whl/torch/ numpy
 
           python3 -c "import torch; print('torch version:', torch.__version__)"
 
