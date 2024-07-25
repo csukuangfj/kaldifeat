@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+set -x
+
 if [ x"$TORCH_VERSION" != x"" ] && [ x"$CUDA_VERSION" != x"" ]; then
     torch=$TORCH_VERSION
     cuda=$CUDA_VERSION
@@ -208,6 +210,23 @@ case ${torch} in
         package="torch==${torch}"
         # Leave it empty to use PyPI.
         url=
+        ;;
+    esac
+    ;;
+  2.4.*)
+    case ${cuda} in
+      11.8)
+        package="torch==${torch}+cu118"
+        # https://download.pytorch.org/whl/nightly/torch/
+        url=https://download.pytorch.org/whl/torch/
+        ;;
+      12.1)
+        package="torch==${torch}+cu121"
+        url=https://download.pytorch.org/whl/torch/
+        ;;
+      12.4)
+        package="torch==${torch}+cu124"
+        url=https://download.pytorch.org/whl/torch/
         ;;
     esac
     ;;
