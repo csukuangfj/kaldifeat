@@ -14,6 +14,20 @@
 **Note**: If you are looking for a version that does not depend on PyTorch,
 please see <https://github.com/csukuangfj/kaldi-native-fbank>
 
+# Installation
+
+Refer to
+<https://csukuangfj.github.io/kaldifeat/installation/from_wheels.html>
+for installation.
+
+> Never use `pip install kaldifeat`
+
+> Never use `pip install kaldifeat`
+
+> Never use `pip install kaldifeat`
+
+
+
 <sub>
 <table>
 <tr>
@@ -312,8 +326,4 @@ extraction.
 
 See <https://github.com/k2-fsa/sherpa/blob/master/sherpa/bin/pruned_stateless_emformer_rnnt2/decode.py>
 
-# Installation
 
-Refer to
-<https://csukuangfj.github.io/kaldifeat>
-for installation.
