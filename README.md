@@ -38,7 +38,7 @@ for installation.
 </tr>
 
 <tr>
-<td>Fbank for <a href="https://github.com/openai/whisper">Whisper</a></td>
+<td><code>Fbank for Whisper</code></td>
 <td><code>kaldifeat.WhisperFbankOptions</code></td>
 <td><code>kaldifeat.WhisperFbank</code></td>
 <td>
@@ -53,7 +53,7 @@ See <a href="https://github.com/csukuangfj/kaldifeat/pull/82">#82</a>
 </tr>
 
 <tr>
-<td>Fbank for <a href="https://github.com/openai/whisper">Whisper-V3</a></td>
+<td><code>Fbank for Whisper large-v3</code></td>
 <td><code>kaldifeat.WhisperFbankOptions</code></td>
 <td><code>kaldifeat.WhisperFbank</code></td>
 <td>
@@ -83,7 +83,7 @@ features = fbank(wave)
 </tr>
 
 <tr>
-<td>Streaming FBANK</td>
+<td><code>Streaming FBANK</code></td>
 <td><code>kaldifeat.FbankOptions</code></td>
 <td><code>kaldifeat.OnlineFbank</code></td>
 <td>
@@ -108,7 +108,7 @@ features = mfcc(wave)
 </tr>
 
 <tr>
-<td>Streaming MFCC</td>
+<td><code>Streaming MFCC</code></td>
 <td><code>kaldifeat.MfccOptions</code></td>
 <td><code>kaldifeat.OnlineMfcc</code></td>
 <td>
@@ -133,7 +133,7 @@ features = plp(wave)
 </tr>
 
 <tr>
-<td>Streaming PLP</td>
+<td><code>Streaming PLP</code></td>
 <td><code>kaldifeat.PlpOptions</code></td>
 <td><code>kaldifeat.OnlinePlp</code></td>
 <td>
