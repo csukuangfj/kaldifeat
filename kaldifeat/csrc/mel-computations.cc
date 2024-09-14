@@ -138,7 +138,7 @@ MelBanks::MelBanks(const MelBanksOptions &opts,
                   << " and vtln-high " << vtln_high << ", versus "
                   << "low-freq " << low_freq << " and high-freq " << high_freq;
 
-  // we will transpose bins_mat_ at the end of this funciton
+  // we will transpose bins_mat_ at the end of this function
   bins_mat_ = torch::zeros({num_bins, num_fft_bins}, torch::kFloat);
 
   int32_t stride = bins_mat_.strides()[0];
@@ -179,12 +179,14 @@ MelBanks::MelBanks(const MelBanksOptions &opts,
         last_index = i;
       }
     }
-    KALDIFEAT_ASSERT(first_index != -1 && last_index >= first_index &&
-                     "You may have set num_mel_bins too large.");
+
+    // Note: It is possible that first_index == last_index == -1 at this line.
 
     // Replicate a bug in HTK, for testing purposes.
-    if (opts.htk_mode && bin == 0 && mel_low_freq != 0.0f)
+    if (opts.htk_mode && bin == 0 && mel_low_freq != 0.0f &&
+        first_index != -1) {
       this_bin[first_index] = 0.0f;
+    }
   }
 
   if (debug_) KALDIFEAT_LOG << bins_mat_;
