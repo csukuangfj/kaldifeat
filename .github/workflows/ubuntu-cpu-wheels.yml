@@ -73,7 +73,7 @@ jobs:
           ls -lh ./wheelhouse/
 
       - name: Upload Wheel
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: torch-${{ matrix.torch }}-python-${{ matrix.python-version }}-ubuntu-latest-cpu
           path: wheelhouse/*.whl
