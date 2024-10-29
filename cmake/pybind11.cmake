@@ -8,19 +8,18 @@ function(download_pybind11)
 
   include(FetchContent)
 
-  # latest commit as of 2022.10.31 that supports python 3.11
-  set(pybind11_URL  "https://github.com/pybind/pybind11/archive/5bc0943ed96836f46489f53961f6c438d2935357.zip")
-  set(pybind11_URL2 "https://huggingface.co/csukuangfj/k2-cmake-deps/resolve/main/pybind11-5bc0943ed96836f46489f53961f6c438d2935357.zip")
-  set(pybind11_HASH "SHA256=ff65a1a8c9e6ceec11e7ed9d296f2e22a63e9ff0c4264b3af29c72b4f18f25a0")
+  set(pybind11_URL  "https://github.com/pybind/pybind11/archive/refs/tags/v2.12.0.tar.gz")
+  set(pybind11_URL2 "https://hf-mirror.com/csukuangfj/sherpa-onnx-cmake-deps/resolve/main/pybind11-2.12.0.tar.gz")
+  set(pybind11_HASH "SHA256=bf8f242abd1abcd375d516a7067490fb71abd79519a282d22b6e4d19282185a7")
 
   # If you don't have access to the Internet,
   # please pre-download pybind11
   set(possible_file_locations
-    $ENV{HOME}/Downloads/pybind11-5bc0943ed96836f46489f53961f6c438d2935357.zip
-    ${PROJECT_SOURCE_DIR}/pybind11-5bc0943ed96836f46489f53961f6c438d2935357.zip
-    ${PROJECT_BINARY_DIR}/pybind11-5bc0943ed96836f46489f53961f6c438d2935357.zip
-    /tmp/pybind11-5bc0943ed96836f46489f53961f6c438d2935357.zip
-    /star-fj/fangjun/download/github/pybind11-5bc0943ed96836f46489f53961f6c438d2935357.zip
+    $ENV{HOME}/Downloads/pybind11-2.12.0.tar.gz
+    ${CMAKE_SOURCE_DIR}/pybind11-2.12.0.tar.gz
+    ${CMAKE_BINARY_DIR}/pybind11-2.12.0.tar.gz
+    /tmp/pybind11-2.12.0.tar.gz
+    /star-fj/fangjun/download/github/pybind11-2.12.0.tar.gz
   )
 
   foreach(f IN LISTS possible_file_locations)

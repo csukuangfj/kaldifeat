@@ -26,11 +26,11 @@ jobs:
         id: set-matrix
         run: |
           # outputting for debugging purposes
-          # python ./scripts/github_actions/generate_build_matrix.py --for-macos
-          # MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --for-macos)
+          python ./scripts/github_actions/generate_build_matrix.py --for-macos
+          MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --for-macos)
 
-          python ./scripts/github_actions/generate_build_matrix.py --for-macos --test-only-latest-torch
-          MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --for-macos --test-only-latest-torch)
+          # python ./scripts/github_actions/generate_build_matrix.py --for-macos --test-only-latest-torch
+          # MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --for-macos --test-only-latest-torch)
           echo "::set-output name=matrix::${MATRIX}"
 
   build_wheels_macos_cpu:
@@ -110,8 +110,9 @@ jobs:
             cd huggingface
             git pull
 
-            mkdir -p macos
-            cp -v ../wheelhouse/*.whl ./macos
+            d=cpu/1.25.5.dev20241029/macos
+            mkdir -p $d
+            cp -v ../wheelhouse/*.whl ./$d
             git status
             git lfs track "*.whl"
             git add .
