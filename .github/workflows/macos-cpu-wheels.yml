@@ -110,8 +110,9 @@ jobs:
             cd huggingface
             git pull
 
-            mkdir -p macos
-            cp -v ../wheelhouse/*.whl ./macos
+            d=cpu/1.25.5.dev20241029/macos
+            mkdir -p $d
+            cp -v ../wheelhouse/*.whl ./$d
             git status
             git lfs track "*.whl"
             git add .
