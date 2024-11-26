@@ -280,7 +280,7 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
         # https://github.com/Jimver/cuda-toolkit/blob/master/src/links/windows-links.ts
     }
     if test_only_latest_torch:
-        latest = "2.5.0"
+        latest = "2.5.1"
         matrix = {latest: matrix[latest]}
 
     if for_windows or for_macos:
