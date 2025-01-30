@@ -87,7 +87,7 @@ echo "Installing torch"
 #   /Python-3.8.2/py-3.8/lib/python3.8/site-packages/torch/share/cmake/Torch/TorchConfig.cmake:68 (find_package)
 #   cmake/torch.cmake:14 (find_package)
 #   CMakeLists.txt:62 (include)
-sed -i.bak /9.0a/d /Python-*/py-3.*/lib/python3.*/site-packages/torch/share/cmake/Caffe2/Modules_CUDA_fix/upstream/FindCUDA/select_compute_arch.cmake
+sed -i.bak /9.0a/d /Python-*/py-3.*/lib/python3.*/site-packages/torch/share/cmake/Caffe2/Modules_CUDA_fix/upstream/FindCUDA/select_compute_arch.cmake || true
 
 rm -rf ~/.cache/pip >/dev/null 2>&1
 yum clean all >/dev/null 2>&1
