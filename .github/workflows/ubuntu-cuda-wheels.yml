@@ -124,6 +124,9 @@ jobs:
               export PYTHON_INSTALL_DIR=$python_dir
               export PATH=$PYTHON_INSTALL_DIR/bin:$PATH
 
+              # There are no libpython.so inside $PYTHON_INSTALL_DIR
+              # since they are statically linked.
+
               python3 --version
               which python3
 

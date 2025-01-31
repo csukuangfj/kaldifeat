@@ -27,6 +27,33 @@ if [[ $TORCH_VERSION =~ 2.2.* && $CUDA_VERSION =~ 12.* ]]; then
   export TORCH_CUDA_ARCH_LIST="8.0 8.6 8.9 9.0"
 fi
 
+yum -y install openssl-devel bzip2-devel libffi-devel xz-devel wget redhat-lsb-core
+
+INSTALLED_PYTHON_VERSION=${PYTHON_VERSION}.2
+if [[ $PYTHON_VERSION == "3.13" ]]; then
+  INSTALLED_PYTHON_VERSION=${PYTHON_VERSION}.0
+fi
+echo "Installing $INSTALLED_PYTHON_VERSION"
+
+curl -O https://www.python.org/ftp/python/$INSTALLED_PYTHON_VERSION/Python-$INSTALLED_PYTHON_VERSION.tgz
+tar xf Python-$INSTALLED_PYTHON_VERSION.tgz
+pushd Python-$INSTALLED_PYTHON_VERSION
+
+PYTHON_INSTALL_DIR=$PWD/py-${PYTHON_VERSION}
+
+if [[ $PYTHON_VERSION =~ 3.1. ]]; then
+  yum install -y openssl11-devel
+  sed -i 's/PKG_CONFIG openssl /PKG_CONFIG openssl11 /g' configure
+fi
+
+./configure --enable-shared --prefix=$PYTHON_INSTALL_DIR >/dev/null 2>&1
+make install >/dev/null 2>&1
+
+popd
+
+export PATH=$PYTHON_INSTALL_DIR/bin:$PATH
+export LD_LIBRARY_PATH=$PYTHON_INSTALL_DIR/lib:$LD_LIBRARY_PATH
+ls -lh $PYTHON_INSTALL_DIR/lib/
 
 python3 --version
 which python3
