@@ -27,7 +27,11 @@ if [[ $TORCH_VERSION =~ 2.2.* && $CUDA_VERSION =~ 12.* ]]; then
   export TORCH_CUDA_ARCH_LIST="8.0 8.6 8.9 9.0"
 fi
 
-yum -y install openssl-devel bzip2-devel libffi-devel xz-devel wget redhat-lsb-core
+if [[ x"$IS_2_28" != x"1" ]]; then
+yum -y install openssl-devel
+fi
+
+yum -y install bzip2-devel libffi-devel xz-devel wget redhat-lsb-core
 
 INSTALLED_PYTHON_VERSION=${PYTHON_VERSION}.2
 if [[ $PYTHON_VERSION == "3.13" ]]; then
@@ -41,7 +45,7 @@ pushd Python-$INSTALLED_PYTHON_VERSION
 
 PYTHON_INSTALL_DIR=$PWD/py-${PYTHON_VERSION}
 
-if [[ $PYTHON_VERSION =~ 3.1. ]]; then
+if [[ $PYTHON_VERSION =~ 3.1. && x"$IS_2_28" != x"1" ]]; then
   yum install -y openssl11-devel
   sed -i 's/PKG_CONFIG openssl /PKG_CONFIG openssl11 /g' configure
 fi
