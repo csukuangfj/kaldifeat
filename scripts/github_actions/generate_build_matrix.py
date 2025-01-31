@@ -339,6 +339,7 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
                                 "python-version": p,
                                 "cuda": c,
                                 "image": f"pytorch/manylinux2_28-builder:cuda{c}",
+                                "is_2_28": "1",
                             }
                         )
                         continue
@@ -349,6 +350,7 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
                             "python-version": p,
                             "cuda": c,
                             "image": f"pytorch/manylinux-builder:cuda{c}",
+                            "is_2_28": "0",
                         }
                     )
         else:
@@ -368,6 +370,7 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
                             "python-version": p,
                             #  "image": "pytorch/manylinux-builder:cpu-2.4",
                             "image": "pytorch/manylinux-builder:cpu-27677ead7c8293c299a885ae2c474bf445e653a5",
+                            "is_2_28": "0",
                         }
                     )
                 elif version_ge(torch, "2.2.0"):
@@ -376,6 +379,7 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
                             "torch": torch,
                             "python-version": p,
                             "image": "pytorch/manylinux-builder:cpu-2.2",
+                            "is_2_28": "0",
                         }
                     )
                 else:
@@ -384,6 +388,7 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
                             "torch": torch,
                             "python-version": p,
                             "image": f"pytorch/manylinux-builder:cuda10.2",
+                            "is_2_28": "0",
                         }
                     )
 

@@ -101,8 +101,16 @@ export CMAKE_CUDA_COMPILER_LAUNCHER=
 export KALDIFEAT_CMAKE_ARGS=" -DPYTHON_EXECUTABLE=$PYTHON_INSTALL_DIR/bin/python3 "
 export KALDIFEAT_MAKE_ARGS=" -j2 "
 
+echo "KALDIFEAT_CMAKE_ARGS: $KALDIFEAT_CMAKE_ARGS"
+
 
 python3 setup.py bdist_wheel
+
+if [[ x"$IS_2_28" == x"1" ]]; then
+  plat=manylinux_2_28_x86_64
+else
+  plat=manylinux_2_17_x86_64
+fi
 
 auditwheel --verbose repair \
   --exclude libc10.so \
@@ -143,7 +151,7 @@ auditwheel --verbose repair \
   --exclude libshm.so \
   --exclude libtorch_cuda_cpp.so \
   --exclude libtorch_cuda_cu.so \
-  --plat manylinux_2_17_x86_64 \
+  --plat $plat \
   -w /var/www/wheelhouse \
   dist/*.whl
 

@@ -65,7 +65,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
             image: ${{ matrix.image }}
-            options: -v ${{ github.workspace }}:/var/www -e PYTHON_VERSION=${{ matrix.python-version }} -e TORCH_VERSION=${{ matrix.torch }} -e CUDA_VERSION=${{ matrix.cuda }}
+            options: -v ${{ github.workspace }}:/var/www -e IS_2_28=${{ matrix.is_2_28 }} -e PYTHON_VERSION=${{ matrix.python-version }} -e TORCH_VERSION=${{ matrix.torch }} -e CUDA_VERSION=${{ matrix.cuda }}
             run: |
               echo "pwd: $PWD"
               uname -a
@@ -80,6 +80,42 @@ jobs:
               echo "---"
 
               ls -lh /opt/python/*/bin
+
+              # cp36-cp36m
+              # cp37-cp37m
+              # cp38-cp38
+              # cp39-cp39
+              # cp310-cp310
+              # cp311-cp311
+              # cp312-cp312
+              # cp313-cp313
+              # cp313-cp313t  (no gil)
+              if [[ $PYTHON_VERSION == "3.6" ]]; then
+                python_dir=/opt/python/cp36-cp36m
+              elif [[ $PYTHON_VERSION == "3.7" ]]; then
+                python_dir=/opt/python/cp37-cp37m
+              elif [[ $PYTHON_VERSION == "3.8" ]]; then
+                python_dir=/opt/python/cp38-cp38
+              elif [[ $PYTHON_VERSION == "3.9" ]]; then
+                python_dir=/opt/python/cp39-cp39
+              elif [[ $PYTHON_VERSION == "3.10" ]]; then
+                python_dir=/opt/python/cp310-cp310
+              elif [[ $PYTHON_VERSION == "3.11" ]]; then
+                python_dir=/opt/python/cp311-cp311
+              elif [[ $PYTHON_VERSION == "3.12" ]]; then
+                python_dir=/opt/python/cp312-cp312
+              elif [[ $PYTHON_VERSION == "3.13" ]]; then
+                python_dir=/opt/python/cp313-cp313
+              else
+                echo "Unsupported Python version $PYTHON_VERSION"
+                exit 1
+              fi
+
+              export PYTHON_INSTALL_DIR=$python_dir
+              export PATH=$PYTHON_INSTALL_DIR/bin:$PATH
+
+              python3 --version
+              which python3
 
               pushd /usr/local
               rm cuda
