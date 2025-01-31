@@ -107,7 +107,7 @@ jobs:
           python3 -c "import kaldifeat; print(kaldifeat.__version__)"
 
       - name: Upload Wheel
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: python-${{ matrix.python-version }}-${{ matrix.os }}-cpu
           path: dist/*.whl

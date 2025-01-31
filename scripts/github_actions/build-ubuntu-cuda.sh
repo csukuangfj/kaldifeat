@@ -28,6 +28,7 @@ if [[ $TORCH_VERSION =~ 2.2.* && $CUDA_VERSION =~ 12.* ]]; then
 fi
 
 
+if false; then
 yum -y install openssl-devel bzip2-devel libffi-devel xz-devel wget redhat-lsb-core
 
 
@@ -60,6 +61,8 @@ export PATH=$PYTHON_INSTALL_DIR/bin:$PATH
 export LD_LIBRARY_PATH=$PYTHON_INSTALL_DIR/lib:$LD_LIBRARY_PATH
 ls -lh $PYTHON_INSTALL_DIR
 ls -lh $PYTHON_INSTALL_DIR/lib/
+
+fi
 
 python3 --version
 which python3

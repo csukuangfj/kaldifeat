@@ -280,4 +280,6 @@ else
   retry python3 -m pip install -q $package -f $url
 fi
 
-rm -rfv ~/.cache/pip
+python3 -m torch.utils.collect_env
+
+rm -rf ~/.cache/pip

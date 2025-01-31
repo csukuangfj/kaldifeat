@@ -3,7 +3,7 @@ name: build-wheels-cuda-ubuntu
 on:
   push:
     branches:
-      - fix-wheel-2
+      - fix-cuda-12.6
     tags:
       - '*'
   workflow_dispatch:
@@ -75,6 +75,12 @@ jobs:
               python3 --version
               which python3
 
+              ls -lh /opt/python/
+
+              echo "---"
+
+              ls -lh /opt/python/*/bin
+
               pushd /usr/local
               rm cuda
               ln -s cuda-$CUDA_VERSION cuda
@@ -93,7 +99,7 @@ jobs:
           ls -lh ./wheelhouse/
 
       - name: Upload Wheel
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: torch-${{ matrix.torch }}-python-${{ matrix.python-version }}-ubuntu-latest-cuda
           path: wheelhouse/*.whl
