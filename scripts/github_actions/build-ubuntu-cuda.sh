@@ -28,57 +28,18 @@ if [[ $TORCH_VERSION =~ 2.2.* && $CUDA_VERSION =~ 12.* ]]; then
 fi
 
 
-if false; then
-yum -y install openssl-devel bzip2-devel libffi-devel xz-devel wget redhat-lsb-core
-
-
-INSTALLED_PYTHON_VERSION=${PYTHON_VERSION}.2
-if [[ $PYTHON_VERSION == "3.13" ]]; then
-  INSTALLED_PYTHON_VERSION=${PYTHON_VERSION}.0
-fi
-echo "Installing $INSTALLED_PYTHON_VERSION"
-
-curl -O https://www.python.org/ftp/python/$INSTALLED_PYTHON_VERSION/Python-$INSTALLED_PYTHON_VERSION.tgz
-tar xf Python-$INSTALLED_PYTHON_VERSION.tgz
-pushd Python-$INSTALLED_PYTHON_VERSION
-
-PYTHON_INSTALL_DIR=$PWD/py-${PYTHON_VERSION}
-
-if [[ $PYTHON_VERSION =~ 3.1. ]]; then
-  yum install -y openssl11-devel
-  sed -i 's/PKG_CONFIG openssl /PKG_CONFIG openssl11 /g' configure
-fi
-
-./configure --enable-shared --prefix=$PYTHON_INSTALL_DIR >/dev/null 2>&1
-make install >/dev/null 2>&1
-
-popd
-
-echo "pwd: $PWD"
-# rm -rf Python-${PYTHON_VERSION}.2
-
-export PATH=$PYTHON_INSTALL_DIR/bin:$PATH
-export LD_LIBRARY_PATH=$PYTHON_INSTALL_DIR/lib:$LD_LIBRARY_PATH
-ls -lh $PYTHON_INSTALL_DIR
-ls -lh $PYTHON_INSTALL_DIR/lib/
-
-fi
-
 python3 --version
 which python3
 
-if [[ $PYTHON_VERSION != 3.6 ]]; then
-  curl -O https://bootstrap.pypa.io/get-pip.py
-  python3 get-pip.py
-fi
-
-python3 -m pip install scikit-build
+# python3 -m pip install scikit-build
 python3 -m pip install -U pip cmake
 python3 -m pip install wheel twine typing_extensions
 python3 -m pip install bs4 requests tqdm auditwheel
 
 echo "Installing torch"
 ./install_torch.sh
+
+python3 -c "import torch; print(torch.__file__)"
 
 # -- Autodetected CUDA architecture(s): 5.0;8.0;8.6;8.9;9.0;9.0a
 # CMake Error at /Python-3.8.2/py-3.8/lib/python3.8/site-packages/torch/share/cmake/Caffe2/Modules_CUDA_fix/upstream/FindCUDA/select_compute_arch.cmake:227 (message):
