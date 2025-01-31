@@ -85,6 +85,11 @@ jobs:
 
               echo "---"
               find /opt/python/cp* -name "libpython*"
+              echo "-----"
+              find /opt/_internal/cp* -name "libpython*"
+
+              echo "-----"
+              find / -name "libpython*"
 
               # cp36-cp36m
               # cp37-cp37m
