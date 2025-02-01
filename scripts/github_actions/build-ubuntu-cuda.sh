@@ -31,7 +31,7 @@ if [[ x"$IS_2_28" != x"1" ]]; then
 yum -y install openssl-devel
 fi
 
-yum -y install bzip2-devel libffi-devel xz-devel wget redhat-lsb-core
+yum -y install zlib-devel bzip2-devel libffi-devel xz-devel wget redhat-lsb-core
 
 INSTALLED_PYTHON_VERSION=${PYTHON_VERSION}.2
 if [[ $PYTHON_VERSION == "3.13" ]]; then
