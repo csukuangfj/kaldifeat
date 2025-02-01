@@ -104,6 +104,9 @@ if [[ x"$IS_2_28" == x"1" ]]; then
 else
   plat=manylinux_2_17_x86_64
 fi
+export PATH=$PYTHON_INSTALL_DIR/bin:$PATH
+python3 --version
+which python3
 
 auditwheel --verbose repair \
   --exclude libc10.so \
