@@ -108,14 +108,19 @@ jobs:
                 python_dir=/opt/python/cp38-cp38
               elif [[ $PYTHON_VERSION == "3.9" ]]; then
                 python_dir=/opt/python/cp39-cp39
+                export PYTHONPATH=/opt/python/cp39-cp39/lib/python3.9/site-packages:$PYTHONPATH
               elif [[ $PYTHON_VERSION == "3.10" ]]; then
                 python_dir=/opt/python/cp310-cp310
+                export PYTHONPATH=/opt/python/cp310-cp310/lib/python3.10/site-packages:$PYTHONPATH
               elif [[ $PYTHON_VERSION == "3.11" ]]; then
                 python_dir=/opt/python/cp311-cp311
+                export PYTHONPATH=/opt/python/cp311-cp311/lib/python3.11/site-packages:$PYTHONPATH
               elif [[ $PYTHON_VERSION == "3.12" ]]; then
                 python_dir=/opt/python/cp312-cp312
+                export PYTHONPATH=/opt/python/cp312-cp312/lib/python3.12/site-packages:$PYTHONPATH
               elif [[ $PYTHON_VERSION == "3.13" ]]; then
                 python_dir=/opt/python/cp313-cp313
+                export PYTHONPATH=/opt/python/cp313-cp313/lib/python3.13/site-packages:$PYTHONPATH
               else
                 echo "Unsupported Python version $PYTHON_VERSION"
                 exit 1
