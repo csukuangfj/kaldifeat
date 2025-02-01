@@ -288,8 +288,7 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
         "2.6.0": {
             "python-version": ["3.9", "3.10", "3.11", "3.12", "3.13"],
             "cuda": (
-                #  ["11.8", "12.4", "12.6"]  # default 12.4
-                ["12.6"]  # default 12.4
+                ["11.8", "12.4", "12.6"]  # default 12.4
                 if not for_windows
                 else ["11.8.0", "12.4.0", "12.6.0"]
             ),
