@@ -81,6 +81,8 @@ jobs:
 
               echo "-----"
               find / -name "libpython*"
+              echo "----"
+              ls -lh /usr/lib64/libpython3.so
 
               # cp36-cp36m
               # cp37-cp37m
