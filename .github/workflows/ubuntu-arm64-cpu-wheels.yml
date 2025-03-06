@@ -1,15 +1,15 @@
-name: build-wheels-cuda-ubuntu
+name: build-wheels-cpu-arm64-ubuntu
 
 on:
   push:
     branches:
-      - wheel
+      - fix-cuda-12.6
     tags:
       - '*'
   workflow_dispatch:
 
 concurrency:
-  group: build-wheels-cuda-ubuntu-${{ github.ref }}
+  group: build-wheels-cpu-arm64-ubuntu-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -26,17 +26,17 @@ jobs:
         id: set-matrix
         run: |
           # outputting for debugging purposes
-          python ./scripts/github_actions/generate_build_matrix.py --enable-cuda
-          MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --enable-cuda)
+          # python ./scripts/github_actions/generate_build_matrix.py --for-arm64
+          # MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --for-arm64)
 
-          # python ./scripts/github_actions/generate_build_matrix.py --enable-cuda --test-only-latest-torch
-          # MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --enable-cuda --test-only-latest-torch)
+          python ./scripts/github_actions/generate_build_matrix.py --test-only-latest-torch --for-arm64
+          MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --test-only-latest-torch --for-arm64)
           echo "::set-output name=matrix::${MATRIX}"
 
   build-manylinux-wheels:
     needs: generate_build_matrix
-    name: ${{ matrix.torch }} ${{ matrix.python-version }} cuda${{ matrix.cuda }}
-    runs-on: ubuntu-latest
+    name: ${{ matrix.torch }} ${{ matrix.python-version }}
+    runs-on: ubuntu-22.04-arm
     strategy:
       fail-fast: false
       matrix:
@@ -47,15 +47,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Free space
-        shell: bash
-        run: |
-          df -h
-          rm -rf /opt/hostedtoolcache
-          df -h
-          echo "pwd: $PWD"
-          echo "github.workspace ${{ github.workspace }}"
-
       # see https://github.com/pytorch/test-infra/blob/9e3d392690719fac85bad0c9b67f530e48375ca1/tools/scripts/generate_binary_build_matrix.py
       # https://github.com/pytorch/builder/tree/main/manywheel
       # https://github.com/pytorch/builder/pull/476
@@ -65,7 +56,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
             image: ${{ matrix.image }}
-            options: -v ${{ github.workspace }}:/var/www -e IS_2_28=${{ matrix.is_2_28 }} -e PYTHON_VERSION=${{ matrix.python-version }} -e TORCH_VERSION=${{ matrix.torch }} -e CUDA_VERSION=${{ matrix.cuda }}
+            options: -v ${{ github.workspace }}:/var/www -e IS_2_28=${{ matrix.is_2_28 }} -e PYTHON_VERSION=${{ matrix.python-version }} -e TORCH_VERSION=${{ matrix.torch }}
             run: |
               echo "pwd: $PWD"
               uname -a
@@ -138,29 +129,12 @@ jobs:
               python3 --version
               which python3
 
-              pushd /usr/local
-              rm cuda
-              ln -s cuda-$CUDA_VERSION cuda
-              popd
-              which nvcc
-              nvcc --version
-
-              cp /var/www/scripts/github_actions/install_torch.sh .
-              chmod +x install_torch.sh
-
-              /var/www/scripts/github_actions/build-ubuntu-cuda.sh
+              /var/www/scripts/github_actions/build-ubuntu-cpu-arm64.sh
 
       - name: Display wheels
         shell: bash
         run: |
           ls -lh ./wheelhouse/
-
-      - name: Upload Wheel
-        if: false
-        uses: actions/upload-artifact@v4
-        with:
-          name: torch-${{ matrix.torch }}-python-${{ matrix.python-version }}-ubuntu-latest-cuda-is_2_28-${{ matrix.is_2_28 }}
-          path: wheelhouse/*.whl
 
       # https://huggingface.co/docs/hub/spaces-github-actions
       - name: Publish to huggingface
@@ -177,17 +151,18 @@ jobs:
             git config --global user.name "Fangjun Kuang"
 
             rm -rf huggingface
+
             export GIT_LFS_SKIP_SMUDGE=1
 
             git clone https://huggingface.co/csukuangfj/kaldifeat huggingface
             cd huggingface
             git pull
 
-            d=cuda/1.25.5.dev20241029/linux
+            d=cpu/1.25.5.dev20250306/linux-arm64
             mkdir -p $d
             cp -v ../wheelhouse/*.whl ./$d
             git status
             git lfs track "*.whl"
             git add .
-            git commit -m "upload ubuntu-cuda wheel for torch ${{ matrix.torch }} python ${{ matrix.python-version }}"
+            git commit -m "upload ubuntu-arm64-cpu wheel for torch ${{ matrix.torch }} python ${{ matrix.python-version }}"
             git push https://csukuangfj:$HF_TOKEN@huggingface.co/csukuangfj/kaldifeat main

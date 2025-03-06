@@ -49,6 +49,13 @@ def get_args():
     )
 
     parser.add_argument(
+        "--for-arm64",
+        action="store_true",
+        default=False,
+        help="True for arm64",
+    )
+
+    parser.add_argument(
         "--test-only-latest-torch",
         action="store_true",
         default=False,
@@ -58,7 +65,9 @@ def get_args():
     return parser.parse_args()
 
 
-def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_torch):
+def generate_build_matrix(
+    enable_cuda, for_windows, for_macos, test_only_latest_torch, for_arm64
+):
     matrix = {
         # 1.5.x is removed because there are compilation errors.
         #  See
@@ -296,7 +305,7 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
         # https://github.com/Jimver/cuda-toolkit/blob/master/src/links/windows-links.ts
     }
     if test_only_latest_torch:
-        latest = "2.6.0"
+        latest = "2.4.0"
         matrix = {latest: matrix[latest]}
 
     if for_windows or for_macos:
@@ -368,7 +377,9 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
                             "torch": torch,
                             "python-version": p,
                             #  "image": "pytorch/manylinux-builder:cpu-2.4",
-                            "image": "pytorch/manylinux-builder:cpu-27677ead7c8293c299a885ae2c474bf445e653a5",
+                            "image": "pytorch/manylinux-builder:cpu-27677ead7c8293c299a885ae2c474bf445e653a5"
+                            if not for_arm64
+                            else "pytorch/manylinuxaarch64-builder:cpu-aarch64-195148266541a9789074265141cb7dc19dc14c54",
                             "is_2_28": "0",
                         }
                     )
@@ -377,7 +388,9 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
                         {
                             "torch": torch,
                             "python-version": p,
-                            "image": "pytorch/manylinux-builder:cpu-2.2",
+                            "image": "pytorch/manylinux-builder:cpu-2.2"
+                            if not for_arm64
+                            else "pytorch/manylinuxaarch64-builder:cpu-aarch64-195148266541a9789074265141cb7dc19dc14c54",
                             "is_2_28": "0",
                         }
                     )
@@ -386,7 +399,9 @@ def generate_build_matrix(enable_cuda, for_windows, for_macos, test_only_latest_
                         {
                             "torch": torch,
                             "python-version": p,
-                            "image": f"pytorch/manylinux-builder:cuda10.2",
+                            "image": "pytorch/manylinux-builder:cuda10.2"
+                            if not for_arm64
+                            else "pytorch/manylinuxaarch64-builder:cpu-aarch64-195148266541a9789074265141cb7dc19dc14c54",
                             "is_2_28": "0",
                         }
                     )
@@ -400,6 +415,7 @@ def main():
         enable_cuda=args.enable_cuda,
         for_windows=args.for_windows,
         for_macos=args.for_macos,
+        for_arm64=args.for_arm64,
         test_only_latest_torch=args.test_only_latest_torch,
     )
 
