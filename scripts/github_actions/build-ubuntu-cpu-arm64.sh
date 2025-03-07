@@ -28,6 +28,7 @@ python3 -m pip install wheel twine typing_extensions
 python3 -m pip install bs4 requests tqdm auditwheel
 
 echo "Installing torch"
+python3 -m pip install -qq torch==$TORCH_VERSION || \
 python3 -m pip install -qq torch==$TORCH_VERSION -f https://download.pytorch.org/whl/torch_stable.html || \
 python3 -m pip install -qq torch==$TORCH_VERSION -f https://download.pytorch.org/whl/torch/
 
@@ -40,10 +41,38 @@ export CMAKE_CUDA_COMPILER_LAUNCHER=
 export KALDIFEAT_CMAKE_ARGS=" -DPYTHON_EXECUTABLE=$PYTHON_INSTALL_DIR/bin/python3 "
 export KALDIFEAT_MAKE_ARGS=" -j "
 
+nvcc --version || true
+rm -rf /usr/local/cuda*
+nvcc --version || true
+
+if [[ x"$IS_2_28" == x"1" ]]; then
+  plat=manylinux_2_28_aarch64
+else
+  plat=manylinux_2_17_aarch64
+fi
 
 python3 setup.py bdist_wheel
 
-mkdir /var/www/wheelhouse
-cp -v dist/*.whl /var/www/wheelhouse
+auditwheel --verbose repair \
+  --exclude libc10.so \
+  --exclude libc10_cuda.so \
+  --exclude libcuda.so.1 \
+  --exclude libcudart.so.${CUDA_VERSION} \
+  --exclude libnvToolsExt.so.1 \
+  --exclude libnvrtc.so.${CUDA_VERSION} \
+  --exclude libtorch.so \
+  --exclude libtorch_cpu.so \
+  --exclude libtorch_cuda.so \
+  --exclude libtorch_python.so \
+  \
+  --exclude libcudnn.so.8 \
+  --exclude libcublas.so.11 \
+  --exclude libcublasLt.so.11 \
+  --exclude libcudart.so.11.0 \
+  --exclude libnvrtc.so.11.2 \
+  --exclude libtorch_cuda_cu.so \
+  --exclude libtorch_cuda_cpp.so \
+  --plat $plat \
+  dist/*.whl
 
 ls -lh  /var/www

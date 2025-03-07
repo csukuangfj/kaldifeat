@@ -3,6 +3,7 @@ name: build-wheels-cpu-arm64-ubuntu
 on:
   push:
     branches:
+      # - wheel
       - fix-cuda-12.6
     tags:
       - '*'
@@ -26,11 +27,11 @@ jobs:
         id: set-matrix
         run: |
           # outputting for debugging purposes
-          # python ./scripts/github_actions/generate_build_matrix.py --for-arm64
-          # MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --for-arm64)
+          python ./scripts/github_actions/generate_build_matrix.py --for-arm64
+          MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --for-arm64)
 
-          python ./scripts/github_actions/generate_build_matrix.py --test-only-latest-torch --for-arm64
-          MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --test-only-latest-torch --for-arm64)
+          # python ./scripts/github_actions/generate_build_matrix.py --test-only-latest-torch --for-arm64
+          # MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --test-only-latest-torch --for-arm64)
           echo "::set-output name=matrix::${MATRIX}"
 
   build-manylinux-wheels:
@@ -125,9 +126,6 @@ jobs:
               export PYTHON_INSTALL_DIR=$python_dir
               export PATH=$PYTHON_INSTALL_DIR/bin:$PATH
 
-              # There are no libpython.so inside $PYTHON_INSTALL_DIR
-              # since they are statically linked.
-
               python3 --version
               which python3
 
@@ -160,7 +158,7 @@ jobs:
             cd huggingface
             git pull
 
-            d=cpu/1.25.5.dev20250306/linux-arm64
+            d=cpu/1.25.5.dev20250307/linux-arm64
             mkdir -p $d
             cp -v ../wheelhouse/*.whl ./$d
             git status

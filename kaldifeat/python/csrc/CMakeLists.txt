@@ -27,13 +27,13 @@ if(NOT WIN32)
 endif()
 
 target_link_libraries(_kaldifeat PRIVATE kaldifeat_core)
-# if(UNIX AND NOT APPLE)
-#   target_link_libraries(_kaldifeat PUBLIC ${TORCH_DIR}/lib/libtorch_python.so)
-#   target_link_libraries(_kaldifeat PUBLIC ${PYTHON_LIBRARY})
-# elseif(WIN32)
-#   target_link_libraries(_kaldifeat PUBLIC ${TORCH_DIR}/lib/torch_python.lib)
-#   target_link_libraries(_kaldifeat PUBLIC ${PYTHON_LIBRARIES})
-# endif()
+if(UNIX AND NOT APPLE)
+  target_link_libraries(_kaldifeat PUBLIC ${TORCH_DIR}/lib/libtorch_python.so)
+  # target_link_libraries(_kaldifeat PUBLIC ${PYTHON_LIBRARY})
+elseif(WIN32)
+  target_link_libraries(_kaldifeat PUBLIC ${TORCH_DIR}/lib/torch_python.lib)
+  # target_link_libraries(_kaldifeat PUBLIC ${PYTHON_LIBRARIES})
+endif()
 
 install(TARGETS _kaldifeat
   DESTINATION ../

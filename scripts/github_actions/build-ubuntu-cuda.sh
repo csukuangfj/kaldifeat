@@ -51,7 +51,7 @@ python3 -c "import torch; print(torch.__file__)"
 sed -i.bak /9.0a/d /Python-*/py-3.*/lib/python3.*/site-packages/torch/share/cmake/Caffe2/Modules_CUDA_fix/upstream/FindCUDA/select_compute_arch.cmake || true
 
 if [[ x"$IS_2_28" != x"1" ]]; then
-yum -y install openssl-devel
+  yum -y install openssl-devel
 fi
 
 yum -y install zlib-devel bzip2-devel libffi-devel xz-devel wget redhat-lsb-core

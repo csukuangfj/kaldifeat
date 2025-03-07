@@ -7,6 +7,7 @@ https://github.com/pytorch/test-infra/blob/main/.github/workflows/test_build_whe
 https://github.com/pytorch/test-infra/blob/main/.github/workflows/test_build_wheels_linux_without_cuda.yml
 
 https://github.com/pytorch/test-infra/actions/workflows/test_build_wheels_linux_with_cuda.yml
+https://github.com/pytorch/test-infra/blob/main/tools/scripts/generate_binary_build_matrix.py
 """
 
 import argparse
@@ -305,7 +306,7 @@ def generate_build_matrix(
         # https://github.com/Jimver/cuda-toolkit/blob/master/src/links/windows-links.ts
     }
     if test_only_latest_torch:
-        latest = "2.4.0"
+        latest = "2.6.0"
         matrix = {latest: matrix[latest]}
 
     if for_windows or for_macos:
@@ -322,9 +323,18 @@ def generate_build_matrix(
             matrix["1.13.1"]["python-version"].remove("3.11")
 
     excluded_python_versions = ["3.6"]
+    enabled_torch_versions = ["1.10.0"]
+
+    enabled_torch_versions += ["1.13.0", "1.13.1"]
+
+    min_torch_version = "2.0.0"
 
     ans = []
     for torch, python_cuda in matrix.items():
+        if enabled_torch_versions and torch not in enabled_torch_versions:
+            if not version_ge(torch, min_torch_version):
+                continue
+
         python_versions = python_cuda["python-version"]
         cuda_versions = python_cuda["cuda"]
         if enable_cuda:
@@ -371,6 +381,17 @@ def generate_build_matrix(
                     ans.append({"torch": torch, "python-version": p})
                 elif for_macos:
                     ans.append({"torch": torch, "python-version": p})
+                elif version_ge(torch, "2.6.0"):
+                    ans.append(
+                        {
+                            "torch": torch,
+                            "python-version": p,
+                            "image": "pytorch/manylinux2_28-builder:cpu"
+                            if not for_arm64
+                            else "pytorch/manylinux2_28_aarch64-builder:cpu-aarch64",
+                            "is_2_28": "1",
+                        }
+                    )
                 elif version_ge(torch, "2.4.0"):
                     ans.append(
                         {
