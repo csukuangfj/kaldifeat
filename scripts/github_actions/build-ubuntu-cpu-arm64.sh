@@ -28,8 +28,9 @@ python3 -m pip install wheel twine typing_extensions
 python3 -m pip install bs4 requests tqdm auditwheel
 
 echo "Installing torch"
-python3 -m pip install -qq torch==$TORCH_VERSION+cpu -f https://download.pytorch.org/whl/torch_stable.html || \
-python3 -m pip install -qq torch==$TORCH_VERSION+cpu -f https://download.pytorch.org/whl/torch/
+python3 -m pip install -qq torch==$TORCH_VERSION || \
+python3 -m pip install -qq torch==$TORCH_VERSION -f https://download.pytorch.org/whl/torch_stable.html || \
+python3 -m pip install -qq torch==$TORCH_VERSION -f https://download.pytorch.org/whl/torch/
 
 rm -rf ~/.cache/pip
 yum clean all
@@ -44,12 +45,13 @@ nvcc --version || true
 rm -rf /usr/local/cuda*
 nvcc --version || true
 
-python3 setup.py bdist_wheel
 if [[ x"$IS_2_28" == x"1" ]]; then
-  plat=manylinux_2_28_x86_64
+  plat=manylinux_2_28_aarch64
 else
-  plat=manylinux_2_17_x86_64
+  plat=manylinux_2_17_aarch64
 fi
+
+python3 setup.py bdist_wheel
 
 auditwheel --verbose repair \
   --exclude libc10.so \

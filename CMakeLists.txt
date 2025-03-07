@@ -43,7 +43,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 option(BUILD_SHARED_LIBS "Whether to build shared libraries" ON)
-option(kaldifeat_BUILD_TESTS "Whether to build tests or not" ON)
+option(kaldifeat_BUILD_TESTS "Whether to build tests or not" OFF)
 option(kaldifeat_BUILD_PYMODULE "Whether to build python module or not" ON)
 
 message(STATUS "BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS}")

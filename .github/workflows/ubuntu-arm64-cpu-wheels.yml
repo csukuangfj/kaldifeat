@@ -1,16 +1,16 @@
-name: build-wheels-cpu-ubuntu
+name: build-wheels-cpu-arm64-ubuntu
 
 on:
   push:
     branches:
-      # - fix-cuda-12.6
-      - wheel
+      # - wheel
+      - fix-cuda-12.6
     tags:
       - '*'
   workflow_dispatch:
 
 concurrency:
-  group: build-wheels-cpu-ubuntu-${{ github.ref }}
+  group: build-wheels-cpu-arm64-ubuntu-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -27,17 +27,17 @@ jobs:
         id: set-matrix
         run: |
           # outputting for debugging purposes
-          # python ./scripts/github_actions/generate_build_matrix.py
-          # MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py)
+          python ./scripts/github_actions/generate_build_matrix.py --for-arm64
+          MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --for-arm64)
 
-          python ./scripts/github_actions/generate_build_matrix.py --test-only-latest-torch
-          MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --test-only-latest-torch)
+          # python ./scripts/github_actions/generate_build_matrix.py --test-only-latest-torch --for-arm64
+          # MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --test-only-latest-torch --for-arm64)
           echo "::set-output name=matrix::${MATRIX}"
 
   build-manylinux-wheels:
     needs: generate_build_matrix
     name: ${{ matrix.torch }} ${{ matrix.python-version }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04-arm
     strategy:
       fail-fast: false
       matrix:
@@ -83,7 +83,7 @@ jobs:
               echo "-----"
               find / -name "libpython*"
               echo "----"
-              ls -lh /usr/lib64/libpython3.so || true
+              ls -lh /usr/lib64/libpython3.so
 
               # cp36-cp36m
               # cp37-cp37m
@@ -129,7 +129,7 @@ jobs:
               python3 --version
               which python3
 
-              /var/www/scripts/github_actions/build-ubuntu-cpu.sh
+              /var/www/scripts/github_actions/build-ubuntu-cpu-arm64.sh
 
       - name: Display wheels
         shell: bash
@@ -158,11 +158,11 @@ jobs:
             cd huggingface
             git pull
 
-            d=cpu/1.25.5.dev20250307/linux-x64
+            d=cpu/1.25.5.dev20250307/linux-arm64
             mkdir -p $d
             cp -v ../wheelhouse/*.whl ./$d
             git status
             git lfs track "*.whl"
             git add .
-            git commit -m "upload ubuntu-cpu wheel for torch ${{ matrix.torch }} python ${{ matrix.python-version }}"
+            git commit -m "upload ubuntu-arm64-cpu wheel for torch ${{ matrix.torch }} python ${{ matrix.python-version }}"
             git push https://csukuangfj:$HF_TOKEN@huggingface.co/csukuangfj/kaldifeat main
