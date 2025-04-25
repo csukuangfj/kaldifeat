@@ -3,8 +3,8 @@ name: build-wheels-cpu-ubuntu
 on:
   push:
     branches:
-      # - fix-cuda-12.6
       - wheel
+      # - torch-2.7.0
     tags:
       - '*'
   workflow_dispatch:
