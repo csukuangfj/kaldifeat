@@ -3,7 +3,8 @@ name: build-wheels-cpu-win64
 on:
   push:
     branches:
-      - fix-wheel-2
+      - wheel
+      # - torch-2.7.0
     tags:
       - '*'
   workflow_dispatch:
@@ -47,15 +48,23 @@ jobs:
         with:
           fetch-depth: 0
 
-      # see https://cibuildwheel.readthedocs.io/en/stable/changelog/
-      # for a list of versions
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v2.22.0
-        env:
-          CIBW_BEFORE_BUILD: pip install torch==${{ matrix.torch}}+cpu -f https://download.pytorch.org/whl/torch_stable.html cmake numpy || pip install torch==${{ matrix.torch}}+cpu -f https://download.pytorch.org/whl/torch/ cmake numpy
-          CIBW_BUILD: ${{ matrix.python-version }}-win_amd64
-          CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: ""
-          CIBW_BUILD_VERBOSITY: 3
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          pip install -q torch==${{ matrix.torch}} cmake numpy wheel>=0.40.0 twine setuptools
+          pip install torch==${{ matrix.torch}}+cpu -f https://download.pytorch.org/whl/torch_stable.html cmake numpy || pip install torch==${{ matrix.torch}}+cpu -f https://download.pytorch.org/whl/torch/ cmake numpy
+
+      - name: Build wheel
+        shell: bash
+        run: |
+          python3 setup.py bdist_wheel
+          mkdir wheelhouse
+          cp -v dist/* wheelhouse
 
       - name: Display wheels
         shell: bash
