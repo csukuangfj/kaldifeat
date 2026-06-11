@@ -25,6 +25,39 @@ execute_process(
 
 message(STATUS "PyTorch version: ${TORCH_VERSION}")
 
+# A ROCm (AMD GPU) PyTorch reports a non-empty torch.version.hip. On such a
+# build TORCH_LIBRARIES drags in the static libkineto.a, whose ROCm profiler
+# references the HIP runtime (hipRuntimeGetVersion in libamdhip64.so). The
+# shared torch libraries do not re-export that symbol, so any executable that
+# links kaldifeat_core needs the HIP runtime on its own link line. Detect ROCm
+# and expose the runtime so csrc/CMakeLists.txt can link it. The device string
+# stays "cuda" as usual; this only fixes linking, not the GPU code path.
+execute_process(
+  COMMAND "${PYTHON_EXECUTABLE}" -c "import torch; print(torch.version.hip or '')"
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  OUTPUT_VARIABLE TORCH_HIP_VERSION
+)
+if(TORCH_HIP_VERSION)
+  message(STATUS "PyTorch is a ROCm build (HIP ${TORCH_HIP_VERSION})")
+  set(kaldifeat_TORCH_IS_ROCM TRUE)
+  find_library(kaldifeat_HIP_RUNTIME_LIB amdhip64
+    HINTS ENV ROCM_PATH /opt/rocm
+    PATH_SUFFIXES lib
+  )
+  if(NOT kaldifeat_HIP_RUNTIME_LIB)
+    message(FATAL_ERROR "ROCm PyTorch detected but libamdhip64 was not found; set ROCM_PATH")
+  endif()
+  message(STATUS "HIP runtime library: ${kaldifeat_HIP_RUNTIME_LIB}")
+
+  # libkineto.a's RocprofLogger references librocprofiler-sdk. The shared
+  # libkaldifeat_core.so resolves it transitively, but a unit-test executable
+  # that compiles the core sources in directly needs it on its own link line.
+  find_library(kaldifeat_ROCPROFILER_SDK_LIB rocprofiler-sdk
+    HINTS ENV ROCM_PATH /opt/rocm
+    PATH_SUFFIXES lib
+  )
+endif()
+
 execute_process(
   COMMAND "${PYTHON_EXECUTABLE}" -c "import torch; print(torch.__version__.split('.')[0])"
   OUTPUT_STRIP_TRAILING_WHITESPACE
