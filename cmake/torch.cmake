@@ -14,8 +14,35 @@ list(APPEND CMAKE_PREFIX_PATH "${TORCH_DIR}")
 find_package(Torch REQUIRED)
 
 # set the global CMAKE_CXX_FLAGS so that
-# kaldifeat uses the same ABI flag as PyTorch
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+# kaldifeat uses the same ABI flag as PyTorch.
+# On Windows with clang (not MSVC) TORCH_CXX_FLAGS and the torch/caffe2 imported
+# targets' INTERFACE_COMPILE_OPTIONS may contain MSVC-only slash options
+# (/permissive-, /EHsc, /bigobj) that clang rejects in GCC-compat mode. Strip
+# them from both places.
+if(WIN32 AND NOT MSVC)
+  # TORCH_CXX_FLAGS may contain MSVC-only slash options (/permissive-, /EHsc,
+  # /bigobj) that clang rejects in GCC-compat mode. Strip items starting with /
+  # before appending to CMAKE_CXX_FLAGS.
+  string(REGEX REPLACE "(^|;| )/[^ ;]+" "" _torch_cxx_flags_filtered "${TORCH_CXX_FLAGS}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_torch_cxx_flags_filtered}")
+  # Caffe2Targets.cmake also bakes these MSVC flags into INTERFACE_COMPILE_OPTIONS
+  # via generator expressions containing /permissive-, /EHsc, /bigobj, /Z7. The
+  # generator expressions have nested ';' separators that cmake splits incorrectly
+  # when reading back via get_target_property, making surgical item-level filtering
+  # unreliable. Instead clear INTERFACE_COMPILE_OPTIONS on the imported torch
+  # targets (clang rejects the MSVC content) and rely on CMAKE_CXX_FLAGS (set
+  # above) and INTERFACE_COMPILE_DEFINITIONS for all needed defines. The defines
+  # (-D__HIP_PLATFORM_AMD__=1, -DUSE_ROCM, etc.) are already in TORCH_CXX_FLAGS
+  # and will be present via CMAKE_CXX_FLAGS after the filter above.
+  foreach(_tgt c10 c10_hip torch_cpu torch_cpu_library torch_hip torch_hip_library
+               torch torch_library headeronly)
+    if(TARGET ${_tgt})
+      set_target_properties(${_tgt} PROPERTIES INTERFACE_COMPILE_OPTIONS "")
+    endif()
+  endforeach()
+else()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+endif()
 
 # Ensure we use at least the C++ standard that torch requires. Newer torch
 # versions (2.13+) set CXX_STANDARD 20 on the torch interface target; building

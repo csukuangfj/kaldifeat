@@ -51,7 +51,7 @@ option(kaldifeat_BUILD_PYMODULE "Whether to build python module or not" ON)
 
 message(STATUS "BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS}")
 
-if(BUILD_SHARED_LIBS AND MSVC)
+if(BUILD_SHARED_LIBS AND WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
@@ -70,7 +70,7 @@ if(kaldifeat_BUILD_TESTS)
 endif()
 
 
-if(WIN32)
+if(MSVC)
   # disable various warnings for MSVC
   # 4624: destructor was implicitly defined as deleted because a base class destructor is inaccessible or deleted
   set(disabled_warnings
