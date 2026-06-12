@@ -17,6 +17,17 @@ find_package(Torch REQUIRED)
 # kaldifeat uses the same ABI flag as PyTorch
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
+# Ensure we use at least the C++ standard that torch requires. Newer torch
+# versions (2.13+) set CXX_STANDARD 20 on the torch interface target; building
+# with a lower standard produces compilation errors in torch's own headers.
+get_target_property(_torch_cxx_std torch CXX_STANDARD)
+if(_torch_cxx_std AND CMAKE_CXX_STANDARD AND CMAKE_CXX_STANDARD LESS _torch_cxx_std)
+  message(STATUS "Raising CMAKE_CXX_STANDARD from ${CMAKE_CXX_STANDARD} to ${_torch_cxx_std} (torch requirement)")
+  set(CMAKE_CXX_STANDARD ${_torch_cxx_std} CACHE STRING "The C++ version to be used." FORCE)
+elseif(_torch_cxx_std AND NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD ${_torch_cxx_std} CACHE STRING "The C++ version to be used." FORCE)
+endif()
+
 execute_process(
   COMMAND "${PYTHON_EXECUTABLE}" -c "import torch; print(torch.__version__)"
   OUTPUT_STRIP_TRAILING_WHITESPACE
