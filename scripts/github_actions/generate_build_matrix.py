@@ -327,10 +327,58 @@ def generate_build_matrix(
                 else ["12.6.2", "12.8.1", "12.9.1"]
             ),
         },
+        "2.9.0": {
+            "python-version": ["3.10", "3.11", "3.12", "3.13", "3.14"],
+            "cuda": (
+                ["12.6", "12.8", "12.9", "13.0"]  # default 12.8
+                if not for_windows
+                else ["12.6.2", "12.8.1", "12.9.1", "13.0.1"]
+            ),
+        },
+        "2.9.1": {
+            "python-version": ["3.10", "3.11", "3.12", "3.13", "3.14"],
+            "cuda": (
+                ["12.6", "12.8", "12.9", "13.0"]  # default 12.8
+                if not for_windows
+                else ["12.6.2", "12.8.1", "12.9.1", "13.0.1"]
+            ),
+        },
+        "2.10.0": {
+            "python-version": ["3.10", "3.11", "3.12", "3.13", "3.14"],
+            "cuda": (
+                ["12.6", "12.8", "12.9", "13.0"]  # default 12.8
+                if not for_windows
+                else ["12.6.2", "12.8.1", "12.9.1", "13.0.1"]
+            ),
+        },
+        "2.11.0": {
+            "python-version": ["3.10", "3.11", "3.12", "3.13", "3.14"],
+            "cuda": (
+                ["12.6", "12.8", "12.9", "13.0"]  # default 13.0
+                if not for_windows
+                else ["12.6.2", "12.8.1", "12.9.1", "13.0.1"]
+            ),
+        },
+        "2.12.0": {
+            "python-version": ["3.10", "3.11", "3.12", "3.13", "3.14"],
+            "cuda": (
+                ["12.6", "13.0", "13.2"]  # default 13.0
+                if not for_windows
+                else ["12.6.2", "13.0.1", "13.2.0"]
+            ),
+        },
+        "2.12.1": {
+            "python-version": ["3.10", "3.11", "3.12", "3.13", "3.14"],
+            "cuda": (
+                ["12.6", "13.0", "13.2"]  # default 13.0
+                if not for_windows
+                else ["12.6.2", "13.0.1", "13.2.0"]
+            ),
+        },
         # https://github.com/Jimver/cuda-toolkit/blob/master/src/links/windows-links.ts
     }
     if test_only_latest_torch:
-        latest = "2.8.0"
+        latest = "2.12.1"
         matrix = {latest: matrix[latest]}
 
     if for_windows or for_macos:
@@ -346,7 +394,7 @@ def generate_build_matrix(
         if "1.13.1" in matrix:
             matrix["1.13.1"]["python-version"].remove("3.11")
 
-    excluded_python_versions = ["3.6"]
+    excluded_python_versions = ["3.6", "3.7"]
     enabled_torch_versions = ["1.10.0"]
 
     enabled_torch_versions += ["1.13.0", "1.13.1"]
@@ -409,9 +457,11 @@ def generate_build_matrix(
                         {
                             "torch": torch,
                             "python-version": p,
-                            "image": "pytorch/manylinux2_28-builder:cpu"
-                            if not for_arm64
-                            else "pytorch/manylinux2_28_aarch64-builder:cpu-aarch64",
+                            "image": (
+                                "pytorch/manylinux2_28-builder:cpu"
+                                if not for_arm64
+                                else "pytorch/manylinux2_28_aarch64-builder:cpu-aarch64"
+                            ),
                             "is_2_28": "1",
                         }
                     )
@@ -421,9 +471,11 @@ def generate_build_matrix(
                             "torch": torch,
                             "python-version": p,
                             #  "image": "pytorch/manylinux-builder:cpu-2.4",
-                            "image": "pytorch/manylinux-builder:cpu-27677ead7c8293c299a885ae2c474bf445e653a5"
-                            if not for_arm64
-                            else "pytorch/manylinuxaarch64-builder:cpu-aarch64-195148266541a9789074265141cb7dc19dc14c54",
+                            "image": (
+                                "pytorch/manylinux-builder:cpu-27677ead7c8293c299a885ae2c474bf445e653a5"
+                                if not for_arm64
+                                else "pytorch/manylinuxaarch64-builder:cpu-aarch64-195148266541a9789074265141cb7dc19dc14c54"
+                            ),
                             "is_2_28": "0",
                         }
                     )
@@ -432,9 +484,11 @@ def generate_build_matrix(
                         {
                             "torch": torch,
                             "python-version": p,
-                            "image": "pytorch/manylinux-builder:cpu-2.2"
-                            if not for_arm64
-                            else "pytorch/manylinuxaarch64-builder:cpu-aarch64-195148266541a9789074265141cb7dc19dc14c54",
+                            "image": (
+                                "pytorch/manylinux-builder:cpu-2.2"
+                                if not for_arm64
+                                else "pytorch/manylinuxaarch64-builder:cpu-aarch64-195148266541a9789074265141cb7dc19dc14c54"
+                            ),
                             "is_2_28": "0",
                         }
                     )
@@ -443,9 +497,11 @@ def generate_build_matrix(
                         {
                             "torch": torch,
                             "python-version": p,
-                            "image": "pytorch/manylinux-builder:cuda10.2"
-                            if not for_arm64
-                            else "pytorch/manylinuxaarch64-builder:cpu-aarch64-195148266541a9789074265141cb7dc19dc14c54",
+                            "image": (
+                                "pytorch/manylinux-builder:cuda10.2"
+                                if not for_arm64
+                                else "pytorch/manylinuxaarch64-builder:cpu-aarch64-195148266541a9789074265141cb7dc19dc14c54"
+                            ),
                             "is_2_28": "0",
                         }
                     )

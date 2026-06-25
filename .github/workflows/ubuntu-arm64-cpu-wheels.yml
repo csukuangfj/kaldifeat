@@ -4,7 +4,7 @@ on:
   push:
     branches:
       # - wheel
-      - torch-2.8.0
+      - torch-2.8.0-1
     tags:
       - '*'
   workflow_dispatch:
@@ -27,11 +27,11 @@ jobs:
         id: set-matrix
         run: |
           # outputting for debugging purposes
-          # python ./scripts/github_actions/generate_build_matrix.py --for-arm64
-          # MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --for-arm64)
+          python ./scripts/github_actions/generate_build_matrix.py --for-arm64
+          MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --for-arm64)
 
-          python ./scripts/github_actions/generate_build_matrix.py --test-only-latest-torch --for-arm64
-          MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --test-only-latest-torch --for-arm64)
+          # python ./scripts/github_actions/generate_build_matrix.py --test-only-latest-torch --for-arm64
+          # MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --test-only-latest-torch --for-arm64)
           echo "::set-output name=matrix::${MATRIX}"
 
   build-manylinux-wheels:
@@ -158,7 +158,7 @@ jobs:
             cd huggingface
             git pull
 
-            d=cpu/1.25.5.dev20250307/linux-arm64
+            d=cpu/1.25.5.dev20260626/linux-arm64
             mkdir -p $d
             cp -v ../wheelhouse/*.whl ./$d
             git status

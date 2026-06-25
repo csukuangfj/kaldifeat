@@ -25,7 +25,7 @@ which python3
 python3 -m pip install scikit-build
 python3 -m pip install -U pip cmake
 python3 -m pip install wheel twine typing_extensions
-python3 -m pip install bs4 requests tqdm auditwheel
+python3 -m pip install bs4 requests tqdm auditwheel patchelf
 
 echo "Installing torch"
 python3 -m pip install -qq torch==$TORCH_VERSION+cpu -f https://download.pytorch.org/whl/torch_stable.html || \
@@ -39,6 +39,14 @@ cd /var/www
 export CMAKE_CUDA_COMPILER_LAUNCHER=
 export KALDIFEAT_CMAKE_ARGS=" -DPYTHON_EXECUTABLE=$PYTHON_INSTALL_DIR/bin/python3 "
 export KALDIFEAT_MAKE_ARGS=" -j "
+
+python3 -m pip install --upgrade wheel
+# torch < 2.0 needs setuptools < 72 (which still has pkg_resources)
+if [[ "${TORCH_VERSION%%.*}" -lt 2 ]]; then
+  python3 -m pip install --upgrade "setuptools<72"
+else
+  python3 -m pip install --upgrade setuptools
+fi
 
 nvcc --version || true
 rm -rf /usr/local/cuda*
@@ -70,7 +78,39 @@ auditwheel --verbose repair \
   --exclude libnvrtc.so.11.2 \
   --exclude libtorch_cuda_cu.so \
   --exclude libtorch_cuda_cpp.so \
+  \
   --plat $plat \
+  \
+  -w /var/www/wheelhouse \
   dist/*.whl
 
 ls -lh  /var/www
+
+ls -lh  /var/www/wheelhouse
+
+# Use patchelf to add nvidia rpath entries to the _kaldifeat shared library
+pushd /var/www/wheelhouse
+whl=$(ls *.whl)
+mkdir -p _tmp_whl
+pushd _tmp_whl
+unzip -o ../$whl
+so_file=$(ls _kaldifeat.cpython-*.so)
+echo "Patching rpath for $so_file"
+current_rpath=$(patchelf --print-rpath "$so_file")
+echo "Current rpath: $current_rpath"
+new_rpath="\$ORIGIN/nvidia/nvtx/lib:\$ORIGIN/nvidia/cuda_runtime/lib:\$ORIGIN/nvidia/cuda_nvrtc/lib:${current_rpath}"
+echo "New rpath: $new_rpath"
+patchelf --set-rpath "$new_rpath" "$so_file"
+echo "Verified rpath:"
+patchelf --print-rpath "$so_file"
+python3 -c "
+import zipfile, os
+with zipfile.ZipFile(os.path.join('..', '$whl'), 'w', zipfile.ZIP_DEFLATED) as zf:
+    for root, dirs, files in os.walk('.'):
+        for f in files:
+            path = os.path.join(root, f)
+            zf.write(path, path[2:])
+"
+popd
+rm -rf _tmp_whl
+popd
