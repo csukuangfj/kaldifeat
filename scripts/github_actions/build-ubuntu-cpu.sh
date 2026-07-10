@@ -15,6 +15,12 @@ if [ -z $TORCH_VERSION ]; then
   exit 1
 fi
 
+if [ -z "$PYTHON_INSTALL_DIR" ]; then
+  echo "Please set the environment variable PYTHON_INSTALL_DIR"
+  echo "Example: export PYTHON_INSTALL_DIR=/opt/python/cp310-cp310"
+  exit 1
+fi
+
 export PATH=$PYTHON_INSTALL_DIR/bin:$PATH
 export LD_LIBRARY_PATH=$PYTHON_INSTALL_DIR/lib:$LD_LIBRARY_PATH
 ls -lh $PYTHON_INSTALL_DIR/lib/

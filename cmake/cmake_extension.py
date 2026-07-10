@@ -79,7 +79,9 @@ class BuildExtension(build_ext):
         print("major, minor", major, minor)
         major = int(major)
         minor = int(minor)
-        if major > 2 or (major == 2 and minor >= 1):
+        if major > 2 or (major == 2 and minor >= 13):
+            extra_cmake_args += f" -DCMAKE_CXX_STANDARD=20 "
+        elif major > 2 or (major == 2 and minor >= 1):
             extra_cmake_args += f" -DCMAKE_CXX_STANDARD=17 "
 
         if "PYTHON_EXECUTABLE" not in cmake_args:
