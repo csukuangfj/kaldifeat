@@ -10,9 +10,27 @@ function(kaldifeat_add_py_test source)
 
   get_filename_component(kaldifeat_path ${CMAKE_CURRENT_LIST_DIR} DIRECTORY)
 
-  set_property(TEST ${name}
-    PROPERTY ENVIRONMENT "PYTHONPATH=${kaldifeat_path}:$<TARGET_FILE_DIR:_kaldifeat>:$ENV{PYTHONPATH}"
-  )
+  # Windows Python uses ";" as the PYTHONPATH separator; Unix uses ":".
+  if(WIN32)
+    set(_pathsep ";")
+  else()
+    set(_pathsep ":")
+  endif()
+
+  if(WIN32)
+    # On Windows the DLL loader needs the kaldifeat_core.dll directory and the
+    # torch/lib directory on PATH (for c10.dll / torch_cpu.dll). Append them to
+    # the inherited PATH so they are found when Python loads _kaldifeat.pyd.
+    set_property(TEST ${name}
+      PROPERTY ENVIRONMENT
+        "PYTHONPATH=${kaldifeat_path}${_pathsep}$<TARGET_FILE_DIR:_kaldifeat>"
+        "PATH=$<TARGET_FILE_DIR:kaldifeat_core>$<SEMICOLON>${TORCH_DIR}/lib$<SEMICOLON>$ENV{PATH}"
+    )
+  else()
+    set_property(TEST ${name}
+      PROPERTY ENVIRONMENT "PYTHONPATH=${kaldifeat_path}${_pathsep}$<TARGET_FILE_DIR:_kaldifeat>${_pathsep}$ENV{PYTHONPATH}"
+    )
+  endif()
 endfunction()
 
 # please sort the files in alphabetic order
