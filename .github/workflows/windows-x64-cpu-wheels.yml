@@ -27,11 +27,11 @@ jobs:
         id: set-matrix
         run: |
           # outputting for debugging purposes
-          # python ./scripts/github_actions/generate_build_matrix.py --for-windows
-          # MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --for-windows)
+          python ./scripts/github_actions/generate_build_matrix.py --for-windows
+          MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --for-windows)
 
-          python ./scripts/github_actions/generate_build_matrix.py --for-windows --test-only-latest-torch
-          MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --for-windows --test-only-latest-torch)
+          # python ./scripts/github_actions/generate_build_matrix.py --for-windows --test-only-latest-torch
+          # MATRIX=$(python ./scripts/github_actions/generate_build_matrix.py --for-windows --test-only-latest-torch)
           echo "::set-output name=matrix::${MATRIX}"
 
   build_wheels_win64_cpu:
@@ -49,15 +49,15 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
         shell: bash
         run: |
+          pip install torch==${{ matrix.torch}}+cpu cmake numpy -f https://download.pytorch.org/whl/torch_stable.html || pip install torch==${{ matrix.torch}}+cpu cmake numpy -f https://download.pytorch.org/whl/torch/
           pip install -q torch==${{ matrix.torch}} cmake numpy wheel>=0.40.0 twine setuptools
-          pip install torch==${{ matrix.torch}}+cpu -f https://download.pytorch.org/whl/torch_stable.html cmake numpy || pip install torch==${{ matrix.torch}}+cpu -f https://download.pytorch.org/whl/torch/ cmake numpy
 
       - name: Build wheel
         shell: bash
