@@ -4,7 +4,7 @@ on:
   push:
     branches:
       # - wheel
-      - torch-2.8.0
+      - torch-2.15.0
     tags:
       - '*'
   workflow_dispatch:
@@ -146,7 +146,7 @@ jobs:
 
       # https://huggingface.co/docs/hub/spaces-github-actions
       - name: Publish to huggingface
-        if: github.repository_owner == 'csukuangfj'
+        # if: github.repository_owner == 'csukuangfj'
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         uses: nick-fields/retry@v2

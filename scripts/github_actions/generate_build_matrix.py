@@ -432,6 +432,15 @@ def generate_build_matrix(
         if "2.13.0" in matrix:
             matrix["2.13.0"]["python-version"].remove("3.15")
 
+    if for_arm64:
+        # torch 1.13 has no cp311 wheels for linux aarch64 (x86_64 has them,
+        # so this must not be applied unconditionally)
+        if "1.13.0" in matrix:
+            matrix["1.13.0"]["python-version"].remove("3.11")
+
+        if "1.13.1" in matrix:
+            matrix["1.13.1"]["python-version"].remove("3.11")
+
     excluded_python_versions = ["3.6", "3.7"]
 
     enabled_torch_versions = ["1.10.0"]
@@ -539,7 +548,16 @@ def generate_build_matrix(
                     ans.append({"torch": torch, "python-version": p})
                 elif for_macos or for_macos_m1:
                     ans.append({"torch": torch, "python-version": p})
-                elif version_ge(torch, "2.6.0"):
+                elif version_ge(torch, "2.6.0") or (
+                    # torch >= 2.4 linux aarch64 wheels for cp310+ are built
+                    # against glibc 2.28 and cannot be used on the old
+                    # manylinux_2_17 images; also, those old images have no
+                    # cp313. Keep cp38/cp39 on the old images: the torch
+                    # wheels for them are still manylinux_2_17.
+                    for_arm64
+                    and version_ge(torch, "2.4.0")
+                    and version_ge(p, "3.10")
+                ):
                     ans.append(
                         {
                             "torch": torch,
