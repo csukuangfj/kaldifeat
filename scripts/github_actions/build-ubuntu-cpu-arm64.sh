@@ -51,6 +51,14 @@ python3 -m pip install -qq torch==$TORCH_VERSION+cpu -f https://download.pytorch
 python3 -m pip install -qq torch==$TORCH_VERSION -f https://download.pytorch.org/whl/torch/ || \
 python3 -m pip install -qq torch==$TORCH_VERSION
 
+# Prefer the libraries bundled inside the installed torch wheel. The
+# manylinux2_28_aarch64 builder image has an Arm Compute Library build (e.g.
+# /acl/build) in LD_LIBRARY_PATH which it uses to build pytorch itself; it
+# shadows the ACL bundled inside the torch wheel and breaks `import torch`
+# for torch versions built against a different ACL ABI (e.g. 2.4/2.5).
+TORCH_LIB_DIR=$(python3 -c "import sysconfig; print(sysconfig.get_paths()['purelib'] + '/torch/lib')")
+export LD_LIBRARY_PATH=$TORCH_LIB_DIR:$LD_LIBRARY_PATH
+
 rm -rf ~/.cache/pip
 yum clean all
 

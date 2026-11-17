@@ -53,6 +53,14 @@ python3 -m pip install bs4 requests tqdm auditwheel
 echo "Installing torch"
 ./install_torch.sh
 
+# Prefer the libraries bundled inside the installed torch wheel. Builder
+# images may ship an Arm Compute Library build (e.g. /acl/build) in
+# LD_LIBRARY_PATH which they use to build pytorch itself; it shadows the ACL
+# bundled inside the torch wheel and breaks `import torch` for torch versions
+# built against a different ACL ABI (e.g. 2.4/2.5).
+TORCH_LIB_DIR=$(python3 -c "import sysconfig; print(sysconfig.get_paths()['purelib'] + '/torch/lib')")
+export LD_LIBRARY_PATH=$TORCH_LIB_DIR:$LD_LIBRARY_PATH
+
 python3 -c "import torch; print(torch.__file__)"
 
 sed -i.bak /9.0a/d /Python-*/py-3.*/lib/python3.*/site-packages/torch/share/cmake/Caffe2/Modules_CUDA_fix/upstream/FindCUDA/select_compute_arch.cmake || true

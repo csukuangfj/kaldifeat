@@ -68,6 +68,15 @@ def get_args():
         default=False,
         help="True to enable ROCm (AMD GPU)",
     )
+
+    parser.add_argument(
+        "--shard",
+        type=str,
+        default="",
+        help="""Shard of the matrix to generate, e.g., "0/2" or "1/2".
+        Shard i of n contains every i-th entry of the full matrix. Use it
+        to stay below the limit of 256 jobs per matrix.""",
+    )
     return parser.parse_args()
 
 
@@ -79,6 +88,7 @@ def generate_build_matrix(
     for_arm64,
     test_only_latest_torch,
     enable_rocm=False,
+    shard="",
 ):
     matrix = {
         # 1.5.x is removed because there are compilation errors.
@@ -441,6 +451,13 @@ def generate_build_matrix(
         if "1.13.1" in matrix:
             matrix["1.13.1"]["python-version"].remove("3.11")
 
+        # likewise, torch 2.5 has no cp313 wheels for linux aarch64
+        if "2.5.0" in matrix:
+            matrix["2.5.0"]["python-version"].remove("3.13")
+
+        if "2.5.1" in matrix:
+            matrix["2.5.1"]["python-version"].remove("3.13")
+
     excluded_python_versions = ["3.6", "3.7"]
 
     enabled_torch_versions = ["1.10.0"]
@@ -613,6 +630,13 @@ def generate_build_matrix(
                         }
                     )
 
+    if shard:
+        i_str, n_str = shard.split("/")
+        i, n = int(i_str), int(n_str)
+        if n <= 0 or not (0 <= i < n):
+            raise ValueError(f"Invalid shard: {shard}")
+        ans = [e for j, e in enumerate(ans) if j % n == i]
+
     print(json.dumps({"include": ans}))
 
 
@@ -626,6 +650,7 @@ def main():
         for_arm64=args.for_arm64,
         test_only_latest_torch=args.test_only_latest_torch,
         enable_rocm=args.enable_rocm,
+        shard=args.shard,
     )
 
 
