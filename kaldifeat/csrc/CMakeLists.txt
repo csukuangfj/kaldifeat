@@ -16,6 +16,13 @@ set(kaldifeat_srcs
 add_library(kaldifeat_core ${kaldifeat_srcs})
 target_link_libraries(kaldifeat_core PUBLIC ${TORCH_LIBRARIES})
 
+# On a ROCm PyTorch, TORCH_LIBRARIES pulls in the static libkineto.a whose ROCm
+# profiler needs the HIP runtime; link it so downstream executables resolve it
+# (kaldifeat_TORCH_IS_ROCM / kaldifeat_HIP_RUNTIME_LIB set in cmake/torch.cmake).
+if(kaldifeat_TORCH_IS_ROCM)
+  target_link_libraries(kaldifeat_core PUBLIC ${kaldifeat_HIP_RUNTIME_LIB})
+endif()
+
 target_compile_definitions(kaldifeat_core PUBLIC KALDIFEAT_TORCH_VERSION_MAJOR=${KALDIFEAT_TORCH_VERSION_MAJOR})
 target_compile_definitions(kaldifeat_core PUBLIC KALDIFEAT_TORCH_VERSION_MINOR=${KALDIFEAT_TORCH_VERSION_MINOR})
 
@@ -34,13 +41,19 @@ target_link_libraries(test_kaldifeat PRIVATE kaldifeat_core)
 
 function(kaldifeat_add_test source)
   get_filename_component(name ${source} NAME_WE)
-  add_executable(${name} "${source}")
+  add_executable(${name} "${source}" $<TARGET_OBJECTS:kaldifeat_core_obj>)
   target_link_libraries(${name}
     PRIVATE
-      kaldifeat_core
+      ${TORCH_LIBRARIES}
       gtest
       gtest_main
   )
+  if(kaldifeat_TORCH_IS_ROCM)
+    target_link_libraries(${name} PRIVATE ${kaldifeat_HIP_RUNTIME_LIB})
+    if(kaldifeat_ROCPROFILER_SDK_LIB)
+      target_link_libraries(${name} PRIVATE ${kaldifeat_ROCPROFILER_SDK_LIB})
+    endif()
+  endif()
 
   # NOTE: We set the working directory here so that
   # it works also on windows. The reason is that
@@ -55,6 +68,21 @@ function(kaldifeat_add_test source)
 endfunction()
 
 if(kaldifeat_BUILD_TESTS)
+  # Source-level core for the unit-test executables. On a ROCm PyTorch, linking
+  # a test exe against the SHARED libkaldifeat_core.so makes the ROCm profiler
+  # (librocprofiler-sdk, pulled in by torch's static libkineto.a) recursively
+  # dlopen that .so during its own one-time static init, which aborts with
+  # __gnu_cxx::recursive_init_error before any test runs. The python module is
+  # unaffected (it is imported into an already-initialized process). Compiling
+  # the core sources into each test exe avoids the startup dlopen while leaving
+  # the shared kaldifeat_core (used by the python module and install) unchanged.
+  # On CUDA/CPU builds this is an equivalent static link.
+  add_library(kaldifeat_core_obj OBJECT ${kaldifeat_srcs})
+  target_compile_definitions(kaldifeat_core_obj PUBLIC
+    KALDIFEAT_TORCH_VERSION_MAJOR=${KALDIFEAT_TORCH_VERSION_MAJOR}
+    KALDIFEAT_TORCH_VERSION_MINOR=${KALDIFEAT_TORCH_VERSION_MINOR})
+  target_include_directories(kaldifeat_core_obj PUBLIC ${TORCH_INCLUDE_DIRS})
+
   # please sort the source files alphabetically
   set(test_srcs
     feature-window-test.cc

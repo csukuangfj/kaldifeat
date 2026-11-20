@@ -27,6 +27,24 @@ To test that you have installed `kaldifeat`_ successfully, please run:
 
 It should print the version, e.g., ``1.0``.
 
+Build for AMD GPUs (ROCm)
+-------------------------
+
+`kaldifeat`_ runs on AMD GPUs without any source change: all GPU compute is
+delegated to libtorch tensor ops, so building against a `ROCm
+<https://rocm.docs.amd.com>`_ PyTorch is enough. Install a ROCm build of
+`PyTorch`_ and then build from source exactly as above:
+
+.. code-block:: bash
+
+  git clone https://github.com/csukuangfj/kaldifeat
+  cd kaldifeat
+  python3 setup.py install
+
+The device string stays ``"cuda"`` as usual (PyTorch keeps the CUDA spelling on
+ROCm); ``opts.device = torch.device("cuda", 0)`` then runs on the AMD GPU via
+the HIP backend.
+
 .. _from PyPI:
 
 Install kaldifeat from PyPI

@@ -273,6 +273,11 @@ fbank = kaldifeat.Fbank(opts)
 features = fbank(wave.to(opts.device))
 ```
 
+The same `"cuda"` device string also selects an AMD GPU when kaldifeat is built
+against a [ROCm](https://rocm.docs.amd.com) PyTorch: feature extraction is
+delegated entirely to libtorch tensor ops, so it runs on the HIP backend with
+no code change. See the installation docs for the ROCm build.
+
 ## MFCC, PLP, Spectrogram
 
 To compute MFCC features, please replace `kaldifeat.FbankOptions` and `kaldifeat.Fbank`
